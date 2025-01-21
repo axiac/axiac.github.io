@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Să se afle ultimele 4 cifre ale numărului - axiac@web</title>
+  <meta name="author" content="axiac">
+
+
+  <meta name="description"
+    content="Problemă (de clasa a VI-a) Să se afle ultimele 4 cifre ale numărului: S = 91 + 92 + 93 + &hellip; + 9400 Soluție Problemele de acest gen, în care se &hellip;">
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="canonical" href="http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="axiac@web" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js" async></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript" async></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-545821-11', 'axiac.ro');
+    if (navigator.userAgent.indexOf('axiac') == -1) {
+      ga('send', 'pageview');
+    }
+  </script>
+
+
+
+
+
+
+  <meta property="fb:app_id" content="128516770538860" />
+
+
+  <meta property="og:url" content="http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Să se afle ultimele 4 cifre ale numărului - axiac@web" />
+  <meta property="og:description" content="Problemă (de clasa a VI-a) Să se afle ultimele 4 cifre ale numărului: S = 91 + 92 + 93 + &hellip; + 9400 Soluție Problemele de acest gen, în care se cere ultima cifră a unui număr mare, se rezolvă de obicei observând
+cum evoluează ultima cifră a puterilor consecutive ale numerelor implicate în &hellip;" />
+  <meta property="og:image" content="http://axiac.github.io/favicon.png" />
+
+  <meta property="og:author" content="https://www.facebook.com/axiac.ro/" />
+
+
+
+</head>
+
+<body>
+  <header role="banner">
+    <hgroup>
+      <h1><a href="/">axiac@web</a></h1>
+
+    </hgroup>
+
+  </header>
+  <nav role="navigation">
+    <ul class="subscription" data-subscription="rss">
+      <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+
+    </ul>
+
+    <form action="https://www.google.com/search" method="get">
+      <fieldset role="search">
+        <input type="hidden" name="q" value="site:axiac.ro" />
+        <input class="search" type="text" name="q" results="0" placeholder="Search" />
+      </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+      <li><a href="/">Blog</a></li>
+      <li><a href="/blog/archives">Archives</a></li>
+    </ul>
+
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+        <article class="hentry" role="article">
+
+          <header>
+
+
+            <h1 class="entry-title">Să se afle ultimele 4 cifre ale numărului</h1>
+
+
+            <p class="meta">
+
+
+
+
+
+              <time class='updated' datetime='2014-10-14T12:34:56+03:00'><span class='date'><span class='date-month'>Oct</span> <span
+                    class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span></time>
+
+            </p>
+
+          </header>
+
+
+          <div class="entry-content">
+            <h2>Problemă (de clasa a VI-a)</h2>
+
+            <p>Să se afle ultimele 4 cifre ale numărului: <em>S</em> = 9<sup>1</sup> + 9<sup>2</sup> + 9<sup>3</sup> + &hellip; + 9<sup>400</sup></p>
+
+            <h2>Soluție</h2>
+
+            <p>Problemele de acest gen, în care se cere ultima cifră a unui număr mare, se rezolvă de obicei observând
+              cum evoluează ultima cifră a puterilor consecutive ale numerelor implicate în relație.
+              Să calculăm primele câteva puteri ale lui 9 și să vedem cum evoluează ultima lor cifră.</p>
+
+            <!--more-->
+
+
+
+
+            <pre>
+9<sup>1</sup> =      <u>9</u>
+9<sup>2</sup> =     8<u>1</u>
+9<sup>3</sup> =    72<u>9</u>
+9<sup>4</sup> =  6 56<u>1</u>
+9<sup>5</sup> = 59 04<u>9</u>
+...
+</pre>
+
+
+            <p>Observăm că pentru valorile pare ale lui <em>k</em>, ultima cifră a lui 9<sup>k</sup> este <em>1</em> iar pentru cele impare ultima cifră este
+              <em>9</em>.
+              Să reținem acest aspect, ne va folosi mai târziu.</p>
+
+            <p>Suma noastră <em>S</em> conține 200 de termeni de forma 9<sup>k</sup> cu <em>k</em> impar și încă 200 de termeni cu <em>k</em> par, ultima cifră
+              a lui <em>S</em> este în mod evident <em>0</em>.
+              Din păcate, asta e cam tot ce putem afla pe această cale.</p>
+
+            <h2>Altă abordare</h2>
+
+            <p>Să încercăm să-l descompunem pe <em>S</em> în factori:<br />
+              S = 9<sup>1</sup> + 9<sup>2</sup> + 9<sup>3</sup> + &hellip; 9<sup>400</sup><br />
+              S = 9 * (1 + 9<sup>1</sup> + 9<sup>2</sup> + &hellip; 9<sup>399</sup>)<br />
+              S = 9 * (9<sup>400</sup> - 1) / (9 - 1)<br /></p>
+
+            <p>Folosind (de 4 ori) formula <em>a<sup>2</sup> - b<sup>2</sup> = (a + b) * (a - b)</em> îl descompunem pe <em>S</em> astfel: <br />
+              S = 9 * (9<sup>200</sup> + 1) * (9<sup>100</sup> + 1) * (9<sup>50</sup> + 1) * (9<sup>25</sup> + 1) * (9<sup>25</sup> - 1) / 8</p>
+
+            <p>Pe <em>9<sup>25</sup> + 1</em> îl scriem ca (9<sup>5</sup>)<sup>5</sup> + 1 și-l descompunem folosind formula: <br />
+              <em>a<sup>n</sup> + b<sup>n</sup> = (a + b) * (a<sup>n-1</sup> - a<sup>n-2</sup> * b<sup>1</sup> + a<sup>n-3</sup> * b<sup>2</sup> &hellip; - a *
+                b<sup>n-2</sup> + b<sup>n-1</sup>)</em><br />
+              (valabilă doar pentru <em>n</em> natural <strong>impar</strong>, <em>n</em> >= 3) în: <br />
+              9<sup>25</sup> + 1 = <em>(9<sup>5</sup> + 1) * (9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1)</em>
+            </p>
+
+            <p>Similar, folosind formula:<br />
+              <em>a<sup>n</sup> - b<sup>n</sup> = (a - b) * (a<sup>n-1</sup> + a<sup>n-2</sup> * b<sup>1</sup> + &hellip; + a<sup>1</sup> * b<sup>n-2</sup> +
+                b<sup>n-1</sup>)</em><br />
+              (valabilă pentru orice <em>n</em> natural, <em>n</em> >= 2), pe <em>9<sup>25</sup> - 1</em> îl scriem ca:<br />
+              <em>9<sup>25</sup> - 1 = (9<sup>5</sup>)<sup>5</sup> - 1 = (9<sup>5</sup> - 1) * (9<sup>20</sup> + 9<sup>15</sup> + 9<sup>10</sup> + 9<sup>5</sup>
+                + 1)</em><br />
+              și aplicând formula încă o dată pentru <em>9<sup>5</sup> - 1</em> obținem:<br />
+              <em>9<sup>25</sup> - 1 = (9 - 1) * (9<sup>4</sup> + 9<sup>3</sup> + 9<sup>2</sup> + 9<sup>1</sup> + 1) * (9<sup>20</sup> + 9<sup>15</sup> +
+                9<sup>10</sup> + 9<sup>5</sup> + 1)</em>
+            </p>
+
+            <p>Substituim expresiile calculate pentru <em>(9<sup>25</sup> + 1)</em> și <em>(9<sup>25</sup> - 1)</em> în formula lui <em>S</em>, simplificăm
+              cu <em>8</em> avem:<br />
+              <strong>S = 9 * (9<sup>200</sup>+1) * (9<sup>100</sup>+1) * (9<sup>50</sup>+1) * (9<sup>5</sup>+1) *
+                (9<sup>20</sup>-9<sup>15</sup>+9<sup>10</sup>-9<sup>5</sup>+1) * (9<sup>4</sup>+9<sup>3</sup>+9<sup>2</sup>+9<sup>1</sup>+1) *
+                (9<sup>20</sup>+9<sup>15</sup>+9<sup>10</sup>+9<sup>5</sup>+1)</strong>
+            </p>
+
+            <p>Să luăm factorii pe rând și să le calculăm ultima cifră:</p>
+
+            <ol>
+              <li><strong>9</strong> - ultima lui cifră este, evident, <em>9</em>.</li>
+              <li><strong>(9<sup>200</sup> + 1), (9<sup>100</sup> + 1) și (9<sup>50</sup> + 1)</strong> - se termină cu cifra <em>2</em> deoarece 9 la putere
+                pară se termină
+                cu <em>1</em> după cum am văzut la începutul discuției.
+                Îi putem scrie ca <em>2*A</em>, <em>2*B</em> și <em>2*C</em> unde <em>A</em>, <em>B</em> și <em>C</em> se termină cu <em>1</em> sau <em>6</em>
+                (singurele numere de o cifră care înmulțite cu <em>2</em> produc rezultate terminate în <em>2</em>).</li>
+              <li><strong>(9<sup>5</sup> + 1)</strong> - <em>9<sup>5</sup> + 1</em> = 59 050 = 50 * 1811.</li>
+              <li><strong>(9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1)</strong> - să notăm acest factor cu <em>T</em>. Are ultima
+                cifră <em>5</em> (1-9+1-9+1)
+                deci este divizibil cu <em>5</em>. Se poate scrie ca <em>5*D</em> și deocamdată nu știm nimic despre <em>D</em>.</li>
+              <li><strong>(9<sup>4</sup> + 9<sup>3</sup> + 9<sup>2</sup> + 9<sup>1</sup> + 1)</strong> și <strong>(9<sup>20</sup> + 9<sup>15</sup> +
+                  9<sup>10</sup> + 9<sup>5</sup> + 1)</strong> - îi vom nota cu <em>E</em> și <em>F</em>.
+                Ambii au ultima cifră <em>1</em> (1+9+1+9+1).</li>
+            </ol>
+
+
+            <p>Îl rescriem pe <em>S</em> folosind notațiile introduse mai sus:<br />
+              S = 9 * 2*A * 2*B * 2*C * 1811*50 * 5*D * E * F<br />
+              Grupăm convenabil factorii:<br />
+              S = (2*2*50*5) * (9*2) * (A*B*C) * (1811*E*F) * D<br />
+              S = 1000 * (18*A*B*C) * (1811*E*F) * D<br /></p>
+
+            <p>Să analizăm factorii lui <em>S</em> din noua descompunere:</p>
+
+            <ol>
+              <li><strong>1000</strong> - <em>S</em> este divizibil cu 1000, deci ultimele sale 3 cifre sunt <em>000</em>;</li>
+              <li><strong>18*A*B*C</strong> - <em>A</em>, <em>B</em> și <em>C</em> se termină cu <em>1</em> sau <em>6</em>, produsul lor se va termina tot cu
+                <em>1</em> (când toți
+                trei se termină cu <em>1</em>) sau cu <em>6</em> (altfel).<br />
+                1 * 8 = 8<br />
+                6 * 8 = 48<br />
+                Ultima cifră a acestui factor este <em>8</em>.</li>
+              <li><strong>1811*E*F</strong> - <em>E</em> și <em>F</em> se termină cu <em>1</em>; ultima cifră a acestui factor este <em>1</em>.</li>
+              <li><strong>D</strong> - Am notat mai sus <em>T</em> = 9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1 = 5 * <em>D</em>; va
+                trebui să calculăm ultimele 2 cifre ale
+                lui T pentru a afla ultima cifră a lui <em>D</em>.</li>
+            </ol>
+
+
+            <h3>Ultimele două cifre ale lui 9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1</h3>
+
+            <p>Încercăm să-l aducem pe <em>T</em> la o formă în care să-i putem calcula ușor ultimele două cifre
+              folosind tabelul de puteri ale lui 9 de la începutul textului.</p>
+
+            <p> <em>T</em> = 9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1<br />
+              <em>T</em> = 9<sup>15</sup> * (9<sup>5</sup> - 1) + 9<sup>5</sup> * (9<sup>5</sup> - 1) + 1<br />
+              <em>T</em> = 9<sup>5</sup> * (9<sup>5</sup> - 1) * (9<sup>10</sup> + 1) + 1<br />
+              <em>T</em> = 9<sup>5</sup> * (9<sup>5</sup> - 1) * (9<sup>5</sup> * 9<sup>5</sup> + 1) + 1<br />
+            </p>
+
+            <p>Fie <em>M</em> și <em>N</em> două numere de cel puțin 2 cifre. Dacă notăm cu <em>m</em> și <em>n</em> numele formate de ultimele două cifre
+              ale lui <em>M</em> și respectiv <em>N</em> atunci ultimele două cifre ale produsului <em>m</em>*<em>n</em> sunt și ultimele două cifre
+              ale lui <em>M</em>*<em>N</em> (demonstația este evidentă).</p>
+
+            <p>Știm că 9<sup>5</sup> = 59 049. Folosim ultimele sale două cifre (<em>49</em>) pentru a calcula ultimele două cifre ale lui <em>T</em>.
+              Să notăm cu U(x) numărul format de ultimele două cifre ale lui <em>x</em>.</p>
+
+            <p> U(T) = U(U(9<sup>5</sup>) * U(9<sup>5</sup> - 1) * U(U(9<sup>5</sup>) * U(9<sup>5</sup>) + 1) + 1)<br />
+              U(T) = U(49 * (49 - 1) * U(49 * 49 + 1) + 1)<br />
+              U(T) = U(49 * 48 * U(2 402) + 1)<br />
+              U(T) = U(2 352 * 2 + 1)<br />
+              U(T) = U(4 705)<br />
+              U(T) = 05<br /></p>
+
+            <p>Așadar, ultimele 2 cifre ale lui <em>T</em> sunt 05, deci <em>T</em> = 100 * U + 5 = 5 * (20 * U + 1) = 5 * <em>D</em>.
+              Prin urmare, <em>D</em> = 20 * U + 1 deci <em>D</em> se termină cu <em>1</em>.</p>
+
+            <h2>Rezultat</h2>
+
+            <p>Introducându-l pe <em>D</em> în formula anterioară avem:<br />
+              * ultimele 3 cifre ale lui <em>S</em> sunt <em>000</em>;<br />
+              * <strong>18*A*B*C</strong> se termină cu <em>8</em>;<br />
+              * <strong>1811*D*E*F</strong> se termină cu <em>1</em>.<br /></p>
+
+            <p>Prin urmare, ultimele 4 cifre ale lui <em>S</em> sunt <strong>8000</strong>.</p>
+
+            <h2>Verificare</h2>
+
+            <p>Pentru cei care cred mai mult în calcule decât în raționamente (și pentru că trăim într-o epocă în care
+              preferăm să nu mai gândim ci să dăm repede fuga la Google ca să aflăm lucruri simple),
+              Wolfram Alpha poate furniza atât <a href="http://www.wolframalpha.com/input/?i=9^1%2B9^2%2B...%2B9^400+mod+10000">rezultatul</a> calculat aici cât
+              și
+              <a href="http://www.wolframalpha.com/input/?i=9^1%2B9^2%2B...%2B9^400">valoarea exactă</a> a lui <em>S</em>.
+            </p>
+          </div>
+
+
+          <footer>
+            <p class="meta">
+
+
+
+              <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+
+
+
+
+
+
+              <time class='updated' datetime='2014-10-14T12:34:56+03:00'><span class='date'><span class='date-month'>Oct</span> <span
+                    class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span></time>
+
+
+              <span class="categories">
+
+                <a class='category' href='/blog/categories/clasa-a-vi-a/'>clasa a vi&shy;-a</a>, <a class='category' href='/blog/categories/mate/'>mate</a>
+
+              </span>
+
+
+            </p>
+
+            <div class="sharing">
+
+              <a href="//twitter.com/share" class="twitter-share-button" data-url="http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"
+                data-via="axiac" data-counturl="http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Tweet</a>
+
+
+              <div class="g-plusone" data-size="medium"></div>
+
+
+              <div class="fb-like" data-share="true" data-width="450" data-show-faces="false"></div>
+
+            </div>
+
+
+            <div class="fb-comments" data-href="http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/" data-numposts="5" data-width="789">
+            </div>
+
+
+
+            <p class="meta">
+
+              <a class="basic-alignment left" href="/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"
+                title="Previous Post: Debug remote PHP CLI scripts">&laquo; Debug remote PHP CLI scripts</a>
+
+
+              <a class="basic-alignment right" href="/blog/merging-git-repositories/"
+                title="Next Post: Join two Git repositories and keep the original commit dates.">Join two Git repositories and keep the original commit dates.
+                &raquo;</a>
+
+            </p>
+          </footer>
+        </article>
+
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered
+                by Disqus.</a></noscript>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="sidebar">
+
+        <section>
+          <h1>Recent Posts</h1>
+          <ul id="recent_posts">
+
+
+            <li class="post">
+              <a href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a>
+            </li>
+
+          </ul>
+        </section>
+
+
+
+        <section class="googleplus googleplus-hidden">
+          <h1>
+            <a href="https://plus.google.com/116025233500446558681?rel=author">
+              <img src="//www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+              Google+
+            </a>
+          </h1>
+        </section>
+
+
+
+
+      </aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <p>
+      Copyright &copy; 2013-2020 - axiac -
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+    </p>
+
+  </footer>
+
+
+  <script type="text/javascript">
+    var disqus_shortname = 'axiac';
+
+
+    // var disqus_developer = 1;
+    var disqus_identifier = 'http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/';
+    var disqus_url = 'http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/';
+    var disqus_script = 'embed.js';
+
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+  </script>
+
+
+
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '128516770538860',
+        xfbml: true,
+        version: 'v2.5'
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function () {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function () {
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script type="text/javascript">
+    setTimeout(function () {
+      var a = document.createElement("script");
+      var b = document.getElementsByTagName("script")[0];
+      a.src = document.location.protocol + "//script.crazyegg.com/pages/scripts/0019/4087.js?" + Math.floor(new Date().getTime() / 3600000);
+      a.async = true; a.type = "text/javascript"; b.parentNode.insertBefore(a, b);
+    }, 1);
+  </script>
+
+
+  <script type="text/javascript" id="inspectletjs">
+    window.__insp = window.__insp || [];
+    __insp.push(['wid', 1818118537]);
+    (function () {
+      function __ldinsp() { var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
+      if (window.attachEvent) {
+        window.attachEvent('onload', __ldinsp);
+      } else {
+        window.addEventListener('load', __ldinsp, false);
+      }
+    })();
+  </script>
+
+
+
+</body>
+
+</html>

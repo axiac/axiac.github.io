@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Git Ignores Me, Not My Files - axiac@web</title>
+  <meta name="author" content="axiac">
+
+
+  <meta name="description"
+    content="A question that occurs frequently on the Q&amp;A programming sites looks like this: I want Git to ignore one of the files in the project. I added the &hellip;">
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="canonical" href="http://axiac.github.io/blog/git-ignores-me-not-my-files/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="axiac@web" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js" async></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript" async></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-545821-11', 'axiac.ro');
+    if (navigator.userAgent.indexOf('axiac') == -1) {
+      ga('send', 'pageview');
+    }
+  </script>
+
+
+
+
+
+
+  <meta property="fb:app_id" content="128516770538860" />
+
+
+  <meta property="og:url" content="http://axiac.github.io/blog/git-ignores-me-not-my-files/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Git Ignores Me, Not My Files - axiac@web" />
+  <meta property="og:description" content="A question that occurs frequently on the Q&amp;A programming sites looks like this: I want Git to ignore one of the files in the project. I added the file name and/or the file path to .gitignore
+and/or .git/info/exclude but git status still shows the file as being modified.
+It seems Git doesn&rsquo &hellip;" />
+  <meta property="og:image" content="http://axiac.github.io/favicon.png" />
+
+  <meta property="og:author" content="https://www.facebook.com/axiac.ro/" />
+
+
+
+</head>
+
+<body>
+  <header role="banner">
+    <hgroup>
+      <h1><a href="/">axiac@web</a></h1>
+
+    </hgroup>
+
+  </header>
+  <nav role="navigation">
+    <ul class="subscription" data-subscription="rss">
+      <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+
+    </ul>
+
+    <form action="https://www.google.com/search" method="get">
+      <fieldset role="search">
+        <input type="hidden" name="q" value="site:axiac.ro" />
+        <input class="search" type="text" name="q" results="0" placeholder="Search" />
+      </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+      <li><a href="/">Blog</a></li>
+      <li><a href="/blog/archives">Archives</a></li>
+    </ul>
+
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+        <article class="hentry" role="article">
+
+          <header>
+
+
+            <h1 class="entry-title">Git Ignores Me, Not My Files</h1>
+
+
+            <p class="meta">
+
+
+
+
+
+              <time class='updated' datetime='2017-02-05'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span
+                    class='date-suffix'>th</span>, <span class='date-year'>2017</span></span></time>
+
+            </p>
+
+          </header>
+
+
+          <div class="entry-content">
+            <p>A question that occurs frequently on the Q&amp;A programming sites looks like this:</p>
+
+            <blockquote>
+              <p>I want Git to ignore one of the files in the project. I added the file name and/or the file path to <code>.gitignore</code>
+                and/or <code>.git/info/exclude</code> but <code>git status</code> still shows the file as being modified.<br>
+                It seems Git doesn&rsquo;t ignore the file, it ignores me. I&rsquo;m desperate, please help!</p>
+            </blockquote>
+
+            <h3>Is it quite so? Does Git ignore you?</h3>
+
+            <!-- more -->
+
+
+            <p>Let&rsquo;s see first what the documentation of <a href="https://git-scm.com/docs/gitignore">.gitignore</a> says:</p>
+
+            <blockquote>
+              <p>A <code>gitignore</code> file specifies intentionally untracked files that Git should ignore.
+                Files already tracked by Git are not affected; see the NOTES below for details.</p>
+            </blockquote>
+
+            <p>And the aforementioned notes, several screens below:</p>
+
+            <blockquote>
+              <p>The purpose of gitignore files is to ensure that certain files not tracked by Git remain untracked.<br>
+                To stop tracking a file that is currently tracked, use <code>git rm --cached</code>.</p>
+            </blockquote>
+
+            <h3>Is there something else to add?</h3>
+
+            <p>I guess the answer is &ldquo;No&rdquo;. Everything should be clear from the fragments quoted above.</p>
+
+            <p>I would emphasize the <em>&ldquo;untracked files&rdquo;</em> expression and note that it is mentioned in both places.
+              The gitignore files are consulted only when Git processes <em>untracked files</em>, i.e. files that are currently
+              <strong>not in the repository</strong>.
+            </p>
+
+            <p>The answer to the question is also included: adding the file name/path to <code>.gitignore</code> doesn&rsquo;t help
+              unless you also remove the file from the repository (<em>untrack it</em>) using the command:</p>
+
+            <pre><code>git rm --cached &lt;filepath&gt;
+</code></pre>
+
+            <p><strong>Case closed.</strong></p>
+          </div>
+
+
+          <footer>
+            <p class="meta">
+
+
+
+              <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+
+
+
+
+
+
+              <time class='updated' datetime='2017-02-05'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span
+                    class='date-suffix'>th</span>, <span class='date-year'>2017</span></span></time>
+
+
+              <span class="categories">
+
+                <a class='category' href='/blog/categories/git/'>git</a>
+
+              </span>
+
+
+            </p>
+
+            <div class="sharing">
+
+              <a href="//twitter.com/share" class="twitter-share-button" data-url="http://axiac.github.io/blog/git-ignores-me-not-my-files/" data-via="axiac"
+                data-counturl="http://axiac.github.io/blog/git-ignores-me-not-my-files/">Tweet</a>
+
+
+              <div class="g-plusone" data-size="medium"></div>
+
+
+              <div class="fb-like" data-share="true" data-width="450" data-show-faces="false"></div>
+
+            </div>
+
+
+            <div class="fb-comments" data-href="http://axiac.github.io/blog/git-ignores-me-not-my-files/" data-numposts="5" data-width="789"></div>
+
+
+
+            <p class="meta">
+
+              <a class="basic-alignment left" href="/blog/how-to-merge-composer-files/" title="Previous Post: How to merge Composer files">&laquo; How to merge
+                Composer files</a>
+
+
+              <a class="basic-alignment right" href="/blog/why-is-mysql-time-limited-to-838-59-59/"
+                title="Next Post: Why is MySQL time limited to 838:59:59?">Why is MySQL time limited to 838:59:59? &raquo;</a>
+
+            </p>
+          </footer>
+        </article>
+
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered
+                by Disqus.</a></noscript>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="sidebar">
+
+        <section>
+          <h1>Recent Posts</h1>
+          <ul id="recent_posts">
+
+
+            <li class="post">
+              <a href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a>
+            </li>
+
+          </ul>
+        </section>
+
+
+
+        <section class="googleplus googleplus-hidden">
+          <h1>
+            <a href="https://plus.google.com/116025233500446558681?rel=author">
+              <img src="//www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+              Google+
+            </a>
+          </h1>
+        </section>
+
+
+
+
+      </aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <p>
+      Copyright &copy; 2013-2020 - axiac -
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+    </p>
+
+  </footer>
+
+
+  <script type="text/javascript">
+    var disqus_shortname = 'axiac';
+
+
+    // var disqus_developer = 1;
+    var disqus_identifier = 'http://axiac.github.io/blog/git-ignores-me-not-my-files/';
+    var disqus_url = 'http://axiac.github.io/blog/git-ignores-me-not-my-files/';
+    var disqus_script = 'embed.js';
+
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+  </script>
+
+
+
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '128516770538860',
+        xfbml: true,
+        version: 'v2.5'
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function () {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function () {
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script type="text/javascript">
+    setTimeout(function () {
+      var a = document.createElement("script");
+      var b = document.getElementsByTagName("script")[0];
+      a.src = document.location.protocol + "//script.crazyegg.com/pages/scripts/0019/4087.js?" + Math.floor(new Date().getTime() / 3600000);
+      a.async = true; a.type = "text/javascript"; b.parentNode.insertBefore(a, b);
+    }, 1);
+  </script>
+
+
+  <script type="text/javascript" id="inspectletjs">
+    window.__insp = window.__insp || [];
+    __insp.push(['wid', 1818118537]);
+    (function () {
+      function __ldinsp() { var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
+      if (window.attachEvent) {
+        window.attachEvent('onload', __ldinsp);
+      } else {
+        window.addEventListener('load', __ldinsp, false);
+      }
+    })();
+  </script>
+
+
+
+</body>
+
+</html>

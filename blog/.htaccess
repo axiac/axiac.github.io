@@ -1,0 +1,9 @@
+Options FollowSymLinks
+RewriteEngine On
+RewriteBase /blog
+
+# Simplified the URLs of the blog entries: keep only the slug, there is no need for post date
+RewriteRule ^201[3-5]/[01][0-9]/[0-3][0-9]/(.*) $1 [R=301,L]
+# 2016-04-17 Rewrite the URLs that were previosly simplified to contain only the year and the month
+RewriteRule ^201[3-6]/[01][0-9]/(.*) $1 [R=301,L]
+

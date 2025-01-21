@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+
+  <title>DISTINCT vs. GROUP BY WITH ROLLUP - axiac@web</title>
+  <meta name="author" content="axiac">
+
+
+  <meta name="description" content="or why 2+2 is not always 4. WITH ROLLUP is a GROUP BY modifier that causes extra rows to be added to
+the result set produced by the query. These rows &hellip;">
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="canonical" href="http://axiac.github.io/blog/distinct-with-rollup/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="axiac@web" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js" async></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript" async></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-545821-11', 'axiac.ro');
+    if (navigator.userAgent.indexOf('axiac') == -1) {
+      ga('send', 'pageview');
+    }
+  </script>
+
+
+
+
+
+
+  <meta property="fb:app_id" content="128516770538860" />
+
+
+  <meta property="og:url" content="http://axiac.github.io/blog/distinct-with-rollup/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="DISTINCT vs. GROUP BY WITH ROLLUP - axiac@web" />
+  <meta property="og:description" content="or why 2+2 is not always 4. WITH ROLLUP is a GROUP BY modifier that causes extra rows to be added to
+the result set produced by the query. These rows represent higher-level (or super-aggregate)
+summary operations. A shallow examination of the effects of WITH ROLLUP on a query like: SELECT user_id, &hellip;" />
+  <meta property="og:image" content="http://axiac.github.io/favicon.png" />
+
+  <meta property="og:author" content="https://www.facebook.com/axiac.ro/" />
+
+
+
+</head>
+
+<body>
+  <header role="banner">
+    <hgroup>
+      <h1><a href="/">axiac@web</a></h1>
+
+    </hgroup>
+
+  </header>
+  <nav role="navigation">
+    <ul class="subscription" data-subscription="rss">
+      <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+
+    </ul>
+
+    <form action="https://www.google.com/search" method="get">
+      <fieldset role="search">
+        <input type="hidden" name="q" value="site:axiac.ro" />
+        <input class="search" type="text" name="q" results="0" placeholder="Search" />
+      </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+      <li><a href="/">Blog</a></li>
+      <li><a href="/blog/archives">Archives</a></li>
+    </ul>
+
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+        <article class="hentry" role="article">
+
+          <header>
+
+
+            <h1 class="entry-title">DISTINCT vs. GROUP BY WITH ROLLUP</h1>
+
+
+            <p class="meta">
+
+
+
+
+
+              <time class='updated' datetime='2015-04-18'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>18</span><span
+                    class='date-suffix'>th</span>, <span class='date-year'>2015</span></span></time>
+
+            </p>
+
+          </header>
+
+
+          <div class="entry-content">
+            <h1>or why 2+2 is not always 4.</h1>
+
+            <p><code>WITH ROLLUP</code> is a <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html"><code>GROUP BY</code> modifier</a> that
+              causes extra rows to be added to
+              the result set produced by the query. These rows represent higher-level (or super-aggregate)
+              summary operations.</p>
+
+            <p>A shallow examination of the effects of <code>WITH ROLLUP</code> on a query like:</p>
+
+            <pre><code>SELECT user_id, COUNT(product) AS nb_products, SUM(amount) AS total FROM cart GROUP BY user_id
+</code></pre>
+
+            <p>can lead to the erroneous conclusion that the <code>WITH ROLLUP</code> modifier is just a courtesy
+              of the database implementors to the front-end developers and the extra rows added by it
+              could be computed on the client-side as well. Big mistake!</p>
+
+            <!-- more -->
+
+
+            <p>A deeper investigation on the <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html"><code>GROUP BY</code> aggregate
+                functions</a> reveals that there are
+              functions whose values generated by <code>WITH ROLLUP</code> <strong>cannot</strong> be computed on the client side
+              using only the values returned by the <code>GROUP BY</code> query. These are the statistical functions
+              (<a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_stddev-pop"><code>STDDEV_POP()</code></a>, <a
+                href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_var-pop"><code>VAR_POP()</code></a> a.s.o.) that are not used by
+              many applications
+              but, surprisingly, also the more commonly used <a
+                href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_sum"><code>SUM()</code></a> and <a
+                href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_count"><code>COUNT()</code></a>,
+              when they are combined with <code>DISTINCT</code>.</p>
+
+            <h3>Case Study</h3>
+
+            <p>Let&rsquo;s create a small MySQL table in the database and put some rows in it:</p>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="ss">`logins`</span> <span class="p">(</span>
+</span><span class='line'>  <span class="ss">`id`</span> <span class="kt">INT</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">`user_id`</span> <span class="kt">INT</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">`date`</span> <span class="kt">DATE</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">`browser`</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="ss">`id`</span><span class="p">)</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="ss">`logins`</span> <span class="p">(</span><span class="ss">`user_id`</span><span class="p">,</span> <span class="ss">`date`</span><span class="p">,</span> <span class="ss">`browser`</span><span class="p">)</span>
+</span><span class='line'><span class="k">VALUES</span>
+</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2015-04-01&#39;</span><span class="p">,</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">),</span>
+</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2015-04-02&#39;</span><span class="p">,</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">),</span>
+</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2015-04-02&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">),</span>
+</span><span class='line'>  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2015-04-01&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">),</span>
+</span><span class='line'>  <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;2015-04-02&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">);</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+            <p>It is a naïve log table that stores the customer login dates and the browsers they are using.</p>
+
+            <p>Let&rsquo;s count the number of logins for each day:</p>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="ss">`date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
+</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
+</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`date`</span>
+</span><span class='line'><span class="k">WITH</span> <span class="n">ROLLUP</span><span class="p">;</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+            <p>The result is straightforward:</p>
+
+            <div class="highlight">
+              <pre><code class="language-text" data-lang="text">+------------+----+
+| date       | nb |
++------------+----+
+| 2015-04-01 |  2 |
+| 2015-04-02 |  3 |
+| NULL       |  5 |
++------------+----+
+3 rows in set (0.01 sec)</code></pre>
+            </div>
+
+
+            <p>The <code>WITH ROLLUP</code> clause produced a nice total and doesn&rsquo;t provide any surprise: <code>2 + 3 = 5</code>,
+              any first-grade child can assure you about the correctness of this result.</p>
+
+            <h3>Where <code>DISTINCT</code> comes into play</h3>
+
+            <p>Now, let&rsquo;s take a look to the raw table data and we&rsquo;ll discover that on <code>2015-04-02</code>
+              the first user logged in twice using two different browsers. Let&rsquo;s change the query
+              to count the unique users for each day, i.e. count the first user only once for <code>2015-04-02</code>:</p>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="ss">`date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
+</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
+</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`date`</span>
+</span><span class='line'><span class="k">WITH</span> <span class="n">ROLLUP</span><span class="p">;</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+
+
+            <div class="highlight">
+              <pre><code class="language-text" data-lang="text">+------------+----+
+| date       | nb |
++------------+----+
+| 2015-04-01 |  2 |
+| 2015-04-02 |  2 |
+| NULL       |  3 |
++------------+----+
+3 rows in set (0.00 sec)</code></pre>
+            </div>
+
+
+            <p>Surprise, surprise! We have <code>2</code> unique visitors for each of the two days and a big total of <code>3</code>
+              which is not quite the calculation one would expect.</p>
+
+            <p>Sure, going back to the raw table data we can see there are only <code>3</code> unique values for <code>user_id</code>
+              in the table and that makes it impossible to return <code>4</code> or more as the result of <code>COUNT(DISTINCT)</code>.
+              This is easy to see at a glance on our example table but not that easy on a production table that
+              contains thousands or millions of records.</p>
+
+            <h2>When 2+2 equals 3</h2>
+
+            <p>In order to find out and understand why MySQL returns this result let&rsquo;s
+              analyze how <code>GROUP BY</code>, <code>WITH ROLLUP</code> and <code>DISTINCT</code> work.</p>
+
+            <p>Let&rsquo;s find out what rows are selected in each of the queries above. This can be done
+              easily by removing (commenting out) the <code>GROUP BY</code> clause (together with its
+              <code>WITH ROLLUP</code> modifier) and removing the aggregate function <code>COUNT()</code>. I also added the
+              <code>PK</code> field to easily identify the rows in our table and <code>ORDER BY</code> to easily identify
+              the groups.
+            </p>
+
+            <h3>All values (without <code>DISTINCT</code>)</h3>
+
+            <h4><code>GROUP BY</code></h4>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="ss">`id`</span><span class="p">,</span> <span class="ss">`date`</span><span class="p">,</span> <span class="ss">`user_id`</span>
+</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
+</span><span class='line'><span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">`date`</span><span class="p">;</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+
+
+            <div class="highlight">
+              <pre><code class="language-text" data-lang="text">+----+------------+---------+
+| id | date       | user_id |
++----+------------+---------+
+|  1 | 2015-04-01 |       1 |
+|  4 | 2015-04-01 |       2 |
++----+------------+---------+
+|  2 | 2015-04-02 |       1 |
+|  3 | 2015-04-02 |       1 |
+|  5 | 2015-04-02 |       3 |
++----+------------+---------+
+5 rows in set (0.00 sec)</code></pre>
+            </div>
+
+
+            <p>No surprise here, the query returns all the rows from the table. We can see there
+              are 2 entries having <code>date = '2015-04-01'</code> and 3 entries with <code>date = '2015-04-02'</code>.
+              Grouping by <code>date</code>, rows 1 and 4 are the first group, rows 2, 3 and 5 are the second
+              group.</p>
+
+            <h4><code>WITH ROLLUP</code></h4>
+
+            <p>The <code>WITH ROLLUP</code> modifier computes an extra row that is some kind of super-group.
+              It aggregates all the rows returned by the query above, creating a single group, behaving
+              like all the rows had the same value in the <code>date</code> column. There are 5 rows in the set,
+              this is why the extra row generated by <code>WITH ROLLUP</code> has value <code>5</code> in the <code>nb</code> column.</p>
+
+            <p>We can simulate the computation of the extra row by running a modified version of the
+              query (without the <code>WITH ROLLUP</code> modifier) that selects <code>NULL</code> for the <code>date</code> column;
+              this makes the <code>GROUP BY</code> clause create a single big group.</p>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="no">NULL</span> <span class="k">AS</span> <span class="ss">`null_date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
+</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
+</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`null_date`</span><span class="p">;</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+            <p><em>We cannot use <code>date</code> as the name of the selected expression because it will conflict
+                with the table column <code>date</code> and <code>GROUP BY `date`</code> will use the table column instead.</em></p>
+
+            <div class="highlight">
+              <pre><code class="language-text" data-lang="text">+-----------+----+
+| null_date | nb |
++-----------+----+
+|      NULL |  5 |
++-----------+----+
+1 row in set (0.00 sec)</code></pre>
+            </div>
+
+
+            <h3>Asking for <code>DISTINCT</code> values</h3>
+
+            <h4><code>GROUP BY</code></h4>
+
+            <p>Let&rsquo;s try now to figure out what rows are used to compute the result set when the
+              original query contains <code>COUNT(DISTINCT `user_id`)</code>.</p>
+
+            <p>For that we need to add the <code>DISTINCT</code> modifier to the <code>SELECT</code> clause and drop out
+              the <code>PK</code> column because it guarantees all the rows are distinct and defeats the purpose
+              of our query (we are interested only in distict combinations of <code>date</code> and <code>user_id</code>).</p>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="ss">`date`</span><span class="p">,</span> <span class="ss">`user_id`</span>
+</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
+</span><span class='line'><span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">`date`</span><span class="p">;</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+            <p>The rows selected for grouping are:</p>
+
+            <div class="highlight">
+              <pre><code class="language-text" data-lang="text">+------------+---------+
+| date       | user_id |
++------------+---------+
+| 2015-04-01 |       1 |
+| 2015-04-01 |       2 |
++------------+---------+
+| 2015-04-02 |       1 |
+| 2015-04-02 |       3 |
++------------+---------+
+4 rows in set (0.00 sec)</code></pre>
+            </div>
+
+
+            <p>The PK column is not there but we can guess the missing row has <code>id</code> = 3 or <code>id</code> = 2
+              (it does not really matter). These two rows have identical values on the <code>date</code> and
+              <code>user_id</code> fields. The <code>DISTINCT</code> modifier guarantees only one of them is selected
+              for further processing by the query.
+            </p>
+
+            <p>There are 2 groups, each of them having exactly 2 rows. This is consistent with the
+              result returned by the <code>GROUP BY</code> query.</p>
+
+            <h4><code>WITH ROLLUP</code></h4>
+
+            <p>If we replace the values of the <code>date</code> column with <code>NULL</code>s in the result set above
+              we will see there are only 3 distinct rows (out of 4).</p>
+
+            <p>Let&rsquo;s use the same trick as above to simulate what <code>WITH ROLLUP</code> does.
+              The modified query is:</p>
+
+            <figure class='code'>
+              <div class="highlight">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre>
+                    </td>
+                    <td class='code'>
+                      <pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="no">NULL</span> <span class="k">AS</span> <span class="ss">`null_date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
+</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
+</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`null_date`</span><span class="p">;</span>
+</span></code></pre>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </figure>
+
+
+            <p>The result:</p>
+
+            <div class="highlight">
+              <pre><code class="language-text" data-lang="text">+-----------+----+
+| null_date | nb |
++-----------+----+
+|      NULL |  3 |
++-----------+----+
+1 row in set (0.00 sec)</code></pre>
+            </div>
+
+
+            <p>Again, the result matches the value returned by MySQL.</p>
+
+            <h2>Conclusion</h2>
+
+            <p>In order to compute the extra rows added by the <code>WITH ROLLUP</code> modifier, MySQL <strong>does not</strong> use
+              the rows already computed for the <code>GROUP BY</code> query without rollup. In some cases they can be
+              used but many times they cannot. This makes the correct computation of the summary rows impossible
+              on the client side (without getting the raw rows, which defeats the entire purpose of using
+              <code>GROUP BY</code> in the first place).
+            </p>
+          </div>
+
+
+          <footer>
+            <p class="meta">
+
+
+
+              <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+
+
+
+
+
+
+              <time class='updated' datetime='2015-04-18'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>18</span><span
+                    class='date-suffix'>th</span>, <span class='date-year'>2015</span></span></time>
+
+
+              <span class="categories">
+
+                <a class='category' href='/blog/categories/mysql/'>mysql</a>
+
+              </span>
+
+
+            </p>
+
+            <div class="sharing">
+
+              <a href="//twitter.com/share" class="twitter-share-button" data-url="http://axiac.github.io/blog/distinct-with-rollup/" data-via="axiac"
+                data-counturl="http://axiac.github.io/blog/distinct-with-rollup/">Tweet</a>
+
+
+              <div class="g-plusone" data-size="medium"></div>
+
+
+              <div class="fb-like" data-share="true" data-width="450" data-show-faces="false"></div>
+
+            </div>
+
+
+            <div class="fb-comments" data-href="http://axiac.github.io/blog/distinct-with-rollup/" data-numposts="5" data-width="789"></div>
+
+
+
+            <p class="meta">
+
+              <a class="basic-alignment left" href="/blog/dont-forget-to-clone-the-datetime-objects/"
+                title="Previous Post: Do you clone the DateTime objects?">&laquo; Do you clone the DateTime objects?</a>
+
+
+              <a class="basic-alignment right" href="/blog/atlassian-sourcetree-and-git-hooks/" title="Next Post: Atlassian SourceTree and Git hooks">Atlassian
+                SourceTree and Git hooks &raquo;</a>
+
+            </p>
+          </footer>
+        </article>
+
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered
+                by Disqus.</a></noscript>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="sidebar">
+
+        <section>
+          <h1>Recent Posts</h1>
+          <ul id="recent_posts">
+
+
+            <li class="post">
+              <a href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a>
+            </li>
+
+
+            <li class="post">
+              <a href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a>
+            </li>
+
+          </ul>
+        </section>
+
+
+
+        <section class="googleplus googleplus-hidden">
+          <h1>
+            <a href="https://plus.google.com/116025233500446558681?rel=author">
+              <img src="//www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+              Google+
+            </a>
+          </h1>
+        </section>
+
+
+
+
+      </aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <p>
+      Copyright &copy; 2013-2020 - axiac -
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+    </p>
+
+  </footer>
+
+
+  <script type="text/javascript">
+    var disqus_shortname = 'axiac';
+
+
+    // var disqus_developer = 1;
+    var disqus_identifier = 'http://axiac.github.io/blog/distinct-with-rollup/';
+    var disqus_url = 'http://axiac.github.io/blog/distinct-with-rollup/';
+    var disqus_script = 'embed.js';
+
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+  </script>
+
+
+
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '128516770538860',
+        xfbml: true,
+        version: 'v2.5'
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function () {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function () {
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script type="text/javascript">
+    setTimeout(function () {
+      var a = document.createElement("script");
+      var b = document.getElementsByTagName("script")[0];
+      a.src = document.location.protocol + "//script.crazyegg.com/pages/scripts/0019/4087.js?" + Math.floor(new Date().getTime() / 3600000);
+      a.async = true; a.type = "text/javascript"; b.parentNode.insertBefore(a, b);
+    }, 1);
+  </script>
+
+
+  <script type="text/javascript" id="inspectletjs">
+    window.__insp = window.__insp || [];
+    __insp.push(['wid', 1818118537]);
+    (function () {
+      function __ldinsp() { var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
+      if (window.attachEvent) {
+        window.attachEvent('onload', __ldinsp);
+      } else {
+        window.addEventListener('load', __ldinsp, false);
+      }
+    })();
+  </script>
+
+
+
+</body>
+
+</html>

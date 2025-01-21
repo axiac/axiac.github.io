@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | axiac@web]]></title>
+  <link href="http://axiac.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://axiac.github.io/"/>
+  <updated>2020-08-23T12:40:37+03:00</updated>
+  <id>http://axiac.github.io/</id>
+  <author>
+    <name><![CDATA[axiac]]></name>
+
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+
+
+  <entry>
+    <title type="html"><![CDATA[Git Ignores Me, Not My Files]]></title>
+    <link href="http://axiac.github.io/blog/git-ignores-me-not-my-files/"/>
+    <updated>2017-02-05T00:00:00+02:00</updated>
+    <id>http://axiac.github.io/blog/git-ignores-me-not-my-files</id>
+    <content type="html"><![CDATA[<p>A question that occurs frequently on the Q&amp;A programming sites looks like this:</p>
+
+<blockquote><p>I want Git to ignore one of the files in the project. I added the file name and/or the file path to <code>.gitignore</code>
+and/or <code>.git/info/exclude</code> but <code>git status</code> still shows the file as being modified.<br>
+It seems Git doesn&rsquo;t ignore the file, it ignores me. I&rsquo;m desperate, please help!</p></blockquote>
+
+<h3>Is it quite so? Does Git ignore you?</h3>
+
+<!-- more -->
+
+
+<p>Let&rsquo;s see first what the documentation of <a href="https://git-scm.com/docs/gitignore">.gitignore</a> says:</p>
+
+<blockquote><p>A <code>gitignore</code> file specifies intentionally untracked files that Git should ignore.
+Files already tracked by Git are not affected; see the NOTES below for details.</p></blockquote>
+
+<p>And the aforementioned notes, several screens below:</p>
+
+<blockquote><p>The purpose of gitignore files is to ensure that certain files not tracked by Git remain untracked.<br>
+To stop tracking a file that is currently tracked, use <code>git rm --cached</code>.</p></blockquote>
+
+<h3>Is there something else to add?</h3>
+
+<p>I guess the answer is &ldquo;No&rdquo;. Everything should be clear from the fragments quoted above.</p>
+
+<p>I would emphasize the <em>&ldquo;untracked files&rdquo;</em> expression and note that it is mentioned in both places.
+The gitignore files are consulted only when Git processes <em>untracked files</em>, i.e. files that are currently
+<strong>not in the repository</strong>.</p>
+
+<p>The answer to the question is also included: adding the file name/path to <code>.gitignore</code> doesn&rsquo;t help
+unless you also remove the file from the repository (<em>untrack it</em>) using the command:</p>
+
+<pre><code>git rm --cached &lt;filepath&gt;
+</code></pre>
+
+<p><strong>Case closed.</strong></p>
+
+<p></p>
+]]></content>
+  </entry>
+
+
+  <entry>
+    <title type="html"><![CDATA[How to Merge Composer Files]]></title>
+    <link href="http://axiac.github.io/blog/how-to-merge-composer-files/"/>
+    <updated>2017-01-24T00:00:00+02:00</updated>
+    <id>http://axiac.github.io/blog/how-to-merge-composer-files</id>
+    <content type="html"><![CDATA[<p>Resolving the conflicts in <code>composer.json</code> can be done in the usual way: use a <code>diff</code> tool and pull into the
+merged file the correct changes from both sides. Save the merged file, add it to the index and you&rsquo;re good to go.</p>
+
+<p>Regarding a VCS conflict, <code>composer.lock</code> behaves more like a binary file. <!-- more -->
+It is possible to do a manual merge but in the end the generated file will be invalid because it also contains
+a checksum that won&rsquo;t match any more after this operation.
+The checksum can be fixed afterwards by running <code>composer update --lock</code> but, as a side-effect,
+this command also computes the current set of dependencies and renders all the manual hardwork useless.</p>
+
+<p>The easiest (and the correct) way to resolve <code>composer.lock</code> merge conflicts is to pick one of the versions
+(<code>yours</code> should be the one because it matches the current content of the <code>vendor</code> directory)
+then run <code>composer update --root-reqs</code> to update <code>composer.lock</code> with the packages that were added or
+modified in <code>composer.json</code> on the other branch.</p>
+
+<p>The commands are:</p>
+
+<pre><code>$ git reset HEAD -- composer.lock
+$ git checkout -- composer.lock
+$ composer update --root-reqs
+</code></pre>
+
+<p>Now <code>composer.lock</code> contains the changes introduced by the merged branch and it can be added to the index to
+conclude the merge.</p>
+
+<p></p>
+]]></content>
+  </entry>
+
+
+  <entry>
+    <title type="html"><![CDATA[Atlassian SourceTree and Git hooks]]></title>
+    <link href="http://axiac.github.io/blog/atlassian-sourcetree-and-git-hooks/"/>
+    <updated>2016-04-18T15:56:40+03:00</updated>
+    <id>http://axiac.github.io/blog/atlassian-sourcetree-and-git-hooks</id>
+    <content type="html"><![CDATA[<p><img src="/images/blog/sismo-sourcetree.png" alt="" style="float: right; margin-left: 50px;" />
+This article explains how I made <code>Sismo</code> work with Atlassian <code>SourceTree</code> on <code>OSX</code>. First I thought it doesn&rsquo;t work
+out-of-the-box because of a <code>$PATH</code> problem but soon it turned out that the biggest issue comes from the command line
+used for integration. Keep reading to learn how I found it out and how easy is to fix it.</p>
+
+<!-- more -->
+
+
+<h3>The actors</h3>
+
+<p><strong><a href="http://sourcetreeapp.com">Atlassian SourceTree</a></strong> is a GUI for Git and Mercurial that runs on Windows and OSX. It covers most of the basic VCS
+workflow; it provides a handy button that opens a command line console in the work tree directory, allowing the user
+to type the advanced commands it doesn&rsquo;t provide. All in all, it is a good tool for the daily needs of any developer
+regarding the source code versioning.</p>
+
+<p><strong><a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Git hooks</a></strong> are a nice way to enhance the behaviour of Git. The pre-commit hooks can be used
+to verify the shape of the code before committing the changes (can run the tests, verify the formatting etc).
+The post-commit hook can be used to send notification emails, to trigger project builds on the continuous
+integration server and so on.</p>
+
+<p><strong><a href="http://sismo.sensiolabs.org">Sismo</a></strong> is a <em>continuous testing server</em> published by Fabien Potencier (the creator of <a href="http://symfony.com">Symfony</a>).
+It is small (everything is packed in a single PHP file that can run both as CLI and as web page), it is fast
+and dumb-easy to configure.</p>
+
+<h3>The play</h3>
+
+<p>I&rsquo;m working with Git and SourceTree for years. Sismo joined the group last week and making it work standalone
+was <a href="http://www.quotationspage.com/quote/237.html">as easy as taking candy from a baby</a>. I created a project and put <code>composer; phpunit</code> in the list of
+commands to be run by <code>Sismo</code> when I ask it to build the project.</p>
+
+<p>The next step was to install it as a <code>post-commit</code> hook, in order to run it every time I create a new commit.
+The <a href="http://sismo.sensiolabs.org">Sismo project page</a> explains how to integrate it into the Git workflow by launching it<a href="#note1"><sup>1</sup></a>
+from the <code>post-commit</code> git hook:</p>
+
+<p><figure class='code'><figcaption><span>.git/hooks/post-commit </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;php /path/to/sismo.php <span class="p">&amp;</span>ndash<span class="p">;</span>quiet build symfony-local &lt;code&gt;git log -1 HEAD --pretty<span class="o">=</span><span class="s2">&quot;%H&quot;</span>&lt;/code&gt; <span class="p">&amp;</span>amp<span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<hr />
+
+<p><a name="note1"><sup>1</sup></a> At the time of this writing, the command displayed on the project&rsquo;s page
+incorrectly escapes the backticks, making <code>Sismo</code> reject it because the incorrect number of arguments.
+I posted it here in the correct form (that runs). It&rsquo;s possible that it was fixed in the meantime in the
+official documentation too.</p>
+
+<h3>The intrigue</h3>
+
+<p>It works well when I use Git from the command line. However, it fails with <code>command not found</code> errors
+when I commit using SourceTree. Putting <code>echo $PATH</code> as the first command for the project
+in <code>~/.sismo/config.php</code> revealed that it cannot find <code>composer</code> because it is not in the path known by
+SourceTree. This happens because SourceTree uses the system environment while the environment of my
+<code>bash</code> command line (and of the programs launched by it) is enhanced with paths and aliases in <code>~/.bashrc</code>.</p>
+
+<h3>One (partial) resolution</h3>
+
+<p>In order to debug the problem easier and get a solution that can be applied to all my projects easily,
+I moved the code from <code>.git/hooks/post-commit</code> into a separate script (I named it <code>sismo-git-post-commit</code>).
+This way, the Git post-commit hook contains a simple call of this external script that receives the Sismo
+project name as argument. All the setup needed to make Sismo work when it is invoked through SourceTree
+(and all future corrections and improvements) require changing a single file (and not every project).</p>
+
+<p>Since <code>~/.bashrc</code> is read only by <code>bash</code> I had to explicitly call <code>Sismo</code> through <code>bash</code>. This can be done
+by prependind the above Sismo command line with <code>bash</code>. It still doesn&rsquo;t work this way because, as <code>man bash</code>
+states:</p>
+
+<blockquote><p>When <code>bash</code> is started non-interactively, to run a shell script, for example,
+it looks for the variable <code>BASH_ENV</code> in the environment, expands its value if it appears there, and
+uses the expanded value as the name of a file to read and execute.</p></blockquote>
+
+<p>I modified <code>bin/sismo-git-post-commit</code> to launch <code>Sismo</code> using <code>bash</code> and provide it the correct path to <code>.bashrc</code>
+in <code>BASH_ENV</code>:</p>
+
+<p><figure class='code'><figcaption><span>~/bin/sismo-git-post-commit </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">BASH_ENV</span><span class="o">=</span>~/.bashrc bash ~/bin/sismo <span class="p">&amp;</span>ndash<span class="p">;</span>quiet build <span class="nv">$PROJECT</span> <span class="k">$(</span>git log -1 HEAD <span class="p">&amp;</span>ndash<span class="p">;</span><span class="nv">pretty</span><span class="o">=</span><span class="p">&amp;</span>ldquo<span class="p">;</span>%H<span class="p">&amp;</span>rdquo<span class="p">;</span><span class="k">)</span> <span class="p">&amp;</span>amp<span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p><em>(If you have noticed that <code>$PROJECT</code> is undefined then please also notice that this is line #9 of the script.
+I have chosen to show only the relevant part here. Keep reading for the complete script.)</em></p>
+
+<p>It was still working fine using the command line <code>git</code> and it started working when I committed the code
+using <code>SourceTree</code>. It seemed I solved the problem and it was the time to move on.</p>
+
+<p>But something wasn&rsquo;t working as it used to work before. Committing using <code>SourceTree</code> used to complete in
+a snap. Now it seemed sluggish. And it felt like this because <strong>it was</strong> sluggish.</p>
+
+<h3>Further investigation</h3>
+
+<p>I suspected that, even if Sismo runs in the background, for some reason SourceTree waits until it completes.
+It&rsquo;s not Git the one that produces the delay; it worked fine when I used <code>git commit</code> from the command line.</p>
+
+<p>The execution of <code>sismo build</code> takes some time, depending on the size of the project and the commands used
+to build it. Mine were pretty light, that&rsquo;s why I added <code>sleep 5</code> as the first build command for the project.
+The next two commits, one from the command line, the other using <code>SourceTree</code> revealed the truth: SourceTree
+indeed waits for the <code>sismo</code> command to complete before it closes the &ldquo;Committing&rdquo; console. The command line
+<code>git commit</code> still completes in a snap, without any additional delay.</p>
+
+<p>I scratched my head and suddenly it dawned to me: when it launches Git in the background to process the commit,
+SourceTree connects to Git&rsquo;s standard output through a pipe in order to get and display in the &ldquo;Committing&rdquo;
+console whatever output Git might produce. Git launches the hook, the hook launches <code>sismo</code> in background but
+none of them close their <code>stdout</code> (they don&rsquo;t have any reason to do it) and because of inheritance, all
+their standard output streams remain connected with SourceTree through the pipe.</p>
+
+<p>Even if <code>sismo-git-post-commit</code> doesn&rsquo;t produce any output (the <code>--quiet</code> option of <code>sismo</code> takes care of that),
+the pipe remains open until all the processes attached to it on the other end complete. SourceTree remains
+connected to it, dutifully waiting for some <code>git</code> output to present to the user.</p>
+
+<p>To verify this assumption I replaced <code>--quiet</code> with <code>--verbose</code> (to force <code>sismo</code> produce a lot of output)
+and I configured SourceTree to always open the console when it runs the Git commands in background and
+<em>voilà!</em> All the output produced by <code>sismo</code> is there, after the 5 seconds delay.</p>
+
+<h3>The epilogue</h3>
+
+<p>At this point, everything was clear and the fix was straight forward. After I removed all the debug code
+all I had to do was to disconnect from the pipe the <code>stdout</code> and <code>stderr</code> of the <code>sismo</code> instance
+launched in background. This can be easily accomplished by redirecting them to <code>/dev/null</code>.</p>
+
+<p>The commit hook and the script it uses now look like this:</p>
+
+<p><figure class='code'><figcaption><span>.git/hooks/post-commit </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;~/bin/sismo-git-post-commit project-name <span class="p">&amp;</span>amp<span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p><figure class='code'><figcaption><span>~/bin/sismo-git-post-commit </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PROJECT<span class="o">=</span><span class="nv">$1</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -z <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">$PROJECT</span><span class="p">&amp;</span>rdquo<span class="p">;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class='line'>    <span class="nb">echo</span> <span class="p">&amp;</span>ldquo<span class="p">;</span>Missing project name.<span class="p">&amp;</span>rdquo<span class="p">;</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;BASH_ENV<span class="o">=</span>~/.bashrc bash ~/bin/sismo <span class="p">&amp;</span>ndash<span class="p">;</span>quiet build <span class="nv">$PROJECT</span> <span class="k">$(</span>git log -1 HEAD <span class="p">&amp;</span>ndash<span class="p">;</span><span class="nv">pretty</span><span class="o">=</span><span class="p">&amp;</span>ldquo<span class="p">;</span>%H<span class="p">&amp;</span>rdquo<span class="p">;</span><span class="k">)</span> &gt;/dev/null 2&gt;<span class="p">&amp;</span>amp<span class="p">;</span><span class="m">1</span> <span class="p">&amp;</span>amp<span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h3>Remarks</h3>
+
+<p>A very helpful tool for debugging the problem was the shell redirection of standard output (and error) streams
+of the <code>sismo</code> command to a file. Together with the <code>--verbose</code> option it allowed me to see what happened
+under the hood when the things doesn&rsquo;t work as expected (in the first part).</p>
+
+<p></p>
+]]></content>
+  </entry>
+
+
+  <entry>
+    <title type="html"><![CDATA[Join two Git repositories and keep the original commit dates.]]></title>
+    <link href="http://axiac.github.io/blog/merging-git-repositories/"/>
+    <updated>2014-11-17T00:00:00+02:00</updated>
+    <id>http://axiac.github.io/blog/merging-git-repositories</id>
+    <content type="html"><![CDATA[<p>Several years ago I started a project that was stored in a Subversion repository. After
+some time, the current (at that time) version of the code was used to create a new Git
+repository and the development continued. Several months and hundreds of commits later,
+I decided to gather the code from both repositories into a single repository and keep all
+the historical data intact.</p>
+
+<p>The goal was to get all the code since the project started until the most recent version
+into a single Git repository as we have used Git from the project beginning.</p>
+
+<p>I&rsquo;ll explain below how to accomplish this goal.</p>
+
+<!-- more -->
+
+
+<p>I started by using <a href="http://subgit.com">SubGit</a> to import the Subversion commits into a new Git repository.
+I could do the import with <code>git svn</code> but SubGit does a better job.</p>
+
+<h2>The request</h2>
+
+<p>In a graphical fashion, the starting setup looks like this:</p>
+
+<pre><code> o &lt;- second-head, second-master    \
+ |                                   |
+ o                                   |
+/|\                                  |
+...                                  | 'second-repo', the newest code
+\|/                                  |
+ o                                   |
+ |                                   |
+ o &lt;- second-root                   /
+ .
+ . &lt;-- the desired link (it does not exist now)
+ .
+ o &lt;- first-head, first-master      \
+ |                                   |
+ o                                   |
+/|\                                  | 'first-repo', the oldest code
+...                                  |
+\|/                                  |
+ o                                  /
+</code></pre>
+
+<p>We want to create a link between commits <code>first-head</code> and <code>second-root</code> (make <code>first-head</code> the parent of
+<code>second-root</code>) and:</p>
+
+<ul>
+<li>preserve the code changes and author date and email of each commit imported from <code>second-repo</code>;</li>
+<li>preserve the commit times of the commits imported from <code>second-repo</code>;</li>
+<li>preserve the branches and merges from <code>second-repo</code>.</li>
+</ul>
+
+
+<p>The first goal is automatically achieved by <code>git rebase</code>. It does not change the content of the commits
+it handles and it is very carefully with the authors information too.</p>
+
+<p>In theory, all we need to do is:</p>
+
+<pre><code>$ git rebase first-head second-head
+</code></pre>
+
+<p>We&rsquo;ll discover that, while it copies the commits from the second repository on top of <code>first-head</code>, it
+makes the history linear (flattens the branches and merges) and it sets the <code>committer date</code> of all the
+copied commits to the current date&amp;time. It does not comply with our second and third items from the list
+above.</p>
+
+<p>Paying more attention to <code>git help rebase</code>, we&rsquo;ll discover that adding the option <code>--committer-date-is-author-date</code>
+tells <code>git</code> to copy the <code>author date</code> as <code>committer date</code> for the commits it handles. While this still
+does not preserve the original commit dates, it is however pretty useful. Usually the <code>committer date</code> is
+the same as <code>author date</code>. They do not match for amended commits, rebased commits and commits submitted
+as patches through email. We could live with that but it still does not match the third item from our list.
+And it is an important one because the past branches and merges shape the history of the code base.</p>
+
+<p>Looking more thoroughly into the help, we&rsquo;ll discover the option <code>--preserve-merges</code> that helps <code>git</code>
+accomplish our third goal. The branches and merges are replicated correctly but, unfortunately, the
+commit dates are again set to the current date&amp;time.</p>
+
+<h4>What&rsquo;s wrong?</h4>
+
+<p>Nothing is wrong. The help explains: <code>--preserve-merges</code> internally uses the
+<code>--interactive</code> machinery and <code>--committer-date-is-author-date</code> is incompatible with <code>--interactive</code>.</p>
+
+<p>Apparently this is a dead end.</p>
+
+<h3>Really?</h3>
+
+<p>I did some research on the Internet and I found a partial solution in an <a href="http://stackoverflow.com/a/19522951/4265352">answer</a>
+on StackOverflow. It is not completely baked, it even fails with a syntax error, but it helped me
+to find the right path and the complete solution.</p>
+
+<h2>My solution</h2>
+
+<p>The solution involves several steps:</p>
+
+<ul>
+<li>prepare a new working repository; get all the required commits into it and mark the important
+ones with branches;</li>
+<li>create the missing link between <code>first-head</code> and <code>second-root</code>; force its creation as Git will,
+most probably, complain;</li>
+<li>rebase the other commits between <code>second-root</code> and <code>second-head</code>;</li>
+<li>fix the <code>committer date</code> for all the commits affected by the previous two steps;</li>
+<li>cleanup.</li>
+</ul>
+
+
+<h3>Preparations</h3>
+
+<p>Let&rsquo;s start with the first repository (the older code) in <code>./first-repo</code> and the second repository
+(the newer code) in <code>./second-repo</code>.</p>
+
+<p>Let&rsquo;s create a new repository in <code>./merge-repo</code> and do all the work there. We&rsquo;ll clone the first
+repository, add the second one as a remote and fetch its commits.</p>
+
+<pre><code>$ mkdir ./merge-repo
+$ cd ./merge-repo
+$ git clone ../first-repo .
+$ git remote add second-repo ../second-repo
+$ git fetch second-repo
+</code></pre>
+
+<p>Next we&rsquo;ll create some branches to point at some special commits: the first and the last commits
+from the second repository:</p>
+
+<pre><code>$ git branch second-head second-repo/master
+$ git branch second-root $(git log second-head --reverse --pretty=%H | head -n 1)
+</code></pre>
+
+<p>The most recent commit of the first repository (this is where we will link <code>second-root</code>):</p>
+
+<pre><code>$ git branch first-head master
+</code></pre>
+
+<p>We&rsquo;ll rename the <code>master</code> branch (it points to the most recent commit of the first repository) to
+<code>first-head</code>. We will create another <code>master</code> branch after everything is completed.</p>
+
+<pre><code>$ git branch -m master first-master
+$ git branch second-master second-repo/master
+</code></pre>
+
+<p>Finally, we remove all the remotes to keep the working repository isolated.</p>
+
+<pre><code>$ git remote remove origin
+$ git remote remove second-repo
+</code></pre>
+
+<p>This way, if something goes wrong we can just remove the <code>./merge-repo</code> directory and start over.</p>
+
+<h3>Backup the commit dates</h3>
+
+<p>Save the tree hash and the commit time (Unix timestamp) of the commits from the second repository
+to a file. We&rsquo;ll use these to restore the original commit times after the rebase. The tree hash is used
+to identify each commit. We could also save the commit hashes to the file but they are of no use because
+they change after the rebase. However, the tree hashes do not change because the rebase does not modify
+the content of the affected commits, only their parents and commit time.</p>
+
+<pre><code>$ git log --pretty='%T %ct' ..second-head &gt; /tmp/hashlist
+</code></pre>
+
+<h3>Make <code>first-head</code> the parent of <code>second-root</code></h3>
+
+<p>Since we are happy with the files from both repositories and just want to paste <code>second-root</code> on top of
+<code>first-head</code>, any potential conflict must be resolved using the files from the applied commit (<code>second-root</code>):</p>
+
+<pre><code>$ git cherry-pick --strategy-option=theirs second-root
+</code></pre>
+
+<p>This forces <code>git</code> to apply <code>second-root</code> on top of <code>first-head</code> and use the information from <code>second-root</code>
+to solve any conflict that appears.</p>
+
+<h3>Copy the rest of the commits from the second repository</h3>
+
+<p>Try the rebase:</p>
+
+<pre><code>$ git rebase --preserve-merges --onto first-head --root second-head
+</code></pre>
+
+<p>It will stop with an error like this:</p>
+
+<pre><code>$ git rebase --preserve-merges --onto first-head --root second-head
+The previous cherry-pick is now empty, possibly due to conflict resolution.
+If you wish to commit it anyway, use:
+
+    git commit --allow-empty
+
+Otherwise, please use 'git reset'
+rebase in progress; onto cffbb1c
+You are currently rebasing branch 'second-head' on 'cffbb1c'.
+
+nothing to commit, working directory clean
+Could not pick 1f7f7036025ac1d48973818b1602fc9aa91731fb
+</code></pre>
+
+<p>It basically complains that it cannot find any difference between <code>second-root</code> and <code>first-head</code>
+and it is entirely right; using the previous <code>cherry-pick</code> we just applied the commit <code>second-root</code>
+on top of the original <code>first-head</code> and now <code>first-head</code> looks identical with <code>second-root</code>.</p>
+
+<p>Let&rsquo;s just tell Git to ignore this commit and continue:</p>
+
+<pre><code>$ git rebase --skip
+</code></pre>
+
+<p>This would take a while (depending on the size of your second repository) and it should complete successfully.
+If it fails then you are on your own. But it has no reason to fail.</p>
+
+<h3>Fix the committer dates</h3>
+
+<p>The <code>rebase</code> operation keeps most of the meta-data of the commits it changes. It changes the commit hash,
+of course, and it also changes the committer date (using the current date). We want to keep the original
+committer date (this is the entire point of this article after all).</p>
+
+<p>We can &ldquo;fix&rdquo; the original committer dates using a bit of magic:</p>
+
+<pre><code>$ git filter-branch --env-filter 'export GIT_COMMITTER_DATE=$(fgrep -m 1 $(git log -1 --pretty=%T $GIT_COMMIT) /tmp/hashlist | cut -d" " -f2)' first-master..second-head
+</code></pre>
+
+<p>In plain English, <code>git filter-branch</code> lets you rewrite Git revision history by applying custom filter
+on each revision. Our custom filter identifies the commit to be changed by its tree hash, finds the
+corresponding commit date into the backup file we created earlier and uses the <code>$GIT_COMMITTER_DATE</code>
+environment variable to set the desired <code>committer date</code> to the commit being processed.</p>
+
+<h4>If something goes wrong</h4>
+
+<p>The previous position of the <code>second-head</code> branch can be found in the file
+<code>.git/refs/original/refs/heads/master</code></p>
+
+<pre><code>$ cat .git/refs/original/refs/heads/second-head
+</code></pre>
+
+<p>To revert the <code>git filter-branch</code>:</p>
+
+<pre><code>$ git reset --hard $(cat .git/refs/original/refs/heads/second-head)
+</code></pre>
+
+<p>Before trying to <code>git filter-branch</code> again, the backup ref file must be deleted (<code>filter-branch</code> refuses
+to run if it founds it):</p>
+
+<pre><code>$ rm .git/refs/original/refs/heads/second-head
+</code></pre>
+
+<h3>Cleanup</h3>
+
+<p>After the successful linking, the current branch is <code>second-head</code> and we have some branches pointing
+to various commits involved in the process. We can rename <code>second-head</code> to <code>master</code> and remove the other branches.</p>
+
+<pre><code>$ git branch -m second-head master
+$ git branch -D first-head
+$ git branch -D second-root
+$ git branch -D second-master
+$ rm .git/refs/original/refs/heads/second-head
+</code></pre>
+
+<p>The branch <code>first-master</code> is still there, pointing to the <code>master</code> branch of the first repository. You may
+probably want to keep it as reference (or, better, create a tag pointing on that commit.)</p>
+
+<p>Remove the hash file:</p>
+
+<pre><code>$ rm /tmp/hashlist
+</code></pre>
+
+<h2>Remarks</h2>
+
+<ul>
+<li><p>Only the current branch from the new repository will be appended to the old repository; any dangling branch
+needs to be rebased individually after the process completes; the same technique could work, given the
+join points are set up correctly.</p></li>
+<li><p>Extras from <code>git help filter-branch</code>:</p>
+
+<blockquote><p>Note that since this operation is very I/O expensive, it might be a good idea to redirect the temporary
+directory off-disk with the -d option, e.g. on tmpfs.
+Reportedly the speedup is very noticeable.</p></blockquote>
+
+<p>It took a couple of seconds for me, for about 2,500 commits but it is not relevant because my repository
+was stored on a SSD.</p></li>
+<li><p>Because of the rebase, <strong>ALL</strong> the commits from the newer repository changed their hashes. If the
+repository is published this will puzzle the other contributors. <em>Before attempting this stunt, make sure
+that all the important branches are merged, everybody knows what&rsquo;s going on and how to catch up and
+continue afterwards without losing their work</em>.</p>
+
+<p><strong>You have been warned!</strong></p></li>
+</ul>
+
+
+<p></p>
+]]></content>
+  </entry>
+
+</feed>

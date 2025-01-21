@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Php | axiac@web]]></title>
+  <link href="http://axiac.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://axiac.github.io/"/>
+  <updated>2020-08-23T12:40:37+03:00</updated>
+  <id>http://axiac.github.io/</id>
+  <author>
+    <name><![CDATA[axiac]]></name>
+
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+
+
+  <entry>
+    <title type="html"><![CDATA[How to Merge Composer Files]]></title>
+    <link href="http://axiac.github.io/blog/how-to-merge-composer-files/"/>
+    <updated>2017-01-24T00:00:00+02:00</updated>
+    <id>http://axiac.github.io/blog/how-to-merge-composer-files</id>
+    <content type="html"><![CDATA[<p>Resolving the conflicts in <code>composer.json</code> can be done in the usual way: use a <code>diff</code> tool and pull into the
+merged file the correct changes from both sides. Save the merged file, add it to the index and you&rsquo;re good to go.</p>
+
+<p>Regarding a VCS conflict, <code>composer.lock</code> behaves more like a binary file. <!-- more -->
+It is possible to do a manual merge but in the end the generated file will be invalid because it also contains
+a checksum that won&rsquo;t match any more after this operation.
+The checksum can be fixed afterwards by running <code>composer update --lock</code> but, as a side-effect,
+this command also computes the current set of dependencies and renders all the manual hardwork useless.</p>
+
+<p>The easiest (and the correct) way to resolve <code>composer.lock</code> merge conflicts is to pick one of the versions
+(<code>yours</code> should be the one because it matches the current content of the <code>vendor</code> directory)
+then run <code>composer update --root-reqs</code> to update <code>composer.lock</code> with the packages that were added or
+modified in <code>composer.json</code> on the other branch.</p>
+
+<p>The commands are:</p>
+
+<pre><code>$ git reset HEAD -- composer.lock
+$ git checkout -- composer.lock
+$ composer update --root-reqs
+</code></pre>
+
+<p>Now <code>composer.lock</code> contains the changes introduced by the merged branch and it can be added to the index to
+conclude the merge.</p>
+
+<p></p>
+]]></content>
+  </entry>
+
+
+  <entry>
+    <title type="html"><![CDATA[Do You Clone the DateTime Objects?]]></title>
+    <link href="http://axiac.github.io/blog/dont-forget-to-clone-the-datetime-objects/"/>
+    <updated>2015-02-17T00:00:00+02:00</updated>
+    <id>http://axiac.github.io/blog/dont-forget-to-clone-the-datetime-objects</id>
+    <content type="html"><![CDATA[<p>The <a href="http://php.net/manual/en/class.datetime.php"><code>DateTime</code></a> class and its friends introduced in PHP 5.2 are a very nice replacement
+for the old date &amp; time processing functions (<code>date()</code>, <code>getdate()</code>, <code>strftime()</code>, <code>strtotime()</code> and so on).</p>
+
+<p>But they come with a minor glitch that is hidden in the plain sight: they are objects and as all the other
+objects in PHP, they are assigned and passed as parameters by reference<a href="#note-1"><sup>[1]</sup></a> and not as copies.</p>
+
+<p>Most of the time I think of a DateTime as a <code>Value Object</code>, passing it from here to there
+without special precautions. And most of the times this works just fine as long as the code doesn&rsquo;t
+try to change it.</p>
+
+<!-- more -->
+
+
+<p>When it starts wreaking havoc I remember that <code>DateTime</code> is a class, the instances of it are objects
+and are passed by reference<a href="#note-1"><sup>[1]</sup></a> both as method arguments and as their
+return values. And special precautions needs to be taken when a method starts modifying
+a <code>DateTime</code> instance that was not created by the same object (because the one that created it
+might still hold a reference to it).</p>
+
+<p><strong>The bottom line:</strong> always clone the <code>DateTime</code> objects that were not created by the current function
+when you intend to change them.</p>
+
+<h4>Later edit (August 2017)</h4>
+
+<p>Since PHP 5.5 it&rsquo;s better to use <a href="http://php.net/manual/en/class.datetimeimmutable.php"><code>DateTimeImmutable</code></a> objects whenever it&rsquo;s possible.
+They cannot be modified after they are created (they behave like true Value Objects). The methods declared
+in <a href="http://php.net/manual/en/class.datetimeinterface.php"><code>DateTimeInterface</code></a> that modify the <code>DateTime</code> objects automatically create
+and return clones for <a href="http://php.net/manual/en/class.datetimeimmutable.php"><code>DateTimeImmutable</code></a> objects.</p>
+
+<p>PHP 5.5 was 20 months old at the time when I wrote this post, but I was still working with PHP 5.3
+and PHP 5.4 because of the business constraints.</p>
+
+<hr />
+
+<p><a name="note-1"></a>
+<sup>[1]</sup> <em>The <a href="http://php.net/manual/en/language.oop5.references.php">PHP documentation</a> explains that they are not really references but
+different variables storing the same object identifier (which involves an additional redirection layer).
+This makes them work more like pointers but this is just an implementation detail.
+From the outside they look like they are passed by reference.</em></p>
+
+<p></p>
+]]></content>
+  </entry>
+
+
+  <entry>
+    <title type="html"><![CDATA[Debug Remote PHP CLI Scripts]]></title>
+    <link href="http://axiac.github.io/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"/>
+    <updated>2014-03-04T00:00:00+02:00</updated>
+    <id>http://axiac.github.io/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug</id>
+    <content type="html"><![CDATA[<p>I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
+I am using <a href="http://www.jetbrains.com/phpstorm">PhpStorm</a> and <a href="http://xdebug.org">XDebug</a>.</p>
+
+<p>PhpStorm comes with a rich set of configurations to run a PHP script, including a couple of presets for debug.
+I used them to debug web pages and command line scripts running on the local computer but nothing worked for
+scripts running on remote servers.</p>
+
+<p>By reading the documentation of XDebug and PhpStorm I learned that some small tasks must be accomplished
+in order to make PhpStorm and XDebug co-operate for debugging.</p>
+
+<!-- more -->
+
+
+<p><a name="xdebug-config"></a></p>
+
+<h2>Installing and configuring XDebug</h2>
+
+<p>Installing XDebug depends on the OS that runs on the remote server and everything is explained in the
+<a href="http://xdebug.org/docs/">XDebug documentation</a>.</p>
+
+<p>A single line of configuration is required. In <code>php.ini</code> add:</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">xdebug.remote_enable</span><span class="o">=</span><span class="s">1</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h2>Starting the debugger client</h2>
+
+<p>Due to the way the PHP scripts are invoked by the web server, the communication between the PHP debugger extension
+and the debugger client (the IDE) is initiated by the PHP extension. The IDE must be told to start listening for
+connections first. PhpStorm has a entry in the <em>Run</em> menu named <em>Start Listen for PHP Debug Connections</em> to
+accomplish this task.</p>
+
+<h2>Starting the debugger extension</h2>
+
+<p>Because debugging is not the normal way to run a PHP script, the debugging does not start by only installing
+and configuring the XDebug extension. It requires the presence of a special variable in the request or in the
+environment.</p>
+
+<p>For CLI scripts this is the environment variable <code>XDEBUG_CONFIG</code>. While its mere presence is enough
+to start the debugging, its content is also important: it can be used to override the values declared in <code>php.ini</code>.<br>
+More details in the XDebug <a href="http://xdebug.org/docs/remote#starting">documentation</a>.</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">XDEBUG_CONFIG</span><span class="o">=</span><span class="p">&amp;</span>lsquo<span class="p">;&amp;</span>rsquo<span class="p">;</span> php script.php
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>By prepending the command line with the initialization of the environment variable, the variable is set only
+for that specific execution of the PHP interpreter. To make the variable available on the subsequent commands
+it should be set in the shell and <code>export</code>ed for all the applications that will run in the current session:</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">XDEBUG_CONFIG</span><span class="o">=</span><span class="p">&amp;</span>lsquo<span class="p">;&amp;</span>rsquo<span class="p">;</span>
+</span><span class='line'>php script.php
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>This is not always the best option but it can help if you are expecting a heavy debug session.</p>
+
+<h2>Configuring path mapping</h2>
+
+<p>Because on the remote host the script is usually located on a different path than on the local machine,
+PhpStorm needs a way to know how to map the remote path to the local path. When the debug session starts,
+PhpStorm asks the debugger about the value of the environment variable <code>PHP_IDE_CONFIG</code> (if it is set.)</p>
+
+<p>Its value should look like <code>serverName=name</code> where <em>&lsquo;name&rsquo;</em> is the name of the server configured in
+<em>Project Settings->PHP->Servers</em>.</p>
+
+<p>The most convenient way to set this variable to the debugged script is to pass it to the interpreter
+as an environment variable.</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PHP_IDE_CONFIG</span><span class="o">=</span><span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">serverName</span><span class="o">=</span>devel-host<span class="p">&amp;</span>rdquo<span class="p">;</span>
+</span><span class='line'><span class="nv">XDEBUG_CONFIG</span><span class="o">=</span><span class="p">&amp;</span>lsquo<span class="p">;&amp;</span>rsquo<span class="p">;</span> php script.php
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>Check <a href="http://blog.jetbrains.com/webide/2012/03/new-in-4-0-easier-debugging-of-remote-php-command-line-scripts/">this post</a> on PhpStorms&rsquo;s blog for details.</p>
+
+<h2>What else is missing?</h2>
+
+<p>I followed all the steps above by the book, double checked them, but the remote debugger continued to ignore
+all my efforts. I searched on the Internet but the directions I could find did not help very much. So, I went
+back to the documentation.</p>
+
+<p>XDebug provides an exhaustive <a href="http://xdebug.org/docs/remote">description</a> of how to set up remote PHP debugging. It explains
+there how the debug extension communicates with the client program (PhpStorm, in my case) and this was
+the starting point on the path to the solution of the problem.</p>
+
+<p>Back to the <a href="#xdebug-config">XDebug configuration</a>, <code>xdebug.remote_connect=1</code> tells it to attempt to connect
+to the host defined by <code>xdebug.remote_host</code> on port defined by <code>xdebug.remote_port</code>. The default values for
+them are <code>localhost</code> and <code>9000</code>.<br>
+Keep in mind that <code>localhost</code> refers to the host where the XDebug runs and that is the remote host and not
+the machine where the PhpStorm runs. This is why XDebug cannot communicate with PhpStorm.</p>
+
+<p>Setting <code>xdebug.remote_host</code> to the IP address of the local machine should do the trick, except that I cannot
+make it work. The remote server where the PHP scripts run is somewhere in the Internet. The workstation where
+PhpStorm runs is connected to a LAN that is behind a firewall. It uses an intranet IP address (<code>192.168.*.*</code>)
+and this (and the firewall) prevents the XDebug extension to call back to the IDE in order to start debugging.</p>
+
+<h2>Eventually, the solution</h2>
+
+<p>The solution is simple: create a SSH tunnel from port <code>9000</code> on the remote server to port <code>9000</code> of the local
+machine.</p>
+
+<p>In order to start the PHP script on the remote server, I already log into the remote machine using <code>ssh</code>.
+All I had to do was to log out then log in again appending <code>-R 9000:localhost:9000</code> to the <code>ssh</code> command line.</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ssh user@remote-host -R 9000:localhost:9000
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>Then I set up the environment variables as above, started the PHP script and the magic happened.</p>
+
+<p></p>
+]]></content>
+  </entry>
+
+
+  <entry>
+    <title type="html"><![CDATA[sh: 1: -t: not found]]></title>
+    <link href="http://axiac.github.io/blog/sh-1-t-not-found/"/>
+    <updated>2013-06-07T00:00:00+03:00</updated>
+    <id>http://axiac.github.io/blog/sh-1-t-not-found</id>
+    <content type="html"><![CDATA[<h3>The problem</h3>
+
+<p>Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple
+processing: gets some data, creates a CSV file and sends the file using email.</p>
+
+<p>When I manually ran it on the development environment everything went well except for the email not being
+sent and this strange line of text sneaked in the script&rsquo;s output:</p>
+
+<p><div class="highlight"><pre><code class="language-sh" data-lang="sh">sh: 1: -t: not found</code></pre></div></p>
+
+<p>The email not being sent wasn&rsquo;t a surprise, I knew that for some (technical or business) reason, the PHP code
+is unable to send emails from that particular machine. The strange error message (strange for me) is a different story.
+It was not generated by my code or by any of its dependencies.</p>
+
+<!-- more -->
+
+
+<p>Sure, a quick <a href="http://www.google.com/search?q=%22sh:+1:+-t:+not+found%22" title="Search this message on Google">search on Google</a> could bring some light over the mystery; this is how you reached this page,
+isn&rsquo;t it?</p>
+
+<p>Eventually I discovered the root cause of the problem by getting PHP info from the command line.</p>
+
+<p><div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>php -i <span class="p">|</span> grep sendmail
+<span class="nv">sendmail_from</span> <span class="o">=</span>&gt; no <span class="nv">value</span> <span class="o">=</span>&gt; no value
+<span class="nv">sendmail_path</span> <span class="o">=</span>&gt; -t -i <span class="o">=</span>&gt; -t -i
+Path to <span class="nv">sendmail</span> <span class="o">=</span>&gt; -t -i</code></pre></div></p>
+
+<p>The email is not sent because the property <code>sendmail_from</code> is not set in <code>php.ini</code>.</p>
+
+<h3>The solution</h3>
+
+<p>The fix is really easy: open <code>/etc/php.ini</code>, search for key <code>sendmail_path</code> and make sure it reads:</p>
+
+<p><div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">sendmail_path</span><span class="o">=</span>sendmail -t -i</code></pre></div></p>
+
+<p>Additional or different parameters can be added after the command name (<code>sendmail</code>). If you use
+a different mail program on your system (<code>qmail</code>, <code>postfix</code> or something else) then replace <code>sendmail</code> with the
+name of the mail program you use. This is usually not necessary because most of the alternative mail programs
+create a link called <code>sendmail</code> that points to the actual mail program (for compatibility.)</p>
+
+<h3>The mystery</h3>
+
+<p>However, what is the meaning of each component of the error message?</p>
+
+<p>I peeked into the source code of PHP (version 5.4.16) on GitHub and this is what I found. The code that handles
+a call to the <code>mail()</code> function is located in file <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c" title="Open the PHP code file on GitHub">ext/standard/mail.c</a>.
+On line <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324" title="Highlight the code on line 324">324</a> it reads:</p>
+
+<p><figure class='code'><figcaption><span>mail.c <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324">https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324</a> See the complete file on GitHub </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>324</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">sendmail</span> <span class="o">=</span> <span class="n">popen</span><span class="p">(</span><span class="n">sendmail_cmd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">w</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;);</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>Several lines above, the variable <code>sendmail_cmd</code> is initialized with the value of <code>sendmail_path</code> defined in <code>php.ini</code> followed
+by the value of the 5<sup>th</sup> parameter of function <code>mail()</code>, if provided (its name is <code>$additional_parameters</code>.)<br />
+In my case, the first parameter of <code>popen()</code> was <code>-t -i</code> (no extra parameters were provided on the call to <code>mail()</code>.)</p>
+
+<h4>Who is popen() and what does it do for a living?</h4>
+
+<p><code>popen()</code> is a system function from the standard C library. Details can be found by running <code>man popen</code> in an Unix/Linux shell.
+See some relevant fragmens below:</p>
+
+<p><div class="highlight"><pre><code class="language-man" data-lang="man">SYNOPSIS
+  FILE *
+  popen(const char &lt;em&gt;command, const char &lt;/em&gt;mode);&lt;/p&gt;
+
+&lt;p&gt;DESCRIPTION
+  The popen() function &amp;ldquo;opens&amp;rdquo; a process by creating a bidirectional pipe, forking,
+  and invoking the shell.
+  &amp;hellip;
+  The &lt;code&gt;command&lt;/code&gt; argument is a (&amp;hellip;) string containing a shell command line. This command
+  is passed to &lt;code&gt;/bin/sh&lt;/code&gt;, using the &lt;code&gt;-c&lt;/code&gt; flag; interpretation, if any, is performed
+  by the shell.</code></pre></div></p>
+
+<p>This means <code>popen()</code> creates an instance of the classic Bourne shell <code>/bin/sh</code> and tells it to run the command <code>-t -i</code>.
+I tried this on the devel machine:</p>
+
+<p><div class="highlight"><pre><code class="language-sh" data-lang="sh">axiac:~<span class="nv">$ </span>/bin/sh
+<span class="nv">$ </span>-t -i
+sh: 1: -t: not found</code></pre></div></p>
+
+<p>Et voilà! The error message is there!</p>
+
+<h4>Further investigation</h4>
+
+<p>I ran this command on several other Linux/Unix systems (including a Mac OS X Lion) and some of them provided the same
+output while on the others the <code>1:</code> part was missing. Further investigation revealed that on <em>some</em> of the systems that
+produce the error message <em>containing</em> the <code>1:</code> fragment, <code>/bin/sh</code> is, in fact, <a href="http://en.wikipedia.org/wiki/Debian_Almquist_shell" title="More info about Debian ash on Wikipedia"><code>dash</code></a>.</p>
+
+<p>I run several other commands on <code>dash</code>&rsquo;s command line and I found out that <code>1</code> from <code>1:</code> is the number of the command
+it (attempted to) ran since it started.</p>
+
+<p>I never worked with <code>dash</code> before (except when I thought <code>/bin/sh</code> is a symlink to <code>bash</code> and in fact it was <code>dash</code>.)
+I cannot tell why <code>dash</code> numbers the commands it runs and how can it be configured to do (or to not do) it so.</p>
+
+<h3>Conclusion</h3>
+
+<p>Investigating this cryptic error message we found some interesting things about the implementation of PHP. On a Linux/Unix
+system there are at least three ways to launch another program: <a href="http://man7.org/linux/man-pages/man2/fork.2.html"><code>fork()</code></a>+<a href="http://man7.org/linux/man-pages/man3/exec.3.html"><code>exec()</code></a>,
+<a href="http://man7.org/linux/man-pages/man3/system.3.html"><code>system()</code></a>, <a href="http://man7.org/linux/man-pages/man3/popen.3.html"><code>popen()</code></a>. By default, <code>sendmail</code>
+reads the message to send from <a href="http://man7.org/linux/man-pages/man3/stdin.3.html"><code>STDIN</code></a>. From the three methods above, <code>popen()</code> is the easiest (and the most natural) way
+to launch <code>sendmail</code> and pass some text to it.</p>
+
+<p>More than that, because <code>popen()</code> doesn&rsquo;t run the command by itself but passes it to a shell instance, this approach provides
+higher flexibility on defining the command used to send emails from PHP.
+The first token of <code>sendmail_path</code> configuration value can be a shell alias, a shell function, a pipe of commands, a list of commands
+or even a small script.</p>
+
+<p></p>
+]]></content>
+  </entry>
+
+</feed>
