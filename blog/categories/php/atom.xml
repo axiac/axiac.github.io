@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Php | axiac@web]]></title>
-  <link href="http://axiac.github.io/blog/categories/php/atom.xml" rel="self"/>
-  <link href="http://axiac.github.io/"/>
+  <link href="https://axiac.ro/blog/categories/php/atom.xml" rel="self"/>
+  <link href="https://axiac.ro/"/>
   <updated>2020-08-23T12:40:37+03:00</updated>
-  <id>http://axiac.github.io/</id>
+  <id>https://axiac.ro/</id>
   <author>
     <name><![CDATA[axiac]]></name>
 
@@ -16,9 +16,9 @@
 
   <entry>
     <title type="html"><![CDATA[How to Merge Composer Files]]></title>
-    <link href="http://axiac.github.io/blog/how-to-merge-composer-files/"/>
+    <link href="https://axiac.ro/blog/how-to-merge-composer-files/"/>
     <updated>2017-01-24T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/how-to-merge-composer-files</id>
+    <id>https://axiac.ro/blog/how-to-merge-composer-files</id>
     <content type="html"><![CDATA[<p>Resolving the conflicts in <code>composer.json</code> can be done in the usual way: use a <code>diff</code> tool and pull into the
 merged file the correct changes from both sides. Save the merged file, add it to the index and you&rsquo;re good to go.</p>
 
@@ -50,9 +50,9 @@ conclude the merge.</p>
 
   <entry>
     <title type="html"><![CDATA[Do You Clone the DateTime Objects?]]></title>
-    <link href="http://axiac.github.io/blog/dont-forget-to-clone-the-datetime-objects/"/>
+    <link href="https://axiac.ro/blog/dont-forget-to-clone-the-datetime-objects/"/>
     <updated>2015-02-17T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/dont-forget-to-clone-the-datetime-objects</id>
+    <id>https://axiac.ro/blog/dont-forget-to-clone-the-datetime-objects</id>
     <content type="html"><![CDATA[<p>The <a href="http://php.net/manual/en/class.datetime.php"><code>DateTime</code></a> class and its friends introduced in PHP 5.2 are a very nice replacement
 for the old date &amp; time processing functions (<code>date()</code>, <code>getdate()</code>, <code>strftime()</code>, <code>strtotime()</code> and so on).</p>
 
@@ -100,9 +100,9 @@ From the outside they look like they are passed by reference.</em></p>
 
   <entry>
     <title type="html"><![CDATA[Debug Remote PHP CLI Scripts]]></title>
-    <link href="http://axiac.github.io/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"/>
+    <link href="https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"/>
     <updated>2014-03-04T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug</id>
+    <id>https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug</id>
     <content type="html"><![CDATA[<p>I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
 I am using <a href="http://www.jetbrains.com/phpstorm">PhpStorm</a> and <a href="http://xdebug.org">XDebug</a>.</p>
 
@@ -224,9 +224,9 @@ All I had to do was to log out then log in again appending <code>-R 9000:localho
 
   <entry>
     <title type="html"><![CDATA[sh: 1: -t: not found]]></title>
-    <link href="http://axiac.github.io/blog/sh-1-t-not-found/"/>
+    <link href="https://axiac.ro/blog/sh-1-t-not-found/"/>
     <updated>2013-06-07T00:00:00+03:00</updated>
-    <id>http://axiac.github.io/blog/sh-1-t-not-found</id>
+    <id>https://axiac.ro/blog/sh-1-t-not-found</id>
     <content type="html"><![CDATA[<h3>The problem</h3>
 
 <p>Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple

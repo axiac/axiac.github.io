@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Clasa a Vi&shy;-a | axiac@web]]></title>
-  <link href="http://axiac.github.io/blog/categories/clasa-a-vi-a/atom.xml" rel="self"/>
-  <link href="http://axiac.github.io/"/>
+  <link href="https://axiac.ro/blog/categories/clasa-a-vi-a/atom.xml" rel="self"/>
+  <link href="https://axiac.ro/"/>
   <updated>2020-08-23T12:40:37+03:00</updated>
-  <id>http://axiac.github.io/</id>
+  <id>https://axiac.ro/</id>
   <author>
     <name><![CDATA[axiac]]></name>
 
@@ -16,9 +16,9 @@
 
   <entry>
     <title type="html"><![CDATA[Să se afle ultimele 4 cifre ale numărului]]></title>
-    <link href="http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"/>
+    <link href="https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"/>
     <updated>2014-10-14T12:34:56+03:00</updated>
-    <id>http://axiac.github.io/blog/sa-se-afle-ultimele-4-cifre-ale-numarului</id>
+    <id>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului</id>
     <content type="html"><![CDATA[<h2>Problemă (de clasa a VI-a)</h2>
 
 <p>Să se afle ultimele 4 cifre ale numărului: <em>S</em> = 9<sup>1</sup> + 9<sup>2</sup> + 9<sup>3</sup> + &hellip; + 9<sup>400</sup></p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Git | axiac@web]]></title>
-  <link href="http://axiac.github.io/blog/categories/git/atom.xml" rel="self"/>
-  <link href="http://axiac.github.io/"/>
+  <link href="https://axiac.ro/blog/categories/git/atom.xml" rel="self"/>
+  <link href="https://axiac.ro/"/>
   <updated>2020-08-23T12:40:37+03:00</updated>
-  <id>http://axiac.github.io/</id>
+  <id>https://axiac.ro/</id>
   <author>
     <name><![CDATA[axiac]]></name>
 
@@ -16,9 +16,9 @@
 
   <entry>
     <title type="html"><![CDATA[Git Ignores Me, Not My Files]]></title>
-    <link href="http://axiac.github.io/blog/git-ignores-me-not-my-files/"/>
+    <link href="https://axiac.ro/blog/git-ignores-me-not-my-files/"/>
     <updated>2017-02-05T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/git-ignores-me-not-my-files</id>
+    <id>https://axiac.ro/blog/git-ignores-me-not-my-files</id>
     <content type="html"><![CDATA[<p>A question that occurs frequently on the Q&amp;A programming sites looks like this:</p>
 
 <blockquote><p>I want Git to ignore one of the files in the project. I added the file name and/or the file path to <code>.gitignore</code>
@@ -63,9 +63,9 @@ unless you also remove the file from the repository (<em>untrack it</em>) using 
 
   <entry>
     <title type="html"><![CDATA[How to Merge Composer Files]]></title>
-    <link href="http://axiac.github.io/blog/how-to-merge-composer-files/"/>
+    <link href="https://axiac.ro/blog/how-to-merge-composer-files/"/>
     <updated>2017-01-24T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/how-to-merge-composer-files</id>
+    <id>https://axiac.ro/blog/how-to-merge-composer-files</id>
     <content type="html"><![CDATA[<p>Resolving the conflicts in <code>composer.json</code> can be done in the usual way: use a <code>diff</code> tool and pull into the
 merged file the correct changes from both sides. Save the merged file, add it to the index and you&rsquo;re good to go.</p>
 
@@ -97,9 +97,9 @@ conclude the merge.</p>
 
   <entry>
     <title type="html"><![CDATA[Atlassian SourceTree and Git hooks]]></title>
-    <link href="http://axiac.github.io/blog/atlassian-sourcetree-and-git-hooks/"/>
+    <link href="https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/"/>
     <updated>2016-04-18T15:56:40+03:00</updated>
-    <id>http://axiac.github.io/blog/atlassian-sourcetree-and-git-hooks</id>
+    <id>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks</id>
     <content type="html"><![CDATA[<p><img src="/images/blog/sismo-sourcetree.png" alt="" style="float: right; margin-left: 50px;" />
 This article explains how I made <code>Sismo</code> work with Atlassian <code>SourceTree</code> on <code>OSX</code>. First I thought it doesn&rsquo;t work
 out-of-the-box because of a <code>$PATH</code> problem but soon it turned out that the biggest issue comes from the command line
@@ -279,9 +279,9 @@ under the hood when the things doesn&rsquo;t work as expected (in the first part
 
   <entry>
     <title type="html"><![CDATA[Join two Git repositories and keep the original commit dates.]]></title>
-    <link href="http://axiac.github.io/blog/merging-git-repositories/"/>
+    <link href="https://axiac.ro/blog/merging-git-repositories/"/>
     <updated>2014-11-17T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/merging-git-repositories</id>
+    <id>https://axiac.ro/blog/merging-git-repositories</id>
     <content type="html"><![CDATA[<p>Several years ago I started a project that was stored in a Subversion repository. After
 some time, the current (at that time) version of the code was used to create a new Git
 repository and the development continued. Several months and hundreds of commits later,

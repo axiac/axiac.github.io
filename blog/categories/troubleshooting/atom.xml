@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Troubleshooting | axiac@web]]></title>
-  <link href="http://axiac.github.io/blog/categories/troubleshooting/atom.xml" rel="self"/>
-  <link href="http://axiac.github.io/"/>
+  <link href="https://axiac.ro/blog/categories/troubleshooting/atom.xml" rel="self"/>
+  <link href="https://axiac.ro/"/>
   <updated>2020-08-23T12:40:37+03:00</updated>
-  <id>http://axiac.github.io/</id>
+  <id>https://axiac.ro/</id>
   <author>
     <name><![CDATA[axiac]]></name>
 
@@ -16,9 +16,9 @@
 
   <entry>
     <title type="html"><![CDATA[Why Is MySQL Time Limited to 838:59:59?]]></title>
-    <link href="http://axiac.github.io/blog/why-is-mysql-time-limited-to-838-59-59/"/>
+    <link href="https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/"/>
     <updated>2017-07-28T00:00:00+03:00</updated>
-    <id>http://axiac.github.io/blog/why-is-mysql-time-limited-to-838-59-59</id>
+    <id>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59</id>
     <content type="html"><![CDATA[<p>An interesting question from <a href="https://stackoverflow.com/q/39259910/4265352">Stack Overflow</a> asks <em>&ldquo;Why is MySQL&rsquo;s maximum time limit 838:59:59?&rdquo;</em></p>
 
 <p>The official reference at <a href="http://dev.mysql.com/doc/refman/5.7/en/time.html">http://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
@@ -135,9 +135,9 @@ the limitation to our days.</p>
 
   <entry>
     <title type="html"><![CDATA[Debug Remote PHP CLI Scripts]]></title>
-    <link href="http://axiac.github.io/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"/>
+    <link href="https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"/>
     <updated>2014-03-04T00:00:00+02:00</updated>
-    <id>http://axiac.github.io/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug</id>
+    <id>https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug</id>
     <content type="html"><![CDATA[<p>I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
 I am using <a href="http://www.jetbrains.com/phpstorm">PhpStorm</a> and <a href="http://xdebug.org">XDebug</a>.</p>
 
@@ -259,9 +259,9 @@ All I had to do was to log out then log in again appending <code>-R 9000:localho
 
   <entry>
     <title type="html"><![CDATA[sh: 1: -t: not found]]></title>
-    <link href="http://axiac.github.io/blog/sh-1-t-not-found/"/>
+    <link href="https://axiac.ro/blog/sh-1-t-not-found/"/>
     <updated>2013-06-07T00:00:00+03:00</updated>
-    <id>http://axiac.github.io/blog/sh-1-t-not-found</id>
+    <id>https://axiac.ro/blog/sh-1-t-not-found</id>
     <content type="html"><![CDATA[<h3>The problem</h3>
 
 <p>Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple

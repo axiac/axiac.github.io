@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Mysql | axiac@web]]></title>
-  <link href="http://axiac.github.io/blog/categories/mysql/atom.xml" rel="self"/>
-  <link href="http://axiac.github.io/"/>
+  <link href="https://axiac.ro/blog/categories/mysql/atom.xml" rel="self"/>
+  <link href="https://axiac.ro/"/>
   <updated>2020-08-23T12:40:37+03:00</updated>
-  <id>http://axiac.github.io/</id>
+  <id>https://axiac.ro/</id>
   <author>
     <name><![CDATA[axiac]]></name>
 
@@ -16,9 +16,9 @@
 
   <entry>
     <title type="html"><![CDATA[Why Is MySQL Time Limited to 838:59:59?]]></title>
-    <link href="http://axiac.github.io/blog/why-is-mysql-time-limited-to-838-59-59/"/>
+    <link href="https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/"/>
     <updated>2017-07-28T00:00:00+03:00</updated>
-    <id>http://axiac.github.io/blog/why-is-mysql-time-limited-to-838-59-59</id>
+    <id>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59</id>
     <content type="html"><![CDATA[<p>An interesting question from <a href="https://stackoverflow.com/q/39259910/4265352">Stack Overflow</a> asks <em>&ldquo;Why is MySQL&rsquo;s maximum time limit 838:59:59?&rdquo;</em></p>
 
 <p>The official reference at <a href="http://dev.mysql.com/doc/refman/5.7/en/time.html">http://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
@@ -135,9 +135,9 @@ the limitation to our days.</p>
 
   <entry>
     <title type="html"><![CDATA[DISTINCT vs. GROUP BY WITH ROLLUP]]></title>
-    <link href="http://axiac.github.io/blog/distinct-with-rollup/"/>
+    <link href="https://axiac.ro/blog/distinct-with-rollup/"/>
     <updated>2015-04-18T00:00:00+03:00</updated>
-    <id>http://axiac.github.io/blog/distinct-with-rollup</id>
+    <id>https://axiac.ro/blog/distinct-with-rollup</id>
     <content type="html"><![CDATA[<h1>or why 2+2 is not always 4.</h1>
 
 <p><code>WITH ROLLUP</code> is a <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html"><code>GROUP BY</code> modifier</a> that causes extra rows to be added to
