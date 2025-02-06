@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Do You Clone the DateTime Objects?</title>
+
+    <meta name="author" content="axiac">
+
+    <link rel="shortcut icon" href="/images/favicon.png">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+    <link rel="canonical" href="https://axiac.ro/blog/do-you-clone-the-datetime-objects/">
+
+    
+        <link rel="alternate" href="/atom.xml" type="application/atom+xml">
+    
+
+    
+
+    
+<script src="/js/modernizr-2.0.js"></script>
+
+
+    
+<script src="/js/jquery-1.9.1.js"></script>
+
+
+    
+    <script>window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            };
+
+            return t;
+        }(document, "script", "twitter-wjs"));</script>
+
+    
+    <link rel="me" href="https://twitter.com/axiac">
+    
+
+
+
+    
+<script src="/js/octo.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+
+    
+<link rel="stylesheet" href="/css/octo.css">
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+
+<header role="banner">
+    <hgroup>
+        <h1><a href="/">axiac@web</a></h1>
+        
+    </hgroup>
+</header>
+
+<nav role="navigation">
+    
+        <ul class="subscription" data-subscription="rss">
+            <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+        </ul>
+    
+
+    <form action="https://google.com/search" method="get">
+        <fieldset role="search">
+            <input type="hidden" name="q" value="site:https://axiac.ro/">
+            <input class="search" type="text" name="q" results="0" placeholder="Search">
+        </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+        
+            <li><a href="/">Blog</a></li>
+        
+            <li><a href="/archives">Archives</a></li>
+        
+    </ul>
+</nav>
+
+
+<div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">Do You Clone the DateTime Objects?</h1>
+            <p class="meta">
+                <time datetime="2015-02-16T22:00:00.000Z" data-updated="true">Tue Feb 17 2015</time>
+            </p>
+        </header>
+        <div class="entry-content">
+            <p>The <a target="_blank" rel="noopener" href="http://php.net/manual/en/class.datetime.php"><code>DateTime</code></a> class and its friends introduced in PHP 5.2 are a very nice replacement
+for the old date &amp; time processing functions (<code>date()</code>, <code>getdate()</code>, <code>strftime()</code>, <code>strtotime()</code> and so on).</p>
+<p>But they come with a minor glitch that is hidden in the plain sight: they are objects and as all the other
+objects in PHP, they are assigned and passed as parameters by reference<a href="#note-1"><sup>[1]</sup></a> and not as copies.</p>
+<p>Most of the time I think of a DateTime as a <code>Value Object</code>, passing it from here to there
+without special precautions. And most of the times this works just fine as long as the code doesn’t
+try to change it.</p>
+<span id="more"></span>
+
+<p>When it starts wreaking havoc I remember that <code>DateTime</code> is a class, the instances of it are objects
+and are passed by reference<a href="#note-1"><sup>[1]</sup></a> both as method arguments and as their
+return values. And special precautions needs to be taken when a method starts modifying
+a <code>DateTime</code> instance that was not created by the same object (because the one that created it
+might still hold a reference to it).</p>
+<p><strong>The bottom line:</strong> always clone the <code>DateTime</code> objects that were not created by the current function
+when you intend to change them.</p>
+<h4 id="Later-edit-August-2017"><a href="#Later-edit-August-2017" class="headerlink" title="Later edit (August 2017)"></a>Later edit (August 2017)</h4><p>Since PHP 5.5 it’s better to use <a target="_blank" rel="noopener" href="http://php.net/manual/en/class.datetimeimmutable.php"><code>DateTimeImmutable</code></a> objects whenever it’s possible.
+They cannot be modified after they are created (they behave like true Value Objects). The methods declared
+in <a target="_blank" rel="noopener" href="http://php.net/manual/en/class.datetimeinterface.php"><code>DateTimeInterface</code></a> that modify the <code>DateTime</code> objects automatically create
+and return clones for <a target="_blank" rel="noopener" href="http://php.net/manual/en/class.datetimeimmutable.php"><code>DateTimeImmutable</code></a> objects.</p>
+<p>PHP 5.5 was 20 months old at the time when I wrote this post, but I was still working with PHP 5.3
+and PHP 5.4 because of the business constraints.</p>
+<hr>
+<p><a name="note-1"></a>
+<sup>[1]</sup> <em>The <a target="_blank" rel="noopener" href="http://php.net/manual/en/language.oop5.references.php">PHP documentation</a> explains that they are not really references but
+different variables storing the same object identifier (which involves an additional redirection layer).
+This makes them work more like pointers but this is just an implementation detail.
+From the outside they look like they are passed by reference.</em></p>
+<!-- This is the end of the post. -->
+
+        </div>
+        <footer>
+            <p class="meta">
+                <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+                <time datetime="2015-02-16T22:00:00.000Z" data-updated="true">Tue Feb 17 2015</time>
+                
+    <span class="categories">
+    
+        <a class="category" href="/tags/php/">php</a>
+    
+    </span>
+
+            </p>
+            <div class="sharing">
+    
+        <a class="twitter-share-button"
+           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=Do%20You%20Clone%20the%20DateTime%20Objects%3F">
+            Tweet
+        </a>
+    
+</div>
+
+            <p class="meta">
+                
+                <a class="basic-alignment left" href="/" title="Previous Post: DISTINCT vs. GROUP BY WITH ROLLUP">« DISTINCT vs. GROUP BY WITH ROLLUP</a>
+                
+
+                
+                <a class="basic-alignment right" href="/" title="Previous Post: Join two Git repositories and keep the original commit dates.">Join two Git repositories and keep the original commit dates. »</a>
+                
+            </p>
+        </footer>
+    </article>
+
+    
+
+</div>
+
+<aside class="sidebar">
+    <section class="odd">
+    <h1>Recent Posts</h1>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+</section><section class="even">
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+        <li id="gh_loader">Status updating&#8230;</li>
+    </ul>
+
+    <a target="_blank" rel="noopener" href="https://github.com/axiac">@axiac</a> on GitHub
+
+    <script defer>
+        const htmlEscaper = document.createElement('textarea');
+        const target = document.getElementById('gh_repos');
+
+        function request () {
+            const ghUser = 'axiac';
+            const url = `https://api.github.com/users/${ghUser}/repos?sort=pushed&type=sources`;
+
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        function renderError () {
+            target.classList.add('error');
+            target.innerText = 'Error loading feed';
+        }
+
+        function renderRepo (repo) {
+            return `<li>
+                <a href="${repo.html_url}">${repo.name}</a>
+                <p>${escapeHTML(repo.description || '')}</p>    
+            </li>`;
+        }
+
+        function escapeHTML (text) {
+            htmlEscaper.innerHTML = text;
+            return htmlEscaper.value;
+        }
+
+        request()
+            .then(response => response.json())
+            .then(results => {
+                if (!results) return;
+
+                const repos = results
+                  .filter(result => !result.fork)
+                  .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                  .reduce((acc, item) => acc.length >= 15 ? acc : [...acc, item], []);
+
+                repos.forEach(repo => {
+                    const repoHTML = renderRepo(repo);
+                    target.insertAdjacentHTML('beforeend', repoHTML);
+                });
+                document.getElementById('gh_loader').remove();
+            })
+            .catch(renderError);
+    </script>
+</section>
+</aside>
+
+    </div>
+</div>
+
+<footer role="contentinfo">
+    <p>
+        Copyright © 2013-2025 - axiac -
+        <span class="credit">Generated using <a target="_blank" rel="noopener" href="https://github.com/jbreckmckye/hexo-theme-octo">Octo theme</a> for <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></span>
+    </p>
+</footer>
+
+
+
+</body>
+</html>

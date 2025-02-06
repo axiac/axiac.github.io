@@ -1,494 +1,274 @@
+
+
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
-<html class="no-js" lang="en"><!--<![endif]-->
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <title>sh: 1: -t: not found</title>
 
-  <title>sh: 1: -t: not found - axiac@web</title>
-  <meta name="author" content="axiac">
+    <meta name="author" content="axiac">
 
+    <link rel="shortcut icon" href="/images/favicon.png">
 
-  <meta name="description" content="The problem Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple
-processing: gets some data, creates a &hellip;">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
 
+    <link rel="canonical" href="https://axiac.ro/blog/sh-1-t-not-found/">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <link rel="alternate" href="/atom.xml" type="application/atom+xml">
+    
 
+    
 
-  <link rel="canonical" href="https://axiac.ro/blog/sh-1-t-not-found/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="axiac@web" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js" async></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript" async></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  <script>
-      (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-          (i[r].q = i[r].q || []).push(arguments);
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
-      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-    ga('create', 'UA-545821-11', 'axiac.ro');
-    if (navigator.userAgent.indexOf('axiac') == -1) {
-      ga('send', 'pageview');
-    }
-  </script>
+    
+<script src="/js/modernizr-2.0.js"></script>
 
 
+    
+<script src="/js/jquery-1.9.1.js"></script>
 
 
+    
+    <script>window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
 
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            };
 
-  <meta property="fb:app_id" content="128516770538860" />
+            return t;
+        }(document, "script", "twitter-wjs"));</script>
 
-
-  <meta property="og:url" content="https://axiac.ro/blog/sh-1-t-not-found/" />
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="sh: 1: -t: not found - axiac@web" />
-  <meta property="og:description" content="The problem Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple
-processing: gets some data, creates a CSV file and sends the file using email. When I manually ran it on the development environment everything went well except for the email not being
-sent &hellip;" />
-  <meta property="og:image" content="https://axiac.ro/favicon.png" />
-
-  <meta property="og:author" content="https://www.facebook.com/axiac.ro/" />
+    
+    <link rel="me" href="https://twitter.com/axiac">
+    
 
 
 
-</head>
+    
+<script src="/js/octo.js"></script>
 
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+
+    
+<link rel="stylesheet" href="/css/octo.css">
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
 <body>
-  <header role="banner">
+
+<header role="banner">
     <hgroup>
-      <h1><a href="/">axiac@web</a></h1>
-
+        <h1><a href="/">axiac@web</a></h1>
+        
     </hgroup>
+</header>
 
-  </header>
-  <nav role="navigation">
-    <ul class="subscription" data-subscription="rss">
-      <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+<nav role="navigation">
+    
+        <ul class="subscription" data-subscription="rss">
+            <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+        </ul>
+    
 
-    </ul>
-
-    <form action="https://www.google.com/search" method="get">
-      <fieldset role="search">
-        <input type="hidden" name="q" value="site:axiac.ro" />
-        <input class="search" type="text" name="q" results="0" placeholder="Search" />
-      </fieldset>
+    <form action="https://google.com/search" method="get">
+        <fieldset role="search">
+            <input type="hidden" name="q" value="site:https://axiac.ro/">
+            <input class="search" type="text" name="q" results="0" placeholder="Search">
+        </fieldset>
     </form>
 
     <ul class="main-navigation">
-      <li><a href="/">Blog</a></li>
-      <li><a href="/blog/archives">Archives</a></li>
+        
+            <li><a href="/">Blog</a></li>
+        
+            <li><a href="/archives">Archives</a></li>
+        
+    </ul>
+</nav>
+
+
+<div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">sh: 1: -t: not found</h1>
+            <p class="meta">
+                <time datetime="2013-06-06T21:00:00.000Z" data-updated="true">Fri Jun 07 2013</time>
+            </p>
+        </header>
+        <div class="entry-content">
+            <h3 id="The-problem"><a href="#The-problem" class="headerlink" title="The problem"></a>The problem</h3><p>Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple processing: gets some data, creates a CSV file and sends the file using email.</p>
+<p>When I manually ran it on the development environment everything went well except for the email not being sent and this strange line of text sneaked in the script’s output:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sh: 1: -t: not found</span><br></pre></td></tr></table></figure>
+
+<p>The email not being sent wasn’t a surprise, I knew that for some (technical or business) reason, the PHP code is unable to send emails from that particular machine. The strange error message (strange for me) is a different story. It was not generated by my code or by any of its dependencies.</p>
+<span id="more"></span>
+
+<p>Sure, a quick <a target="_blank" rel="noopener" href="http://www.google.com/search?q=%22sh:+1:+-t:+not+found%22" title="Search this message on Google">search on Google</a> could bring some light over the mystery; this is how you reached this page, isn’t it?</p>
+<p>Eventually I discovered the root cause of the problem by getting PHP info from the command line.</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ php -i | grep sendmail</span><br><span class="line">sendmail_from =&gt; no value =&gt; no value</span><br><span class="line">sendmail_path =&gt; -t -i =&gt; -t -i</span><br><span class="line">Path to sendmail =&gt; -t -i</span><br></pre></td></tr></table></figure>
+
+
+<p>The email is not sent because the property <code>sendmail_from</code> is not set in <code>php.ini</code>.</p>
+<h3 id="The-solution"><a href="#The-solution" class="headerlink" title="The solution"></a>The solution</h3><p>The fix is really easy: open <code>/etc/php.ini</code>, search for key <code>sendmail_path</code> and make sure it reads:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sendmail_path=sendmail -t -i</span><br></pre></td></tr></table></figure>
+
+<p>Additional or different parameters can be added after the command name (<code>sendmail</code>). If you use a different mail program on your system (<code>qmail</code>, <code>postfix</code> or something else) then replace <code>sendmail</code> with the name of the mail program you use. This is usually not necessary because most of the alternative mail programs create a link called <code>sendmail</code> that points to the actual mail program (for compatibility.)</p>
+<h3 id="The-mystery"><a href="#The-mystery" class="headerlink" title="The mystery"></a>The mystery</h3><p>However, what is the meaning of each component of the error message?</p>
+<p>I peeked into the source code of PHP (version 5.4.16) on GitHub and this is what I found. The code that handles a call to the <code>mail()</code> function is located in file <a target="_blank" rel="noopener" href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c" title="Open the PHP code file on GitHub">ext&#x2F;standard&#x2F;mail.c</a>.
+On line <a target="_blank" rel="noopener" href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324" title="Highlight the code on line 324">324</a> it reads:</p>
+<figure class="highlight c"><figcaption><span>mail.c <https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324> See the complete file on GitHub</span></figcaption><table><tr><td class="gutter"><pre><span class="line">324</span><br></pre></td><td class="code"><pre><span class="line">sendmail = popen(sendmail_cmd, <span class="string">&quot;w&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Several lines above, the variable <code>sendmail_cmd</code> is initialized with the value of <code>sendmail_path</code> defined in <code>php.ini</code> followed by the value of the 5<sup>th</sup> parameter of function <code>mail()</code>, if provided (its name is <code>$additional_parameters</code>.)
+In my case, the first parameter of <code>popen()</code> was <code>-t -i</code> (no extra parameters were provided on the call to <code>mail()</code>.)</p>
+<h4 id="Who-is-popen-and-what-does-it-do-for-a-living"><a href="#Who-is-popen-and-what-does-it-do-for-a-living" class="headerlink" title="Who is popen() and what does it do for a living?"></a>Who is popen() and what does it do for a living?</h4><p><code>popen()</code> is a system function from the standard C library. Details can be found by running <code>man popen</code> in an Unix&#x2F;Linux shell. See some relevant fragmens below:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SYNOPSIS</span><br><span class="line">  FILE *</span><br><span class="line">  popen(const char*command, const char *mode);</span><br><span class="line"></span><br><span class="line">DESCRIPTION</span><br><span class="line">  The popen() function ``opens&#x27;&#x27; a process by creating a bidirectional pipe, forking,</span><br><span class="line">  and invoking the shell.</span><br><span class="line">  ...</span><br><span class="line">  The `command` argument is a (...) string containing a shell command line. This command</span><br><span class="line">  is passed to `/bin/sh`, using the `-c` flag; interpretation, if any, is performed</span><br><span class="line">  by the shell.</span><br></pre></td></tr></table></figure>
+
+<p>This means <code>popen()</code> creates an instance of the classic Bourne shell <code>/bin/sh</code> and tells it to run the command <code>-t -i</code>. I tried this on the devel machine:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">axiac:~$ /bin/sh</span><br><span class="line">$ -t -i</span><br><span class="line">sh: 1: -t: not found</span><br></pre></td></tr></table></figure>
+
+<p>Et voilà! The error message is there!</p>
+<h4 id="Further-investigation"><a href="#Further-investigation" class="headerlink" title="Further investigation"></a>Further investigation</h4><p>I ran this command on several other Linux&#x2F;Unix systems (including a Mac OS X Lion) and some of them provided the same output while on the others the <code>1:</code> part was missing. Further investigation revealed that on <em>some</em> of the systems that produce the error message <em>containing</em> the <code>1:</code> fragment, <code>/bin/sh</code> is, in fact, <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Debian_Almquist_shell" title="More info about Debian ash on Wikipedia"><code>dash</code></a>.</p>
+<p>I run several other commands on <code>dash</code>‘s command line and I found out that <code>1</code> from <code>1:</code> is the number of the command it (attempted to) ran since it started.</p>
+<p>I never worked with <code>dash</code> before (except when I thought <code>/bin/sh</code> is a symlink to <code>bash</code> and in fact it was <code>dash</code>.) I cannot tell why <code>dash</code> numbers the commands it runs and how can it be configured to do (or to not do) it so.</p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Investigating this cryptic error message we found some interesting things about the implementation of PHP. On a Linux&#x2F;Unix system there are at least three ways to launch another program: <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man2/fork.2.html"><code>fork()</code></a>+<a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man3/exec.3.html"><code>exec()</code></a>, <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man3/system.3.html"><code>system()</code></a>, <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man3/popen.3.html"><code>popen()</code></a>. By default, <code>sendmail</code> reads the message to send from <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man3/stdin.3.html"><code>STDIN</code></a>. From the three methods above, <code>popen()</code> is the easiest (and the most natural) way to launch <code>sendmail</code> and pass some text to it.</p>
+<p>More than that, because <code>popen()</code> doesn’t run the command by itself but passes it to a shell instance, this approach provides higher flexibility on defining the command used to send emails from PHP.
+The first token of <code>sendmail_path</code> configuration value can be a shell alias, a shell function, a pipe of commands, a list of commands or even a small script.</p>
+<!-- This is the end of page -->
+
+        </div>
+        <footer>
+            <p class="meta">
+                <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+                <time datetime="2013-06-06T21:00:00.000Z" data-updated="true">Fri Jun 07 2013</time>
+                
+    <span class="categories">
+    
+        <a class="category" href="/tags/php/">php</a>,
+    
+        <a class="category" href="/tags/troubleshooting/">troubleshooting</a>
+    
+    </span>
+
+            </p>
+            <div class="sharing">
+    
+        <a class="twitter-share-button"
+           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=sh%3A%201%3A%20-t%3A%20not%20found">
+            Tweet
+        </a>
+    
+</div>
+
+            <p class="meta">
+                
+                <a class="basic-alignment left" href="/" title="Previous Post: Debug Remote PHP CLI Scripts">« Debug Remote PHP CLI Scripts</a>
+                
+
+                
+            </p>
+        </footer>
+    </article>
+
+    
+
+</div>
+
+<aside class="sidebar">
+    <section class="odd">
+    <h1>Recent Posts</h1>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+</section><section class="even">
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+        <li id="gh_loader">Status updating&#8230;</li>
     </ul>
 
-  </nav>
-  <div id="main">
-    <div id="content">
-      <div>
-        <article class="hentry" role="article">
-
-          <header>
-
-
-            <h1 class="entry-title">sh: 1: -t: not found</h1>
-
-
-            <p class="meta">
-
-
-
-
-
-              <time class='updated' datetime='2013-06-07'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>7</span><span
-                    class='date-suffix'>th</span>, <span class='date-year'>2013</span></span></time>
-
-            </p>
-
-          </header>
-
-
-          <div class="entry-content">
-            <h3>The problem</h3>
-
-            <p>Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple
-              processing: gets some data, creates a CSV file and sends the file using email.</p>
-
-            <p>When I manually ran it on the development environment everything went well except for the email not being
-              sent and this strange line of text sneaked in the script&rsquo;s output:</p>
-
-            <div class="highlight">
-              <pre><code class="language-sh" data-lang="sh">sh: 1: -t: not found</code></pre>
-            </div>
-
-
-            <p>The email not being sent wasn&rsquo;t a surprise, I knew that for some (technical or business) reason, the PHP code
-              is unable to send emails from that particular machine. The strange error message (strange for me) is a different story.
-              It was not generated by my code or by any of its dependencies.</p>
-
-            <!-- more -->
-
-
-            <p>Sure, a quick <a href="http://www.google.com/search?q=%22sh:+1:+-t:+not+found%22" title="Search this message on Google">search on Google</a>
-              could bring some light over the mystery; this is how you reached this page,
-              isn&rsquo;t it?</p>
-
-            <p>Eventually I discovered the root cause of the problem by getting PHP info from the command line.</p>
-
-            <div class="highlight">
-              <pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>php -i <span class="p">|</span> grep sendmail
-<span class="nv">sendmail_from</span> <span class="o">=</span>&gt; no <span class="nv">value</span> <span class="o">=</span>&gt; no value
-<span class="nv">sendmail_path</span> <span class="o">=</span>&gt; -t -i <span class="o">=</span>&gt; -t -i
-Path to <span class="nv">sendmail</span> <span class="o">=</span>&gt; -t -i</code></pre>
-            </div>
-
-
-            <p>The email is not sent because the property <code>sendmail_from</code> is not set in <code>php.ini</code>.</p>
-
-            <h3>The solution</h3>
-
-            <p>The fix is really easy: open <code>/etc/php.ini</code>, search for key <code>sendmail_path</code> and make sure it reads:</p>
-
-            <div class="highlight">
-              <pre><code class="language-sh" data-lang="sh"><span class="nv">sendmail_path</span><span class="o">=</span>sendmail -t -i</code></pre>
-            </div>
-
-
-            <p>Additional or different parameters can be added after the command name (<code>sendmail</code>). If you use
-              a different mail program on your system (<code>qmail</code>, <code>postfix</code> or something else) then replace <code>sendmail</code> with the
-              name of the mail program you use. This is usually not necessary because most of the alternative mail programs
-              create a link called <code>sendmail</code> that points to the actual mail program (for compatibility.)</p>
-
-            <h3>The mystery</h3>
-
-            <p>However, what is the meaning of each component of the error message?</p>
-
-            <p>I peeked into the source code of PHP (version 5.4.16) on GitHub and this is what I found. The code that handles
-              a call to the <code>mail()</code> function is located in file <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c"
-                title="Open the PHP code file on GitHub">ext/standard/mail.c</a>.
-              On line <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324" title="Highlight the code on line 324">324</a> it reads:
-            </p>
-
-            <figure class='code'>
-              <figcaption><span>mail.c</span><a href='https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324'>See the complete file on GitHub
-                </a></figcaption>
-              <div class="highlight">
-                <table>
-                  <tr>
-                    <td class="gutter">
-                      <pre class="line-numbers"><span class='line-number'>324</span>
-</pre>
-                    </td>
-                    <td class='code'>
-                      <pre><code class='c'><span class='line'><span class="n">sendmail</span> <span class="o">=</span> <span class="n">popen</span><span class="p">(</span><span class="n">sendmail_cmd</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">);</span>
-</span></code></pre>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </figure>
-
-
-            <p>Several lines above, the variable <code>sendmail_cmd</code> is initialized with the value of <code>sendmail_path</code> defined in
-              <code>php.ini</code> followed
-              by the value of the 5<sup>th</sup> parameter of function <code>mail()</code>, if provided (its name is <code>$additional_parameters</code>.)<br />
-              In my case, the first parameter of <code>popen()</code> was <code>-t -i</code> (no extra parameters were provided on the call to
-              <code>mail()</code>.)</p>
-
-            <h4>Who is popen() and what does it do for a living?</h4>
-
-            <p><code>popen()</code> is a system function from the standard C library. Details can be found by running <code>man popen</code> in an Unix/Linux
-              shell.
-              See some relevant fragmens below:</p>
-
-            <div class="highlight">
-              <pre><code class="language-man" data-lang="man">SYNOPSIS
-  FILE *
-  popen(const char *command, const char *mode);
-
-DESCRIPTION
-  The popen() function ``opens&#39;&#39; a process by creating a bidirectional pipe, forking,
-  and invoking the shell.
-  ...
-  The `command` argument is a (...) string containing a shell command line. This command
-  is passed to `/bin/sh`, using the `-c` flag; interpretation, if any, is performed
-  by the shell.</code></pre>
-            </div>
-
-
-            <p>This means <code>popen()</code> creates an instance of the classic Bourne shell <code>/bin/sh</code> and tells it to run the command
-              <code>-t -i</code>.
-              I tried this on the devel machine:</p>
-
-            <div class="highlight">
-              <pre><code class="language-sh" data-lang="sh">axiac:~<span class="nv">$ </span>/bin/sh
-<span class="nv">$ </span>-t -i
-sh: 1: -t: not found</code></pre>
-            </div>
-
-
-            <p>Et voilà! The error message is there!</p>
-
-            <h4>Further investigation</h4>
-
-            <p>I ran this command on several other Linux/Unix systems (including a Mac OS X Lion) and some of them provided the same
-              output while on the others the <code>1:</code> part was missing. Further investigation revealed that on <em>some</em> of the systems that
-              produce the error message <em>containing</em> the <code>1:</code> fragment, <code>/bin/sh</code> is, in fact, <a
-                href="http://en.wikipedia.org/wiki/Debian_Almquist_shell" title="More info about Debian ash on Wikipedia"><code>dash</code></a>.</p>
-
-            <p>I run several other commands on <code>dash</code>&rsquo;s command line and I found out that <code>1</code> from <code>1:</code> is the number of
-              the command
-              it (attempted to) ran since it started.</p>
-
-            <p>I never worked with <code>dash</code> before (except when I thought <code>/bin/sh</code> is a symlink to <code>bash</code> and in fact it was
-              <code>dash</code>.)
-              I cannot tell why <code>dash</code> numbers the commands it runs and how can it be configured to do (or to not do) it so.</p>
-
-            <h3>Conclusion</h3>
-
-            <p>Investigating this cryptic error message we found some interesting things about the implementation of PHP. On a Linux/Unix
-              system there are at least three ways to launch another program: <a
-                href="http://man7.org/linux/man-pages/man2/fork.2.html"><code>fork()</code></a>+<a
-                href="http://man7.org/linux/man-pages/man3/exec.3.html"><code>exec()</code></a>,
-              <a href="http://man7.org/linux/man-pages/man3/system.3.html"><code>system()</code></a>, <a
-                href="http://man7.org/linux/man-pages/man3/popen.3.html"><code>popen()</code></a>. By default, <code>sendmail</code>
-              reads the message to send from <a href="http://man7.org/linux/man-pages/man3/stdin.3.html"><code>STDIN</code></a>. From the three methods above,
-              <code>popen()</code> is the easiest (and the most natural) way
-              to launch <code>sendmail</code> and pass some text to it.
-            </p>
-
-            <p>More than that, because <code>popen()</code> doesn&rsquo;t run the command by itself but passes it to a shell instance, this approach provides
-              higher flexibility on defining the command used to send emails from PHP.
-              The first token of <code>sendmail_path</code> configuration value can be a shell alias, a shell function, a pipe of commands, a list of commands
-              or even a small script.</p>
-          </div>
-
-
-          <footer>
-            <p class="meta">
-
-
-
-              <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
-
-
-
-
-
-
-              <time class='updated' datetime='2016-10-15'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>15</span><span
-                    class='date-suffix'>th</span>, <span class='date-year'>2016</span></span></time>
-
-
-              <span class="categories">
-
-                <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/troubleshooting/'>troubleshooting</a>
-
-              </span>
-
-
-            </p>
-
-            <div class="sharing">
-
-              <a href="//twitter.com/share" class="twitter-share-button" data-url="https://axiac.ro/blog/sh-1-t-not-found/" data-via="axiac"
-                data-counturl="https://axiac.ro/blog/sh-1-t-not-found/">Tweet</a>
-
-
-              <div class="g-plusone" data-size="medium"></div>
-
-
-              <div class="fb-like" data-share="true" data-width="450" data-show-faces="false"></div>
-
-            </div>
-
-
-            <div class="fb-comments" data-href="https://axiac.ro/blog/sh-1-t-not-found/" data-numposts="5" data-width="789"></div>
-
-
-
-            <p class="meta">
-
-
-              <a class="basic-alignment right" href="/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"
-                title="Next Post: Debug remote PHP CLI scripts">Debug remote PHP CLI scripts &raquo;</a>
-
-            </p>
-          </footer>
-        </article>
-
-        <section>
-          <h1>Comments</h1>
-          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered
-                by Disqus.</a></noscript>
-          </div>
-        </section>
-
-      </div>
-
-      <aside class="sidebar">
-
-        <section>
-          <h1>Recent Posts</h1>
-          <ul id="recent_posts">
-
-
-            <li class="post">
-              <a href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a>
-            </li>
-
-
-            <li class="post">
-              <a href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a>
-            </li>
-
-
-            <li class="post">
-              <a href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a>
-            </li>
-
-
-            <li class="post">
-              <a href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a>
-            </li>
-
-
-            <li class="post">
-              <a href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a>
-            </li>
-
-          </ul>
-        </section>
-
-
-
-        <section class="googleplus googleplus-hidden">
-          <h1>
-            <a href="https://plus.google.com/116025233500446558681?rel=author">
-              <img src="//www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
-              Google+
-            </a>
-          </h1>
-        </section>
-
-
-
-
-      </aside>
-
+    <a target="_blank" rel="noopener" href="https://github.com/axiac">@axiac</a> on GitHub
+
+    <script defer>
+        const htmlEscaper = document.createElement('textarea');
+        const target = document.getElementById('gh_repos');
+
+        function request () {
+            const ghUser = 'axiac';
+            const url = `https://api.github.com/users/${ghUser}/repos?sort=pushed&type=sources`;
+
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        function renderError () {
+            target.classList.add('error');
+            target.innerText = 'Error loading feed';
+        }
+
+        function renderRepo (repo) {
+            return `<li>
+                <a href="${repo.html_url}">${repo.name}</a>
+                <p>${escapeHTML(repo.description || '')}</p>    
+            </li>`;
+        }
+
+        function escapeHTML (text) {
+            htmlEscaper.innerHTML = text;
+            return htmlEscaper.value;
+        }
+
+        request()
+            .then(response => response.json())
+            .then(results => {
+                if (!results) return;
+
+                const repos = results
+                  .filter(result => !result.fork)
+                  .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                  .reduce((acc, item) => acc.length >= 15 ? acc : [...acc, item], []);
+
+                repos.forEach(repo => {
+                    const repoHTML = renderRepo(repo);
+                    target.insertAdjacentHTML('beforeend', repoHTML);
+                });
+                document.getElementById('gh_loader').remove();
+            })
+            .catch(renderError);
+    </script>
+</section>
+</aside>
 
     </div>
-  </div>
-  <footer role="contentinfo">
+</div>
+
+<footer role="contentinfo">
     <p>
-      Copyright &copy; 2013-2020 - axiac -
-      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+        Copyright © 2013-2025 - axiac -
+        <span class="credit">Generated using <a target="_blank" rel="noopener" href="https://github.com/jbreckmckye/hexo-theme-octo">Octo theme</a> for <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></span>
     </p>
-
-  </footer>
-
-
-  <script type="text/javascript">
-    var disqus_shortname = 'axiac';
-
-
-    // var disqus_developer = 1;
-      var disqus_identifier = 'https://axiac.ro/blog/sh-1-t-not-found/';
-      var disqus_url = 'https://axiac.ro/blog/sh-1-t-not-found/';
-    var disqus_script = 'embed.js';
-
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-  </script>
-
-
-
-  <div id="fb-root"></div>
-  <script>
-    window.fbAsyncInit = function () {
-      FB.init({
-        appId: '128516770538860',
-        xfbml: true,
-        version: 'v2.5'
-      });
-    };
-
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) { return; }
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function () {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function () {
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-  <script type="text/javascript">
-    setTimeout(function () {
-      var a = document.createElement("script");
-      var b = document.getElementsByTagName("script")[0];
-      a.src = document.location.protocol + "//script.crazyegg.com/pages/scripts/0019/4087.js?" + Math.floor(new Date().getTime() / 3600000);
-      a.async = true; a.type = "text/javascript"; b.parentNode.insertBefore(a, b);
-    }, 1);
-  </script>
-
-
-  <script type="text/javascript" id="inspectletjs">
-    window.__insp = window.__insp || [];
-    __insp.push(['wid', 1818118537]);
-    (function () {
-      function __ldinsp() { var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
-      if (window.attachEvent) {
-        window.attachEvent('onload', __ldinsp);
-      } else {
-        window.addEventListener('load', __ldinsp, false);
-      }
-    })();
-  </script>
+</footer>
 
 
 
 </body>
-
 </html>

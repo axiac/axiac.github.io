@@ -1,83 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url>
-<loc>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/</loc>
-<lastmod>2017-07-28T00:00:00+03:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/git-ignores-me-not-my-files/</loc>
-<lastmod>2017-02-05T00:00:00+02:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/how-to-merge-composer-files/</loc>
-<lastmod>2017-01-24T00:00:00+02:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/public-properties-are-not-oop/</loc>
-<lastmod>2016-10-15T17:56:57+03:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</loc>
-<lastmod>2016-04-18T15:56:40+03:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/distinct-with-rollup/</loc>
-<lastmod>2015-04-18T00:00:00+03:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/dont-forget-to-clone-the-datetime-objects/</loc>
-<lastmod>2015-02-17T00:00:00+02:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/merging-git-repositories/</loc>
-<lastmod>2014-11-17T00:00:00+02:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</loc>
-<lastmod>2014-10-14T12:34:56+03:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/</loc>
-<lastmod>2014-03-04T00:00:00+02:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/blog/sh-1-t-not-found/</loc>
-<lastmod>2013-06-07T00:00:00+03:00</lastmod>
-</url>
-<url>
-<loc>https://axiac.ro/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/archives/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/me/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/php/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/troubleshooting/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/mate/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/clasa-a-vi-a/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/git/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/mysql/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/osx/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/oop/</loc>
-</url>
-<url>
-<loc>https://axiac.ro/blog/categories/composer/</loc>
-</url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</loc>
+    
+    <lastmod>2025-01-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/git-ignores-me-not-my-files/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/how-to-merge-composer-files/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/public-properties-are-not-oop/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/distinct-vs-group-by-with-rollup/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/do-you-clone-the-datetime-objects/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/debug-remote-php-cli-scripts/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</loc>
+    
+    <lastmod>2025-01-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/sh-1-t-not-found/</loc>
+    
+    <lastmod>2016-10-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://axiac.ro/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://axiac.ro/tags/php/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/troubleshooting/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/mate/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/clasa-a-VI-a/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/git/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/mysql/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/OOP/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/macOS/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/composer/</loc>
+    <lastmod>2025-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
 </urlset>

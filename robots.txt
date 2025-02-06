@@ -1,4 +1,14 @@
 User-agent: *
-Disallow:
 
-Sitemap: https://axiac.ro/sitemap.xml
+Allow: /
+Allow: /archives/
+Allow: /blog/
+Allow: /page/
+Allow: /tags/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /images/
+
+Sitemap: /sitemap.xml
+Sitemap: /sitemap.txt

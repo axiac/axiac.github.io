@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Join two Git repositories and keep the original commit dates.</title>
+
+    <meta name="author" content="axiac">
+
+    <link rel="shortcut icon" href="/images/favicon.png">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+    <link rel="canonical" href="https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">
+
+    
+        <link rel="alternate" href="/atom.xml" type="application/atom+xml">
+    
+
+    
+
+    
+<script src="/js/modernizr-2.0.js"></script>
+
+
+    
+<script src="/js/jquery-1.9.1.js"></script>
+
+
+    
+    <script>window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            };
+
+            return t;
+        }(document, "script", "twitter-wjs"));</script>
+
+    
+    <link rel="me" href="https://twitter.com/axiac">
+    
+
+
+
+    
+<script src="/js/octo.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+
+    
+<link rel="stylesheet" href="/css/octo.css">
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+
+<header role="banner">
+    <hgroup>
+        <h1><a href="/">axiac@web</a></h1>
+        
+    </hgroup>
+</header>
+
+<nav role="navigation">
+    
+        <ul class="subscription" data-subscription="rss">
+            <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+        </ul>
+    
+
+    <form action="https://google.com/search" method="get">
+        <fieldset role="search">
+            <input type="hidden" name="q" value="site:https://axiac.ro/">
+            <input class="search" type="text" name="q" results="0" placeholder="Search">
+        </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+        
+            <li><a href="/">Blog</a></li>
+        
+            <li><a href="/archives">Archives</a></li>
+        
+    </ul>
+</nav>
+
+
+<div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">Join two Git repositories and keep the original commit dates.</h1>
+            <p class="meta">
+                <time datetime="2014-11-16T22:00:00.000Z" data-updated="true">Mon Nov 17 2014</time>
+            </p>
+        </header>
+        <div class="entry-content">
+            <p>Several years ago I started a project that was stored in a Subversion repository. After
+some time, the current (at that time) version of the code was used to create a new Git
+repository and the development continued. Several months and hundreds of commits later,
+I decided to gather the code from both repositories into a single repository and keep all
+the historical data intact.</p>
+<p>The goal was to get all the code since the project started until the most recent version
+into a single Git repository as we have used Git from the project beginning.</p>
+<p>I’ll explain below how to accomplish this goal.</p>
+<span id="more"></span>
+
+<p>I started by using <a target="_blank" rel="noopener" href="http://subgit.com/">SubGit</a> to import the Subversion commits into a new Git repository.
+I could do the import with <code>git svn</code> but SubGit does a better job.</p>
+<h2 id="The-request"><a href="#The-request" class="headerlink" title="The request"></a>The request</h2><p>In a graphical fashion, the starting setup looks like this:</p>
+<pre><code> o &lt;- second-head, second-master    \
+ |                                   |
+ o                                   |
+/|\                                  |
+...                                  | &#39;second-repo&#39;, the newest code
+\|/                                  |
+ o                                   |
+ |                                   |
+ o &lt;- second-root                   /
+ .
+ . &lt;-- the desired link (it does not exist now)
+ .
+ o &lt;- first-head, first-master      \
+ |                                   |
+ o                                   |
+/|\                                  | &#39;first-repo&#39;, the oldest code
+...                                  |
+\|/                                  |
+ o                                  /
+</code></pre>
+<p>We want to create a link between commits <code>first-head</code> and <code>second-root</code> (make <code>first-head</code> the parent of
+<code>second-root</code>) and:</p>
+<ul>
+<li>preserve the code changes and author date and email of each commit imported from <code>second-repo</code>;</li>
+<li>preserve the commit times of the commits imported from <code>second-repo</code>;</li>
+<li>preserve the branches and merges from <code>second-repo</code>.</li>
+</ul>
+<p>The first goal is automatically achieved by <code>git rebase</code>. It does not change the content of the commits
+it handles and it is very carefully with the authors information too.</p>
+<p>In theory, all we need to do is:</p>
+<pre><code>git rebase first-head second-head
+</code></pre>
+<p>We’ll discover that, while it copies the commits from the second repository on top of <code>first-head</code>, it
+makes the history linear (flattens the branches and merges) and it sets the <code>committer date</code> of all the
+copied commits to the current date&amp;time. It does not comply with our second and third items from the list
+above.</p>
+<p>Paying more attention to <code>git help rebase</code>, we’ll discover that adding the option <code>--committer-date-is-author-date</code>
+tells <code>git</code> to copy the <code>author date</code> as <code>committer date</code> for the commits it handles. While this still
+does not preserve the original commit dates, it is however pretty useful. Usually the <code>committer date</code> is
+the same as <code>author date</code>. They do not match for amended commits, rebased commits and commits submitted
+as patches through email. We could live with that but it still does not match the third item from our list.
+And it is an important one because the past branches and merges shape the history of the code base.</p>
+<p>Looking more thoroughly into the help, we’ll discover the option <code>--preserve-merges</code> that helps <code>git</code>
+accomplish our third goal. The branches and merges are replicated correctly but, unfortunately, the
+commit dates are again set to the current date&amp;time.</p>
+<h3 id="What’s-wrong"><a href="#What’s-wrong" class="headerlink" title="What’s wrong?"></a>What’s wrong?</h3><p>Nothing is wrong. The help explains: <code>--preserve-merges</code> internally uses the
+<code>--interactive</code> machinery and <code>--committer-date-is-author-date</code> is incompatible with <code>--interactive</code>.</p>
+<p>Apparently this is a dead end.</p>
+<h3 id="Really"><a href="#Really" class="headerlink" title="Really?"></a>Really?</h3><p>I did some research on the Internet and I found a partial solution in an <a target="_blank" rel="noopener" href="http://stackoverflow.com/a/19522951/4265352">answer</a>
+on StackOverflow. It is not completely baked, it even fails with a syntax error, but it helped me
+to find the right path and the complete solution.</p>
+<h2 id="My-solution"><a href="#My-solution" class="headerlink" title="My solution"></a>My solution</h2><p>The solution involves several steps:</p>
+<ul>
+<li>prepare a new working repository; get all the required commits into it and mark the important
+ones with branches;</li>
+<li>create the missing link between <code>first-head</code> and <code>second-root</code>; force its creation as Git will,
+most probably, complain;</li>
+<li>rebase the other commits between <code>second-root</code> and <code>second-head</code>;</li>
+<li>fix the <code>committer date</code> for all the commits affected by the previous two steps;</li>
+<li>cleanup.</li>
+</ul>
+<h3 id="Preparations"><a href="#Preparations" class="headerlink" title="Preparations"></a>Preparations</h3><p>Let’s start with the first repository (the older code) in <code>./first-repo</code> and the second repository
+(the newer code) in <code>./second-repo</code>.</p>
+<p>Let’s create a new repository in <code>./merge-repo</code> and do all the work there. We’ll clone the first
+repository, add the second one as a remote and fetch its commits.</p>
+<pre><code>mkdir ./merge-repo
+cd ./merge-repo
+git clone ../first-repo .
+git remote add second-repo ../second-repo
+git fetch second-repo
+</code></pre>
+<p>Next we’ll create some branches to point at some special commits: the first and the last commits
+from the second repository:</p>
+<pre><code>git branch second-head second-repo/master
+git branch second-root $(git log second-head --reverse --pretty=%H | head -n 1)
+</code></pre>
+<p>The most recent commit of the first repository (this is where we will link <code>second-root</code>):</p>
+<pre><code>git branch first-head master
+</code></pre>
+<p>We’ll rename the <code>master</code> branch (it points to the most recent commit of the first repository) to
+<code>first-head</code>. We will create another <code>master</code> branch after everything is completed.</p>
+<pre><code>git branch -m master first-master
+git branch second-master second-repo/master
+</code></pre>
+<p>Finally, we remove all the remotes to keep the working repository isolated.</p>
+<pre><code>git remote remove origin
+git remote remove second-repo
+</code></pre>
+<p>This way, if something goes wrong we can just remove the <code>./merge-repo</code> directory and start over.</p>
+<h3 id="Backup-the-commit-dates"><a href="#Backup-the-commit-dates" class="headerlink" title="Backup the commit dates"></a>Backup the commit dates</h3><p>Save the tree hash and the commit time (Unix timestamp) of the commits from the second repository
+to a file. We’ll use these to restore the original commit times after the rebase. The tree hash is used
+to identify each commit. We could also save the commit hashes to the file but they are of no use because
+they change after the rebase. However, the tree hashes do not change because the rebase does not modify
+the content of the affected commits, only their parents and commit time.</p>
+<pre><code>git log --pretty=&#39;%T %ct&#39; ..second-head &gt; /tmp/hashlist
+</code></pre>
+<h3 id="Make-first-head-the-parent-of-second-root"><a href="#Make-first-head-the-parent-of-second-root" class="headerlink" title="Make first-head the parent of second-root"></a>Make <code>first-head</code> the parent of <code>second-root</code></h3><p>Since we are happy with the files from both repositories and just want to paste <code>second-root</code> on top of
+<code>first-head</code>, any potential conflict must be resolved using the files from the applied commit (<code>second-root</code>):</p>
+<pre><code>git cherry-pick --strategy-option=theirs second-root
+</code></pre>
+<p>This forces <code>git</code> to apply <code>second-root</code> on top of <code>first-head</code> and use the information from <code>second-root</code>
+to solve any conflict that appears.</p>
+<h3 id="Copy-the-rest-of-the-commits-from-the-second-repository"><a href="#Copy-the-rest-of-the-commits-from-the-second-repository" class="headerlink" title="Copy the rest of the commits from the second repository"></a>Copy the rest of the commits from the second repository</h3><p>Try the rebase:</p>
+<pre><code>git rebase --preserve-merges --onto first-head --root second-head
+</code></pre>
+<p>It will stop with an error like this:</p>
+<pre><code>$ git rebase --preserve-merges --onto first-head --root second-head
+The previous cherry-pick is now empty, possibly due to conflict resolution.
+If you wish to commit it anyway, use:
+
+    git commit --allow-empty
+
+Otherwise, please use &#39;git reset&#39;
+rebase in progress; onto cffbb1c
+You are currently rebasing branch &#39;second-head&#39; on &#39;cffbb1c&#39;.
+
+nothing to commit, working directory clean
+Could not pick 1f7f7036025ac1d48973818b1602fc9aa91731fb
+</code></pre>
+<p>It basically complains that it cannot find any difference between <code>second-root</code> and <code>first-head</code>
+and it is entirely right; using the previous <code>cherry-pick</code> we just applied the commit <code>second-root</code>
+on top of the original <code>first-head</code> and now <code>first-head</code> looks identical with <code>second-root</code>.</p>
+<p>Let’s just tell Git to ignore this commit and continue:</p>
+<pre><code>git rebase --skip
+</code></pre>
+<p>This would take a while (depending on the size of your second repository) and it should complete successfully.
+If it fails then you are on your own. But it has no reason to fail.</p>
+<h3 id="Fix-the-committer-dates"><a href="#Fix-the-committer-dates" class="headerlink" title="Fix the committer dates"></a>Fix the committer dates</h3><p>The <code>rebase</code> operation keeps most of the meta-data of the commits it changes. It changes the commit hash,
+of course, and it also changes the committer date (using the current date). We want to keep the original
+committer date (this is the entire point of this article after all).</p>
+<p>We can “fix” the original committer dates using a bit of magic:</p>
+<pre><code>git filter-branch --env-filter &#39;export GIT_COMMITTER_DATE=$(fgrep -m 1 $(git log -1 --pretty=%T $GIT_COMMIT) /tmp/hashlist | cut -d&quot; &quot; -f2)&#39; first-master..second-head
+</code></pre>
+<p>In plain English, <code>git filter-branch</code> lets you rewrite Git revision history by applying custom filter
+on each revision. Our custom filter identifies the commit to be changed by its tree hash, finds the
+corresponding commit date into the backup file we created earlier and uses the <code>$GIT_COMMITTER_DATE</code>
+environment variable to set the desired <code>committer date</code> to the commit being processed.</p>
+<h4 id="If-something-goes-wrong"><a href="#If-something-goes-wrong" class="headerlink" title="If something goes wrong"></a>If something goes wrong</h4><p>The previous position of the <code>second-head</code> branch can be found in the file
+<code>.git/refs/original/refs/heads/master</code></p>
+<pre><code>cat .git/refs/original/refs/heads/second-head
+</code></pre>
+<p>To revert the <code>git filter-branch</code>:</p>
+<pre><code>git reset --hard $(cat .git/refs/original/refs/heads/second-head)
+</code></pre>
+<p>Before trying to <code>git filter-branch</code> again, the backup ref file must be deleted (<code>filter-branch</code> refuses
+to run if it founds it):</p>
+<pre><code>rm .git/refs/original/refs/heads/second-head
+</code></pre>
+<h3 id="Cleanup"><a href="#Cleanup" class="headerlink" title="Cleanup"></a>Cleanup</h3><p>After the successful linking, the current branch is <code>second-head</code> and we have some branches pointing
+to various commits involved in the process. We can rename <code>second-head</code> to <code>master</code> and remove the other branches.</p>
+<pre><code>git branch -m second-head master
+git branch -D first-head
+git branch -D second-root
+git branch -D second-master
+rm .git/refs/original/refs/heads/second-head
+</code></pre>
+<p>The branch <code>first-master</code> is still there, pointing to the <code>master</code> branch of the first repository. You may
+probably want to keep it as reference (or, better, create a tag pointing on that commit.)</p>
+<p>Remove the hash file:</p>
+<pre><code>rm /tmp/hashlist
+</code></pre>
+<h2 id="Remarks"><a href="#Remarks" class="headerlink" title="Remarks"></a>Remarks</h2><ul>
+<li><p>Only the current branch from the new repository will be appended to the old repository; any dangling branch
+needs to be rebased individually after the process completes; the same technique could work, given the
+join points are set up correctly.</p>
+</li>
+<li><p>Extras from <code>git help filter-branch</code>:</p>
+</li>
+</ul>
+<blockquote>
+<p>Note that since this operation is very I&#x2F;O expensive, it might be a good idea to redirect the temporary
+directory off-disk with the -d option, e.g. on tmpfs.
+Reportedly the speedup is very noticeable.</p>
+</blockquote>
+<p>  It took a couple of seconds for me, for about 2,500 commits but it is not relevant because my repository
+  was stored on a SSD.</p>
+<ul>
+<li><p>Because of the rebase, <strong>ALL</strong> the commits from the newer repository changed their hashes. If the
+repository is published this will puzzle the other contributors. <em>Before attempting this stunt, make sure
+that all the important branches are merged, everybody knows what’s going on and how to catch up and
+continue afterwards without losing their work</em>.</p>
+<p><strong>You have been warned!</strong></p>
+</li>
+</ul>
+<!-- This is the end of the post. -->
+
+        </div>
+        <footer>
+            <p class="meta">
+                <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+                <time datetime="2014-11-16T22:00:00.000Z" data-updated="true">Mon Nov 17 2014</time>
+                
+    <span class="categories">
+    
+        <a class="category" href="/tags/git/">git</a>
+    
+    </span>
+
+            </p>
+            <div class="sharing">
+    
+        <a class="twitter-share-button"
+           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=Join%20two%20Git%20repositories%20and%20keep%20the%20original%20commit%20dates.">
+            Tweet
+        </a>
+    
+</div>
+
+            <p class="meta">
+                
+                <a class="basic-alignment left" href="/" title="Previous Post: Do You Clone the DateTime Objects?">« Do You Clone the DateTime Objects?</a>
+                
+
+                
+                <a class="basic-alignment right" href="/" title="Previous Post: Să se afle ultimele 4 cifre ale numărului">Să se afle ultimele 4 cifre ale numărului »</a>
+                
+            </p>
+        </footer>
+    </article>
+
+    
+
+</div>
+
+<aside class="sidebar">
+    <section class="odd">
+    <h1>Recent Posts</h1>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+</section><section class="even">
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+        <li id="gh_loader">Status updating&#8230;</li>
+    </ul>
+
+    <a target="_blank" rel="noopener" href="https://github.com/axiac">@axiac</a> on GitHub
+
+    <script defer>
+        const htmlEscaper = document.createElement('textarea');
+        const target = document.getElementById('gh_repos');
+
+        function request () {
+            const ghUser = 'axiac';
+            const url = `https://api.github.com/users/${ghUser}/repos?sort=pushed&type=sources`;
+
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        function renderError () {
+            target.classList.add('error');
+            target.innerText = 'Error loading feed';
+        }
+
+        function renderRepo (repo) {
+            return `<li>
+                <a href="${repo.html_url}">${repo.name}</a>
+                <p>${escapeHTML(repo.description || '')}</p>    
+            </li>`;
+        }
+
+        function escapeHTML (text) {
+            htmlEscaper.innerHTML = text;
+            return htmlEscaper.value;
+        }
+
+        request()
+            .then(response => response.json())
+            .then(results => {
+                if (!results) return;
+
+                const repos = results
+                  .filter(result => !result.fork)
+                  .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                  .reduce((acc, item) => acc.length >= 15 ? acc : [...acc, item], []);
+
+                repos.forEach(repo => {
+                    const repoHTML = renderRepo(repo);
+                    target.insertAdjacentHTML('beforeend', repoHTML);
+                });
+                document.getElementById('gh_loader').remove();
+            })
+            .catch(renderError);
+    </script>
+</section>
+</aside>
+
+    </div>
+</div>
+
+<footer role="contentinfo">
+    <p>
+        Copyright © 2013-2025 - axiac -
+        <span class="credit">Generated using <a target="_blank" rel="noopener" href="https://github.com/jbreckmckye/hexo-theme-octo">Octo theme</a> for <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></span>
+    </p>
+</footer>
+
+
+
+</body>
+</html>

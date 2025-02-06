@@ -1,1498 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-
-  <title><![CDATA[axiac@web]]></title>
+  <title>axiac@web</title>
+  <icon>https://axiac.ro/images/favicon.png</icon>
+  
   <link href="https://axiac.ro/atom.xml" rel="self"/>
+  
   <link href="https://axiac.ro/"/>
-  <updated>2020-08-23T12:40:37+03:00</updated>
+  <updated>2025-01-22T08:51:52.608Z</updated>
   <id>https://axiac.ro/</id>
+  
   <author>
-    <name><![CDATA[axiac]]></name>
-
+    <name>axiac</name>
+    
   </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
-
-
-
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
   <entry>
-    <title type="html"><![CDATA[Why Is MySQL Time Limited to 838:59:59?]]></title>
+    <title>Why Is MySQL Time Limited to 838:59:59?</title>
     <link href="https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/"/>
-    <updated>2017-07-28T00:00:00+03:00</updated>
-    <id>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59</id>
-    <content type="html"><![CDATA[<p>An interesting question from <a href="https://stackoverflow.com/q/39259910/4265352">Stack Overflow</a> asks <em>&ldquo;Why is MySQL&rsquo;s maximum time limit 838:59:59?&rdquo;</em></p>
-
-<p>The official reference at <a href="http://dev.mysql.com/doc/refman/5.7/en/time.html">http://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
-
-<blockquote><p><code>TIME</code> values may range from <code>-838:59:59</code> to <code>838:59:59</code>. The hours part may be so large
-because the <code>TIME</code> type can be used not only to represent a time of day (which must be
+    <id>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/</id>
+    <published>2017-07-27T21:00:00.000Z</published>
+    <updated>2025-01-22T08:51:52.608Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;An interesting question from &lt;a href=&quot;https://stackoverflow.com/q/39259910/4265352&quot;&gt;Stack Overflow&lt;/a&gt; asks &lt;em&gt;“Why is MySQL’s maximum time limit 838:59:59?”&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The official reference at &lt;a href=&quot;http://dev.mysql.com/doc/refman/5.7/en/time.html&quot;&gt;http://dev.mysql.com/doc/refman/5.7/en/time.html&lt;/a&gt; says&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;TIME&lt;/code&gt; values may range from &lt;code&gt;-838:59:59&lt;/code&gt; to &lt;code&gt;838:59:59&lt;/code&gt;. The hours part may be so large
+because the &lt;code&gt;TIME&lt;/code&gt; type can be used not only to represent a time of day (which must be
 less than 24 hours), but also elapsed time or a time interval between two events
-(which may be much greater than 24 hours, or even negative).</p></blockquote>
-
-<p>The <code>TIME</code> values were always stored on 3 bytes in MySQL. But the format changed on <a href="http://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html">version 5.6.4</a>.</p>
-
-<!-- more -->
-
-
-<p>I suspect this was not the first time when it changed. But the other change, if there was one, happened
-long time ago and there is no public evidence of it. The MySQL source code history on GitHub starts with
-version 5.5 (the oldest commit is from May 2008) but the change I am looking for happened somewhere
-around 2001-2002. The first stable release of MySQL 4 (version 4.0.4) was launched in September 2002.</p>
-
-<h3>How the <code>TIME</code> values are stored since version 5.6.4</h3>
-
-<p>The current format, as described in the <a href="http://dev.mysql.com/doc/refman/5.7/en/time.html">documentation</a>, uses the 24 bits as follows:</p>
-
-<ul>
-<li>6 bits for seconds (possible values: <code>0</code> to <code>63</code>);</li>
-<li>6 bits for minutes (again, possible values: <code>0</code> to <code>63</code>);</li>
-<li>10 bits for hours (possible values: <code>0</code> to <code>1023</code>);</li>
-<li>1 bit for sign;</li>
-<li>1 bit is unused and labelled <em>&ldquo;reserved for future extensions&rdquo;</em>.</li>
-</ul>
-
-
-<p>It is optimized for working with time components (hours, minutes, seconds) and it doesn&rsquo;t waste much space.
-Using this format it&rsquo;s possible to store values between <code>-1023:59:59</code> and <code>+1023:59:59</code>.
-However MySQL limits the number of hours to <code>838</code>, probably for backward compatibility with applications
-that were written a while ago, when I think <code>838</code> hours was the upper limit.</p>
-
-<h3>The format of <code>TIME</code> before version 5.6.4</h3>
-
-<p>Until version 5.6.4, the <code>TIME</code> values were also stored on 3 bytes and the components were packed as
-<code>days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds</code>.<br>
-This format was optimized for working with timestamps (because it was, in fact, a timestamp).
-Using this format it would be possible to store values in the range of about <code>-2330</code> to <code>+2330</code> hours.</p>
-
-<p>I think this format was introduced in MySQL 4.</p>
-
-<p>While having this big range of values available, MySQL was still limiting the values to <code>-838</code> to <code>+838</code> hours
-for compatibility with applications developed on MySQL 3.</p>
-
-<h3>The format of <code>TIME</code> before MySQL 4</h3>
-
-<p>There was <a href="https://bugs.mysql.com/bug.php?id=11655">bug #11655</a> on MySQL 4. It was possible to return <code>TIME</code> values outside the <code>-838..+838</code>
-range using nested <code>SELECT</code> statements. It was not a feature but a bug and it was fixed.</p>
-
-<p>The only reason to limit the values to this range and to actively change any piece of code that produces
-<code>TIME</code> values outside it was backward compatibility.</p>
-
-<p>I suspect MySQL 3 used a different format that, due to the way the data was packed,
-limited the valid values to the range <code>-838..+838</code> hours.</p>
-
-<p>By looking into the current <a href="https://github.com/mysql/mysql-server/blob/5.7/include/my_time.h#L94">MySQL&rsquo;s source code</a> I found this interesting formula:</p>
-
-<pre><code>#define TIME_MAX_VALUE (TIME_MAX_HOUR*10000 + TIME_MAX_MINUTE*100 + TIME_MAX_SECOND)
-</code></pre>
-
-<p>Let&rsquo;s ignore for the moment the <em><code>MAX</code></em> part of the names used above and let&rsquo;s remember only that
-<code>TIME_MAX_MINUTE</code> and <code>TIME_MAX_SECOND</code> are numbers between <code>00</code> and <code>59</code>.
-The formula just concatenates the hours, minutes and seconds in a single integer number.<br>
-For example, the value <code>170:29:45</code> becomes <code>1702945</code>.</p>
-
-<p>This formula raises the following question: given that the <code>TIME</code> values are stored on 3 bytes with sign,
-what is the maximum positive value that can be represented this way?</p>
-
-<p>The maximum value that can be stored on 3 digits with sign is <code>0x7FFFFF</code> that in decimal notation is <code>8388607</code>.
-Since the last four digits (<code>8607</code>) should be read as minutes (<code>86</code>) and seconds (<code>07</code>) and their maximum
-valid value is <code>59</code>, the greatest value that can be stored on 3 bytes with sign using the formula above is <code>8385959</code>.
-Which, as <code>TIME</code> is <code>+838:59:59</code>. Ta-da!</p>
-
-<p>Guess what? The fragment of <code>C</code> code listed above was extracted from:</p>
-
-<figure class='code'><figcaption><span>my_time.h</span><a href='https://github.com/mysql/mysql-server/blob/5.7/include/my_time.h#L90'>See the file on Github </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cm">/* Limits for the TIME data type */</span>
-</span><span class='line'><span class="cp">#define TIME_MAX_HOUR 838</span>
-</span><span class='line'><span class="cp">#define TIME_MAX_MINUTE 59</span>
-</span><span class='line'><span class="cp">#define TIME_MAX_SECOND 59</span>
-</span><span class='line'><span class="cp">#define TIME_MAX_VALUE (TIME_MAX_HOUR*10000 + TIME_MAX_MINUTE*100 + TIME_MAX_SECOND)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now I am sure this is how MySQL 3 used to keep the <code>TIME</code> values internally. This format imposed the limitation
-of the range, and the backward compatibility requirement on the subsequent versions propagated
-the limitation to our days.</p>
-]]></content>
+(which may be much greater than 24 hours, or even negative).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The &lt;code&gt;TIME&lt;/code&gt; values were always stored on 3 bytes in MySQL. But the format changed on &lt;a href=&quot;http://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html&quot;&gt;version 5.6.4&lt;/a&gt;.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="troubleshooting" scheme="https://axiac.ro/tags/troubleshooting/"/>
+    
+    <category term="mysql" scheme="https://axiac.ro/tags/mysql/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Git Ignores Me, Not My Files]]></title>
+    <title>Git Ignores Me, Not My Files</title>
     <link href="https://axiac.ro/blog/git-ignores-me-not-my-files/"/>
-    <updated>2017-02-05T00:00:00+02:00</updated>
-    <id>https://axiac.ro/blog/git-ignores-me-not-my-files</id>
-    <content type="html"><![CDATA[<p>A question that occurs frequently on the Q&amp;A programming sites looks like this:</p>
-
-<blockquote><p>I want Git to ignore one of the files in the project. I added the file name and/or the file path to <code>.gitignore</code>
-and/or <code>.git/info/exclude</code> but <code>git status</code> still shows the file as being modified.<br>
-It seems Git doesn&rsquo;t ignore the file, it ignores me. I&rsquo;m desperate, please help!</p></blockquote>
-
-<h3>Is it quite so? Does Git ignore you?</h3>
-
-<!-- more -->
-
-
-<p>Let&rsquo;s see first what the documentation of <a href="https://git-scm.com/docs/gitignore">.gitignore</a> says:</p>
-
-<blockquote><p>A <code>gitignore</code> file specifies intentionally untracked files that Git should ignore.
-Files already tracked by Git are not affected; see the NOTES below for details.</p></blockquote>
-
-<p>And the aforementioned notes, several screens below:</p>
-
-<blockquote><p>The purpose of gitignore files is to ensure that certain files not tracked by Git remain untracked.<br>
-To stop tracking a file that is currently tracked, use <code>git rm --cached</code>.</p></blockquote>
-
-<h3>Is there something else to add?</h3>
-
-<p>I guess the answer is &ldquo;No&rdquo;. Everything should be clear from the fragments quoted above.</p>
-
-<p>I would emphasize the <em>&ldquo;untracked files&rdquo;</em> expression and note that it is mentioned in both places.
-The gitignore files are consulted only when Git processes <em>untracked files</em>, i.e. files that are currently
-<strong>not in the repository</strong>.</p>
-
-<p>The answer to the question is also included: adding the file name/path to <code>.gitignore</code> doesn&rsquo;t help
-unless you also remove the file from the repository (<em>untrack it</em>) using the command:</p>
-
-<pre><code>git rm --cached &lt;filepath&gt;
-</code></pre>
-
-<p><strong>Case closed.</strong></p>
-]]></content>
+    <id>https://axiac.ro/blog/git-ignores-me-not-my-files/</id>
+    <published>2017-02-04T22:00:00.000Z</published>
+    <updated>2025-01-22T08:51:39.905Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;A question that occurs frequently on the Q&amp;amp;A programming sites looks like this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I want Git to ignore one of the files in the project. I added the file name and&amp;#x2F;or the file path to &lt;code&gt;.gitignore&lt;/code&gt;
+and&amp;#x2F;or &lt;code&gt;.git/info/exclude&lt;/code&gt; but &lt;code&gt;git status&lt;/code&gt; still shows the file as being modified.&lt;br&gt;
+It seems Git doesn’t ignore the file, it ignores me. I’m desperate, please help!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;Is-it-quite-so-Does-Git-ignore-you&quot;&gt;&lt;a href=&quot;#Is-it-quite-so-Does-Git-ignore-you&quot; class=&quot;headerlink&quot; title=&quot;Is it quite so? Does Git ignore you?&quot;&gt;&lt;/a&gt;Is it quite so? Does Git ignore you?&lt;/h3&gt;</summary>
+    
+    
+    
+    
+    <category term="git" scheme="https://axiac.ro/tags/git/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[How to Merge Composer Files]]></title>
+    <title>How to Merge Composer Files</title>
     <link href="https://axiac.ro/blog/how-to-merge-composer-files/"/>
-    <updated>2017-01-24T00:00:00+02:00</updated>
-    <id>https://axiac.ro/blog/how-to-merge-composer-files</id>
-    <content type="html"><![CDATA[<p>Resolving the conflicts in <code>composer.json</code> can be done in the usual way: use a <code>diff</code> tool and pull into the
-merged file the correct changes from both sides. Save the merged file, add it to the index and you&rsquo;re good to go.</p>
-
-<p>Regarding a VCS conflict, <code>composer.lock</code> behaves more like a binary file. <!-- more -->
-It is possible to do a manual merge but in the end the generated file will be invalid because it also contains
-a checksum that won&rsquo;t match any more after this operation.
-The checksum can be fixed afterwards by running <code>composer update --lock</code> but, as a side-effect,
-this command also computes the current set of dependencies and renders all the manual hardwork useless.</p>
-
-<p>The easiest (and the correct) way to resolve <code>composer.lock</code> merge conflicts is to pick one of the versions
-(<code>yours</code> should be the one because it matches the current content of the <code>vendor</code> directory)
-then run <code>composer update --root-reqs</code> to update <code>composer.lock</code> with the packages that were added or
-modified in <code>composer.json</code> on the other branch.</p>
-
-<p>The commands are:</p>
-
-<pre><code>$ git reset HEAD -- composer.lock
-$ git checkout -- composer.lock
-$ composer update --root-reqs
-</code></pre>
-
-<p>Now <code>composer.lock</code> contains the changes introduced by the merged branch and it can be added to the index to
-conclude the merge.</p>
-]]></content>
+    <id>https://axiac.ro/blog/how-to-merge-composer-files/</id>
+    <published>2017-01-23T22:00:00.000Z</published>
+    <updated>2025-01-22T08:51:18.924Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Resolving the conflicts in &lt;code&gt;composer.json&lt;/code&gt; can be done in the usual way: use a &lt;code&gt;diff&lt;/code&gt; tool and pull into the
+merged file the correct changes from both sides. Save the merged file, add it to the index and you’re good to go.&lt;/p&gt;
+&lt;p&gt;Regarding a VCS conflict, &lt;code&gt;composer.lock&lt;/code&gt; behaves more like a binary file.</summary>
+    
+    
+    
+    
+    <category term="php" scheme="https://axiac.ro/tags/php/"/>
+    
+    <category term="git" scheme="https://axiac.ro/tags/git/"/>
+    
+    <category term="composer" scheme="https://axiac.ro/tags/composer/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Public Properties Are Not OOP]]></title>
+    <title>Public Properties Are Not OOP</title>
     <link href="https://axiac.ro/blog/public-properties-are-not-oop/"/>
-    <updated>2016-10-15T17:56:57+03:00</updated>
-    <id>https://axiac.ro/blog/public-properties-are-not-oop</id>
-    <content type="html"><![CDATA[<p><a href="https://en.wikipedia.org/wiki/Object-oriented_programming#Encapsulation">Encapsulation</a> is one fundamental concept of object-oriented programming. It refers to
+    <id>https://axiac.ro/blog/public-properties-are-not-oop/</id>
+    <published>2016-10-15T14:56:57.000Z</published>
+    <updated>2025-01-22T08:50:52.634Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Object-oriented_programming#Encapsulation&quot;&gt;Encapsulation&lt;/a&gt; is one fundamental concept of object-oriented programming. It refers to
 the bundling of data with the methods that operate on that data. Encapsulation is used to hide the values
-or state of a structured data object inside a class, preventing unauthorized parties' direct access to them.</p>
-
-<p>That&rsquo;s it, the object properties (and some of its methods) should be <code>private</code> (or, sometimes, <code>protected</code>)
-and not <code>public</code>.</p>
-
-<!-- more -->
-
-
-<p>Let&rsquo;s see an example:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$name</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$age</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">$user</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
-</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">name</span> <span class="o">=</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">age</span>  <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">printf</span><span class="p">(</span><span class="s2">&quot;Name: %s, age: %d</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">age</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The code above uses the keyword <em>&ldquo;class&rdquo;</em> and because of that, according to many developers, it is
-object-oriented code. In fact, it is pure procedural code.</p>
-
-<p>Let&rsquo;s put it side-by-side against the same code written in <a href="https://en.wikipedia.org/wiki/C_(programming_language)"><em>C</em></a>, a procedural language that
-<strong>does not</strong> provide any object-oriented feature.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="cm">/** &quot;Object-oriented&quot; PHP code */</span>         <span class="o">|</span>      <span class="cm">/** Procedural C code */</span>
-</span><span class='line'>                                          <span class="o">|</span>
-</span><span class='line'>                                          <span class="o">|</span>      <span class="err">#</span><span class="nx">include</span> <span class="o">&lt;</span><span class="nx">stdlib</span><span class="p">.</span><span class="nx">h</span><span class="o">&gt;</span>
-</span><span class='line'>                                          <span class="o">|</span>      <span class="err">#</span><span class="nx">include</span> <span class="o">&lt;</span><span class="nx">stdio</span><span class="p">.</span><span class="nx">h</span><span class="o">&gt;</span>
-</span><span class='line'>                                          <span class="o">|</span>
-</span><span class='line'><span class="kr">class</span> <span class="nx">User</span> <span class="p">{</span>                              <span class="o">|</span>      <span class="nx">typedef</span> <span class="nx">struct</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kr">public</span> <span class="nx">$name</span><span class="p">;</span>                         <span class="o">|</span>          <span class="kr">char</span> <span class="o">*</span><span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="kr">public</span> <span class="nx">$age</span><span class="p">;</span>                          <span class="o">|</span>          <span class="kr">int</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>                                         <span class="o">|</span>      <span class="p">}</span> <span class="nx">User</span><span class="p">;</span>
-</span><span class='line'>                                          <span class="o">|</span>
-</span><span class='line'>                                          <span class="o">|</span>      <span class="kr">int</span> <span class="nx">main</span><span class="p">()</span>
-</span><span class='line'>                                          <span class="o">|</span>      <span class="p">{</span>
-</span><span class='line'><span class="nx">$user</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>                       <span class="o">|</span>          <span class="nx">User</span> <span class="o">*</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">malloc</span><span class="p">(</span><span class="nx">sizeof</span><span class="p">(</span><span class="nx">User</span><span class="p">));</span>
-</span><span class='line'><span class="nx">$user</span><span class="o">-&gt;</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">;</span>                 <span class="o">|</span>          <span class="nx">user</span><span class="o">-&gt;</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nx">$user</span><span class="o">-&gt;</span><span class="nx">age</span>  <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>                         <span class="o">|</span>          <span class="nx">user</span><span class="o">-&gt;</span><span class="nx">age</span>  <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
-</span><span class='line'>                                          <span class="o">|</span>
-</span><span class='line'><span class="nx">printf</span><span class="p">(</span><span class="s2">&quot;Name: %s, age: %d\n&quot;</span><span class="p">,</span>             <span class="o">|</span>          <span class="nx">printf</span><span class="p">(</span><span class="s2">&quot;Name: %s, age: %d\n&quot;</span><span class="p">,</span>
-</span><span class='line'>               <span class="nx">$user</span><span class="o">-&gt;</span><span class="nx">name</span><span class="p">,</span> <span class="nx">$user</span><span class="o">-&gt;</span><span class="nx">age</span><span class="p">);</span>  <span class="o">|</span>                         <span class="nx">user</span><span class="o">-&gt;</span><span class="nx">name</span><span class="p">,</span> <span class="nx">user</span><span class="o">-&gt;</span><span class="nx">age</span><span class="p">);</span>
-</span><span class='line'>                                          <span class="o">|</span>
-</span><span class='line'>                                          <span class="o">|</span>          <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>                                          <span class="o">|</span>      <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Letting apart the inherent differences due to syntax, can you spot any difference of style in the two fragments above?
-I cannot.</p>
-
-<p>It is the same code, procedural beyond a shadow of a doubt.
-<br>Case closed.</p>
-
-<hr />
-
-<p><em>Addendum:</em> There are cases when public properties are the way to go. I&rsquo;ll write about them in a future post.</p>
-]]></content>
+or state of a structured data object inside a class, preventing unauthorized parties’ direct access to them.&lt;/p&gt;
+&lt;p&gt;That’s it, the object properties (and some of its methods) should be &lt;code&gt;private&lt;/code&gt; (or, sometimes, &lt;code&gt;protected&lt;/code&gt;)
+and not &lt;code&gt;public&lt;/code&gt;.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="OOP" scheme="https://axiac.ro/tags/OOP/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Atlassian SourceTree and Git hooks]]></title>
+    <title>Atlassian SourceTree and Git hooks</title>
     <link href="https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/"/>
-    <updated>2016-04-18T15:56:40+03:00</updated>
-    <id>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks</id>
-    <content type="html"><![CDATA[<p><img src="https://axiac.ro/images/blog/sismo-sourcetree.png" alt="" style="float: right; margin-left: 50px;" />
-This article explains how I made <code>Sismo</code> work with Atlassian <code>SourceTree</code> on <code>OSX</code>. First I thought it doesn&rsquo;t work
-out-of-the-box because of a <code>$PATH</code> problem but soon it turned out that the biggest issue comes from the command line
-used for integration. Keep reading to learn how I found it out and how easy is to fix it.</p>
+    <id>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</id>
+    <published>2016-04-18T12:56:40.000Z</published>
+    <updated>2025-01-28T11:24:11.862Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;/images/blog/sismo-sourcetree.png&quot; alt=&quot;&quot; style=&quot;float: right; margin-left: 50px;&quot; /&gt;
 
-<!-- more -->
-
-
-<h3>The actors</h3>
-
-<p><strong><a href="http://sourcetreeapp.com">Atlassian SourceTree</a></strong> is a GUI for Git and Mercurial that runs on Windows and OSX. It covers most of the basic VCS
-workflow; it provides a handy button that opens a command line console in the work tree directory, allowing the user
-to type the advanced commands it doesn&rsquo;t provide. All in all, it is a good tool for the daily needs of any developer
-regarding the source code versioning.</p>
-
-<p><strong><a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Git hooks</a></strong> are a nice way to enhance the behaviour of Git. The pre-commit hooks can be used
-to verify the shape of the code before committing the changes (can run the tests, verify the formatting etc).
-The post-commit hook can be used to send notification emails, to trigger project builds on the continuous
-integration server and so on.</p>
-
-<p><strong><a href="http://sismo.sensiolabs.org">Sismo</a></strong> is a <em>continuous testing server</em> published by Fabien Potencier (the creator of <a href="http://symfony.com">Symfony</a>).
-It is small (everything is packed in a single PHP file that can run both as CLI and as web page), it is fast
-and dumb-easy to configure.</p>
-
-<h3>The play</h3>
-
-<p>I&rsquo;m working with Git and SourceTree for years. Sismo joined the group last week and making it work standalone
-was <a href="http://www.quotationspage.com/quote/237.html">as easy as taking candy from a baby</a>. I created a project and put <code>composer; phpunit</code> in the list of
-commands to be run by <code>Sismo</code> when I ask it to build the project.</p>
-
-<p>The next step was to install it as a <code>post-commit</code> hook, in order to run it every time I create a new commit.
-The <a href="http://sismo.sensiolabs.org">Sismo project page</a> explains how to integrate it into the Git workflow by launching it<a href="#note1"><sup>1</sup></a>
-from the <code>post-commit</code> git hook:</p>
-
-<figure class='code'><figcaption><span>.git/hooks/post-commit </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'>
-</span><span class='line'>php /path/to/sismo.php --quiet build symfony-local <span class="sb">`</span>git log -1 HEAD --pretty<span class="o">=</span><span class="s2">&quot;%H&quot;</span><span class="sb">`</span> <span class="p">&amp;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<hr />
-
-<p><a name="note1"><sup>1</sup></a> At the time of this writing, the command displayed on the project&rsquo;s page
-incorrectly escapes the backticks, making <code>Sismo</code> reject it because the incorrect number of arguments.
-I posted it here in the correct form (that runs). It&rsquo;s possible that it was fixed in the meantime in the
-official documentation too.</p>
-
-<h3>The intrigue</h3>
-
-<p>It works well when I use Git from the command line. However, it fails with <code>command not found</code> errors
-when I commit using SourceTree. Putting <code>echo $PATH</code> as the first command for the project
-in <code>~/.sismo/config.php</code> revealed that it cannot find <code>composer</code> because it is not in the path known by
-SourceTree. This happens because SourceTree uses the system environment while the environment of my
-<code>bash</code> command line (and of the programs launched by it) is enhanced with paths and aliases in <code>~/.bashrc</code>.</p>
-
-<h3>One (partial) resolution</h3>
-
-<p>In order to debug the problem easier and get a solution that can be applied to all my projects easily,
-I moved the code from <code>.git/hooks/post-commit</code> into a separate script (I named it <code>sismo-git-post-commit</code>).
-This way, the Git post-commit hook contains a simple call of this external script that receives the Sismo
-project name as argument. All the setup needed to make Sismo work when it is invoked through SourceTree
-(and all future corrections and improvements) require changing a single file (and not every project).</p>
-
-<p>Since <code>~/.bashrc</code> is read only by <code>bash</code> I had to explicitly call <code>Sismo</code> through <code>bash</code>. This can be done
-by prependind the above Sismo command line with <code>bash</code>. It still doesn&rsquo;t work this way because, as <code>man bash</code>
-states:</p>
-
-<blockquote><p>When <code>bash</code> is started non-interactively, to run a shell script, for example,
-it looks for the variable <code>BASH_ENV</code> in the environment, expands its value if it appears there, and
-uses the expanded value as the name of a file to read and execute.</p></blockquote>
-
-<p>I modified <code>bin/sismo-git-post-commit</code> to launch <code>Sismo</code> using <code>bash</code> and provide it the correct path to <code>.bashrc</code>
-in <code>BASH_ENV</code>:</p>
-
-<figure class='code'><figcaption><span>~/bin/sismo-git-post-commit </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">BASH_ENV</span><span class="o">=</span>~/.bashrc bash ~/bin/sismo --quiet build <span class="nv">$PROJECT</span> <span class="k">$(</span>git log -1 HEAD --pretty<span class="o">=</span><span class="s2">&quot;%H&quot;</span><span class="k">)</span> <span class="p">&amp;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><em>(If you have noticed that <code>$PROJECT</code> is undefined then please also notice that this is line #9 of the script.
-I have chosen to show only the relevant part here. Keep reading for the complete script.)</em></p>
-
-<p>It was still working fine using the command line <code>git</code> and it started working when I committed the code
-using <code>SourceTree</code>. It seemed I solved the problem and it was the time to move on.</p>
-
-<p>But something wasn&rsquo;t working as it used to work before. Committing using <code>SourceTree</code> used to complete in
-a snap. Now it seemed sluggish. And it felt like this because <strong>it was</strong> sluggish.</p>
-
-<h3>Further investigation</h3>
-
-<p>I suspected that, even if Sismo runs in the background, for some reason SourceTree waits until it completes.
-It&rsquo;s not Git the one that produces the delay; it worked fine when I used <code>git commit</code> from the command line.</p>
-
-<p>The execution of <code>sismo build</code> takes some time, depending on the size of the project and the commands used
-to build it. Mine were pretty light, that&rsquo;s why I added <code>sleep 5</code> as the first build command for the project.
-The next two commits, one from the command line, the other using <code>SourceTree</code> revealed the truth: SourceTree
-indeed waits for the <code>sismo</code> command to complete before it closes the &ldquo;Committing&rdquo; console. The command line
-<code>git commit</code> still completes in a snap, without any additional delay.</p>
-
-<p>I scratched my head and suddenly it dawned to me: when it launches Git in the background to process the commit,
-SourceTree connects to Git&rsquo;s standard output through a pipe in order to get and display in the &ldquo;Committing&rdquo;
-console whatever output Git might produce. Git launches the hook, the hook launches <code>sismo</code> in background but
-none of them close their <code>stdout</code> (they don&rsquo;t have any reason to do it) and because of inheritance, all
-their standard output streams remain connected with SourceTree through the pipe.</p>
-
-<p>Even if <code>sismo-git-post-commit</code> doesn&rsquo;t produce any output (the <code>--quiet</code> option of <code>sismo</code> takes care of that),
-the pipe remains open until all the processes attached to it on the other end complete. SourceTree remains
-connected to it, dutifully waiting for some <code>git</code> output to present to the user.</p>
-
-<p>To verify this assumption I replaced <code>--quiet</code> with <code>--verbose</code> (to force <code>sismo</code> produce a lot of output)
-and I configured SourceTree to always open the console when it runs the Git commands in background and
-<em>voilà!</em> All the output produced by <code>sismo</code> is there, after the 5 seconds delay.</p>
-
-<h3>The epilogue</h3>
-
-<p>At this point, everything was clear and the fix was straight forward. After I removed all the debug code
-all I had to do was to disconnect from the pipe the <code>stdout</code> and <code>stderr</code> of the <code>sismo</code> instance
-launched in background. This can be easily accomplished by redirecting them to <code>/dev/null</code>.</p>
-
-<p>The commit hook and the script it uses now look like this:</p>
-
-<figure class='code'><figcaption><span>.git/hooks/post-commit </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'>
-</span><span class='line'>~/bin/sismo-git-post-commit project-name <span class="p">&amp;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>~/bin/sismo-git-post-commit </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">PROJECT</span><span class="o">=</span><span class="nv">$1</span>
-</span><span class='line'><span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;$PROJECT&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-</span><span class='line'>    <span class="nb">echo</span> <span class="s2">&quot;Missing project name.&quot;</span>
-</span><span class='line'>    <span class="nb">exit </span>1
-</span><span class='line'><span class="k">fi</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">BASH_ENV</span><span class="o">=</span>~/.bashrc bash ~/bin/sismo --quiet build <span class="nv">$PROJECT</span> <span class="k">$(</span>git log -1 HEAD --pretty<span class="o">=</span><span class="s2">&quot;%H&quot;</span><span class="k">)</span> &gt;/dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Remarks</h3>
-
-<p>A very helpful tool for debugging the problem was the shell redirection of standard output (and error) streams
-of the <code>sismo</code> command to a file. Together with the <code>--verbose</code> option it allowed me to see what happened
-under the hood when the things doesn&rsquo;t work as expected (in the first part).</p>
-]]></content>
+&lt;p&gt;This article explains how I made &lt;code&gt;Sismo&lt;/code&gt; work with Atlassian &lt;code&gt;SourceTree&lt;/code&gt; on &lt;code&gt;OSX&lt;/code&gt;. First I thought it doesn’t work
+out-of-the-box because of a &lt;code&gt;$PATH&lt;/code&gt; problem but soon it turned out that the biggest issue comes from the command line
+used for integration. Keep reading to learn how I found it out and how easy is to fix it.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="git" scheme="https://axiac.ro/tags/git/"/>
+    
+    <category term="macOS" scheme="https://axiac.ro/tags/macOS/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[DISTINCT vs. GROUP BY WITH ROLLUP]]></title>
-    <link href="https://axiac.ro/blog/distinct-with-rollup/"/>
-    <updated>2015-04-18T00:00:00+03:00</updated>
-    <id>https://axiac.ro/blog/distinct-with-rollup</id>
-    <content type="html"><![CDATA[<h1>or why 2+2 is not always 4.</h1>
-
-<p><code>WITH ROLLUP</code> is a <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html"><code>GROUP BY</code> modifier</a> that causes extra rows to be added to
+    <title>DISTINCT vs. GROUP BY WITH ROLLUP</title>
+    <link href="https://axiac.ro/blog/distinct-vs-group-by-with-rollup/"/>
+    <id>https://axiac.ro/blog/distinct-vs-group-by-with-rollup/</id>
+    <published>2015-04-17T21:00:00.000Z</published>
+    <updated>2025-01-22T08:45:28.810Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;or-why-2-2-is-not-always-4&quot;&gt;&lt;a href=&quot;#or-why-2-2-is-not-always-4&quot; class=&quot;headerlink&quot; title=&quot;or why 2+2 is not always 4&quot;&gt;&lt;/a&gt;or why 2+2 is not always 4&lt;/h2&gt;&lt;p&gt;&lt;code&gt;WITH ROLLUP&lt;/code&gt; is a &lt;a href=&quot;http://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html&quot;&gt;&lt;code&gt;GROUP BY&lt;/code&gt; modifier&lt;/a&gt; that causes extra rows to be added to
 the result set produced by the query. These rows represent higher-level (or super-aggregate)
-summary operations.</p>
-
-<p>A shallow examination of the effects of <code>WITH ROLLUP</code> on a query like:</p>
-
-<pre><code>SELECT user_id, COUNT(product) AS nb_products, SUM(amount) AS total FROM cart GROUP BY user_id
-</code></pre>
-
-<p>can lead to the erroneous conclusion that the <code>WITH ROLLUP</code> modifier is just a courtesy
+summary operations.&lt;/p&gt;
+&lt;p&gt;A shallow examination of the effects of &lt;code&gt;WITH ROLLUP&lt;/code&gt; on a query like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT user_id, COUNT(product) AS nb_products, SUM(amount) AS total FROM cart GROUP BY user_id
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;can lead to the erroneous conclusion that the &lt;code&gt;WITH ROLLUP&lt;/code&gt; modifier is just a courtesy
 of the database implementors to the front-end developers and the extra rows added by it
-could be computed on the client-side as well. Big mistake!</p>
-
-<!-- more -->
-
-
-<p>A deeper investigation on the <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html"><code>GROUP BY</code> aggregate functions</a> reveals that there are
-functions whose values generated by <code>WITH ROLLUP</code> <strong>cannot</strong> be computed on the client side
-using only the values returned by the <code>GROUP BY</code> query. These are the statistical functions
-(<a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_stddev-pop"><code>STDDEV_POP()</code></a>, <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_var-pop"><code>VAR_POP()</code></a> a.s.o.) that are not used by many applications
-but, surprisingly, also the more commonly used <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_sum"><code>SUM()</code></a> and <a href="http://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_count"><code>COUNT()</code></a>,
-when they are combined with <code>DISTINCT</code>.</p>
-
-<h3>Case Study</h3>
-
-<p>Let&rsquo;s create a small MySQL table in the database and put some rows in it:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="ss">`logins`</span> <span class="p">(</span>
-</span><span class='line'>  <span class="ss">`id`</span> <span class="kt">INT</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">`user_id`</span> <span class="kt">INT</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">`date`</span> <span class="kt">DATE</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">`browser`</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
-</span><span class='line'>  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="ss">`id`</span><span class="p">)</span>
-</span><span class='line'><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="ss">`logins`</span> <span class="p">(</span><span class="ss">`user_id`</span><span class="p">,</span> <span class="ss">`date`</span><span class="p">,</span> <span class="ss">`browser`</span><span class="p">)</span>
-</span><span class='line'><span class="k">VALUES</span>
-</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2015-04-01&#39;</span><span class="p">,</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">),</span>
-</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2015-04-02&#39;</span><span class="p">,</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">),</span>
-</span><span class='line'>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2015-04-02&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">),</span>
-</span><span class='line'>  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2015-04-01&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">),</span>
-</span><span class='line'>  <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;2015-04-02&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It is a naïve log table that stores the customer login dates and the browsers they are using.</p>
-
-<p>Let&rsquo;s count the number of logins for each day:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="ss">`date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
-</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
-</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`date`</span>
-</span><span class='line'><span class="k">WITH</span> <span class="n">ROLLUP</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The result is straightforward:</p>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">+------------+----+
-| date       | nb |
-+------------+----+
-| 2015-04-01 |  2 |
-| 2015-04-02 |  3 |
-| NULL       |  5 |
-+------------+----+
-3 rows in set (0.01 sec)</code></pre></div>
-
-
-<p>The <code>WITH ROLLUP</code> clause produced a nice total and doesn&rsquo;t provide any surprise: <code>2 + 3 = 5</code>,
-any first-grade child can assure you about the correctness of this result.</p>
-
-<h3>Where <code>DISTINCT</code> comes into play</h3>
-
-<p>Now, let&rsquo;s take a look to the raw table data and we&rsquo;ll discover that on <code>2015-04-02</code>
-the first user logged in twice using two different browsers. Let&rsquo;s change the query
-to count the unique users for each day, i.e. count the first user only once for <code>2015-04-02</code>:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="ss">`date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
-</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
-</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`date`</span>
-</span><span class='line'><span class="k">WITH</span> <span class="n">ROLLUP</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">+------------+----+
-| date       | nb |
-+------------+----+
-| 2015-04-01 |  2 |
-| 2015-04-02 |  2 |
-| NULL       |  3 |
-+------------+----+
-3 rows in set (0.00 sec)</code></pre></div>
-
-
-<p>Surprise, surprise! We have <code>2</code> unique visitors for each of the two days and a big total of <code>3</code>
-which is not quite the calculation one would expect.</p>
-
-<p>Sure, going back to the raw table data we can see there are only <code>3</code> unique values for <code>user_id</code>
-in the table and that makes it impossible to return <code>4</code> or more as the result of <code>COUNT(DISTINCT)</code>.
-This is easy to see at a glance on our example table but not that easy on a production table that
-contains thousands or millions of records.</p>
-
-<h2>When 2+2 equals 3</h2>
-
-<p>In order to find out and understand why MySQL returns this result let&rsquo;s
-analyze how <code>GROUP BY</code>, <code>WITH ROLLUP</code> and <code>DISTINCT</code> work.</p>
-
-<p>Let&rsquo;s find out what rows are selected in each of the queries above. This can be done
-easily by removing (commenting out) the <code>GROUP BY</code> clause (together with its
-<code>WITH ROLLUP</code> modifier) and removing the aggregate function <code>COUNT()</code>. I also added the
-<code>PK</code> field to easily identify the rows in our table and <code>ORDER BY</code> to easily identify
-the groups.</p>
-
-<h3>All values (without <code>DISTINCT</code>)</h3>
-
-<h4><code>GROUP BY</code></h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="ss">`id`</span><span class="p">,</span> <span class="ss">`date`</span><span class="p">,</span> <span class="ss">`user_id`</span>
-</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
-</span><span class='line'><span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">`date`</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">+----+------------+---------+
-| id | date       | user_id |
-+----+------------+---------+
-|  1 | 2015-04-01 |       1 |
-|  4 | 2015-04-01 |       2 |
-+----+------------+---------+
-|  2 | 2015-04-02 |       1 |
-|  3 | 2015-04-02 |       1 |
-|  5 | 2015-04-02 |       3 |
-+----+------------+---------+
-5 rows in set (0.00 sec)</code></pre></div>
-
-
-<p>No surprise here, the query returns all the rows from the table. We can see there
-are 2 entries having <code>date = '2015-04-01'</code> and 3 entries with <code>date = '2015-04-02'</code>.
-Grouping by <code>date</code>, rows 1 and 4 are the first group, rows 2, 3 and 5 are the second
-group.</p>
-
-<h4><code>WITH ROLLUP</code></h4>
-
-<p>The <code>WITH ROLLUP</code> modifier computes an extra row that is some kind of super-group.
-It aggregates all the rows returned by the query above, creating a single group, behaving
-like all the rows had the same value in the <code>date</code> column. There are 5 rows in the set,
-this is why the extra row generated by <code>WITH ROLLUP</code> has value <code>5</code> in the <code>nb</code> column.</p>
-
-<p>We can simulate the computation of the extra row by running a modified version of the
-query (without the <code>WITH ROLLUP</code> modifier) that selects <code>NULL</code> for the <code>date</code> column;
-this makes the <code>GROUP BY</code> clause create a single big group.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="no">NULL</span> <span class="k">AS</span> <span class="ss">`null_date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
-</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
-</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`null_date`</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><em>We cannot use <code>date</code> as the name of the selected expression because it will conflict
-with the table column <code>date</code> and <code>GROUP BY `date`</code> will use the table column instead.</em></p>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">+-----------+----+
-| null_date | nb |
-+-----------+----+
-|      NULL |  5 |
-+-----------+----+
-1 row in set (0.00 sec)</code></pre></div>
-
-
-<h3>Asking for <code>DISTINCT</code> values</h3>
-
-<h4><code>GROUP BY</code></h4>
-
-<p>Let&rsquo;s try now to figure out what rows are used to compute the result set when the
-original query contains <code>COUNT(DISTINCT `user_id`)</code>.</p>
-
-<p>For that we need to add the <code>DISTINCT</code> modifier to the <code>SELECT</code> clause and drop out
-the <code>PK</code> column because it guarantees all the rows are distinct and defeats the purpose
-of our query (we are interested only in distict combinations of <code>date</code> and <code>user_id</code>).</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="ss">`date`</span><span class="p">,</span> <span class="ss">`user_id`</span>
-</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
-</span><span class='line'><span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">`date`</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The rows selected for grouping are:</p>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">+------------+---------+
-| date       | user_id |
-+------------+---------+
-| 2015-04-01 |       1 |
-| 2015-04-01 |       2 |
-+------------+---------+
-| 2015-04-02 |       1 |
-| 2015-04-02 |       3 |
-+------------+---------+
-4 rows in set (0.00 sec)</code></pre></div>
-
-
-<p>The PK column is not there but we can guess the missing row has <code>id</code> = 3 or <code>id</code> = 2
-(it does not really matter). These two rows have identical values on the <code>date</code> and
-<code>user_id</code> fields. The <code>DISTINCT</code> modifier guarantees only one of them is selected
-for further processing by the query.</p>
-
-<p>There are 2 groups, each of them having exactly 2 rows. This is consistent with the
-result returned by the <code>GROUP BY</code> query.</p>
-
-<h4><code>WITH ROLLUP</code></h4>
-
-<p>If we replace the values of the <code>date</code> column with <code>NULL</code>s in the result set above
-we will see there are only 3 distinct rows (out of 4).</p>
-
-<p>Let&rsquo;s use the same trick as above to simulate what <code>WITH ROLLUP</code> does.
-The modified query is:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="k">SELECT</span> <span class="no">NULL</span> <span class="k">AS</span> <span class="ss">`null_date`</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="ss">`user_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">nb</span>
-</span><span class='line'><span class="k">FROM</span> <span class="ss">`logins`</span>
-</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">`null_date`</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The result:</p>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">+-----------+----+
-| null_date | nb |
-+-----------+----+
-|      NULL |  3 |
-+-----------+----+
-1 row in set (0.00 sec)</code></pre></div>
-
-
-<p>Again, the result matches the value returned by MySQL.</p>
-
-<h2>Conclusion</h2>
-
-<p>In order to compute the extra rows added by the <code>WITH ROLLUP</code> modifier, MySQL <strong>does not</strong> use
-the rows already computed for the <code>GROUP BY</code> query without rollup. In some cases they can be
-used but many times they cannot. This makes the correct computation of the summary rows impossible
-on the client side (without getting the raw rows, which defeats the entire purpose of using
-<code>GROUP BY</code> in the first place).</p>
-]]></content>
+could be computed on the client-side as well. Big mistake!&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="troubleshooting" scheme="https://axiac.ro/tags/troubleshooting/"/>
+    
+    <category term="mysql" scheme="https://axiac.ro/tags/mysql/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Do You Clone the DateTime Objects?]]></title>
-    <link href="https://axiac.ro/blog/dont-forget-to-clone-the-datetime-objects/"/>
-    <updated>2015-02-17T00:00:00+02:00</updated>
-    <id>https://axiac.ro/blog/dont-forget-to-clone-the-datetime-objects</id>
-    <content type="html"><![CDATA[<p>The <a href="http://php.net/manual/en/class.datetime.php"><code>DateTime</code></a> class and its friends introduced in PHP 5.2 are a very nice replacement
-for the old date &amp; time processing functions (<code>date()</code>, <code>getdate()</code>, <code>strftime()</code>, <code>strtotime()</code> and so on).</p>
-
-<p>But they come with a minor glitch that is hidden in the plain sight: they are objects and as all the other
-objects in PHP, they are assigned and passed as parameters by reference<a href="#note-1"><sup>[1]</sup></a> and not as copies.</p>
-
-<p>Most of the time I think of a DateTime as a <code>Value Object</code>, passing it from here to there
-without special precautions. And most of the times this works just fine as long as the code doesn&rsquo;t
-try to change it.</p>
-
-<!-- more -->
-
-
-<p>When it starts wreaking havoc I remember that <code>DateTime</code> is a class, the instances of it are objects
-and are passed by reference<a href="#note-1"><sup>[1]</sup></a> both as method arguments and as their
-return values. And special precautions needs to be taken when a method starts modifying
-a <code>DateTime</code> instance that was not created by the same object (because the one that created it
-might still hold a reference to it).</p>
-
-<p><strong>The bottom line:</strong> always clone the <code>DateTime</code> objects that were not created by the current function
-when you intend to change them.</p>
-
-<h4>Later edit (August 2017)</h4>
-
-<p>Since PHP 5.5 it&rsquo;s better to use <a href="http://php.net/manual/en/class.datetimeimmutable.php"><code>DateTimeImmutable</code></a> objects whenever it&rsquo;s possible.
-They cannot be modified after they are created (they behave like true Value Objects). The methods declared
-in <a href="http://php.net/manual/en/class.datetimeinterface.php"><code>DateTimeInterface</code></a> that modify the <code>DateTime</code> objects automatically create
-and return clones for <a href="http://php.net/manual/en/class.datetimeimmutable.php"><code>DateTimeImmutable</code></a> objects.</p>
-
-<p>PHP 5.5 was 20 months old at the time when I wrote this post, but I was still working with PHP 5.3
-and PHP 5.4 because of the business constraints.</p>
-
-<hr />
-
-<p><a name="note-1"></a>
-<sup>[1]</sup> <em>The <a href="http://php.net/manual/en/language.oop5.references.php">PHP documentation</a> explains that they are not really references but
-different variables storing the same object identifier (which involves an additional redirection layer).
-This makes them work more like pointers but this is just an implementation detail.
-From the outside they look like they are passed by reference.</em></p>
-]]></content>
+    <title>Do You Clone the DateTime Objects?</title>
+    <link href="https://axiac.ro/blog/do-you-clone-the-datetime-objects/"/>
+    <id>https://axiac.ro/blog/do-you-clone-the-datetime-objects/</id>
+    <published>2015-02-16T22:00:00.000Z</published>
+    <updated>2025-01-22T08:35:17.144Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;The &lt;a href=&quot;http://php.net/manual/en/class.datetime.php&quot;&gt;&lt;code&gt;DateTime&lt;/code&gt;&lt;/a&gt; class and its friends introduced in PHP 5.2 are a very nice replacement
+for the old date &amp;amp; time processing functions (&lt;code&gt;date()&lt;/code&gt;, &lt;code&gt;getdate()&lt;/code&gt;, &lt;code&gt;strftime()&lt;/code&gt;, &lt;code&gt;strtotime()&lt;/code&gt; and so on).&lt;/p&gt;
+&lt;p&gt;But they come with a minor glitch that is hidden in the plain sight: they are objects and as all the other
+objects in PHP, they are assigned and passed as parameters by reference&lt;a href=&quot;#note-1&quot;&gt;&lt;sup&gt;[1]&lt;/sup&gt;&lt;/a&gt; and not as copies.&lt;/p&gt;
+&lt;p&gt;Most of the time I think of a DateTime as a &lt;code&gt;Value Object&lt;/code&gt;, passing it from here to there
+without special precautions. And most of the times this works just fine as long as the code doesn’t
+try to change it.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="php" scheme="https://axiac.ro/tags/php/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Join two Git repositories and keep the original commit dates.]]></title>
-    <link href="https://axiac.ro/blog/merging-git-repositories/"/>
-    <updated>2014-11-17T00:00:00+02:00</updated>
-    <id>https://axiac.ro/blog/merging-git-repositories</id>
-    <content type="html"><![CDATA[<p>Several years ago I started a project that was stored in a Subversion repository. After
+    <title>Join two Git repositories and keep the original commit dates.</title>
+    <link href="https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/"/>
+    <id>https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/</id>
+    <published>2014-11-16T22:00:00.000Z</published>
+    <updated>2025-01-22T08:34:55.125Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Several years ago I started a project that was stored in a Subversion repository. After
 some time, the current (at that time) version of the code was used to create a new Git
 repository and the development continued. Several months and hundreds of commits later,
 I decided to gather the code from both repositories into a single repository and keep all
-the historical data intact.</p>
-
-<p>The goal was to get all the code since the project started until the most recent version
-into a single Git repository as we have used Git from the project beginning.</p>
-
-<p>I&rsquo;ll explain below how to accomplish this goal.</p>
-
-<!-- more -->
-
-
-<p>I started by using <a href="http://subgit.com">SubGit</a> to import the Subversion commits into a new Git repository.
-I could do the import with <code>git svn</code> but SubGit does a better job.</p>
-
-<h2>The request</h2>
-
-<p>In a graphical fashion, the starting setup looks like this:</p>
-
-<pre><code> o &lt;- second-head, second-master    \
- |                                   |
- o                                   |
-/|\                                  |
-...                                  | 'second-repo', the newest code
-\|/                                  |
- o                                   |
- |                                   |
- o &lt;- second-root                   /
- .
- . &lt;-- the desired link (it does not exist now)
- .
- o &lt;- first-head, first-master      \
- |                                   |
- o                                   |
-/|\                                  | 'first-repo', the oldest code
-...                                  |
-\|/                                  |
- o                                  /
-</code></pre>
-
-<p>We want to create a link between commits <code>first-head</code> and <code>second-root</code> (make <code>first-head</code> the parent of
-<code>second-root</code>) and:</p>
-
-<ul>
-<li>preserve the code changes and author date and email of each commit imported from <code>second-repo</code>;</li>
-<li>preserve the commit times of the commits imported from <code>second-repo</code>;</li>
-<li>preserve the branches and merges from <code>second-repo</code>.</li>
-</ul>
-
-
-<p>The first goal is automatically achieved by <code>git rebase</code>. It does not change the content of the commits
-it handles and it is very carefully with the authors information too.</p>
-
-<p>In theory, all we need to do is:</p>
-
-<pre><code>$ git rebase first-head second-head
-</code></pre>
-
-<p>We&rsquo;ll discover that, while it copies the commits from the second repository on top of <code>first-head</code>, it
-makes the history linear (flattens the branches and merges) and it sets the <code>committer date</code> of all the
-copied commits to the current date&amp;time. It does not comply with our second and third items from the list
-above.</p>
-
-<p>Paying more attention to <code>git help rebase</code>, we&rsquo;ll discover that adding the option <code>--committer-date-is-author-date</code>
-tells <code>git</code> to copy the <code>author date</code> as <code>committer date</code> for the commits it handles. While this still
-does not preserve the original commit dates, it is however pretty useful. Usually the <code>committer date</code> is
-the same as <code>author date</code>. They do not match for amended commits, rebased commits and commits submitted
-as patches through email. We could live with that but it still does not match the third item from our list.
-And it is an important one because the past branches and merges shape the history of the code base.</p>
-
-<p>Looking more thoroughly into the help, we&rsquo;ll discover the option <code>--preserve-merges</code> that helps <code>git</code>
-accomplish our third goal. The branches and merges are replicated correctly but, unfortunately, the
-commit dates are again set to the current date&amp;time.</p>
-
-<h4>What&rsquo;s wrong?</h4>
-
-<p>Nothing is wrong. The help explains: <code>--preserve-merges</code> internally uses the
-<code>--interactive</code> machinery and <code>--committer-date-is-author-date</code> is incompatible with <code>--interactive</code>.</p>
-
-<p>Apparently this is a dead end.</p>
-
-<h3>Really?</h3>
-
-<p>I did some research on the Internet and I found a partial solution in an <a href="http://stackoverflow.com/a/19522951/4265352">answer</a>
-on StackOverflow. It is not completely baked, it even fails with a syntax error, but it helped me
-to find the right path and the complete solution.</p>
-
-<h2>My solution</h2>
-
-<p>The solution involves several steps:</p>
-
-<ul>
-<li>prepare a new working repository; get all the required commits into it and mark the important
-ones with branches;</li>
-<li>create the missing link between <code>first-head</code> and <code>second-root</code>; force its creation as Git will,
-most probably, complain;</li>
-<li>rebase the other commits between <code>second-root</code> and <code>second-head</code>;</li>
-<li>fix the <code>committer date</code> for all the commits affected by the previous two steps;</li>
-<li>cleanup.</li>
-</ul>
-
-
-<h3>Preparations</h3>
-
-<p>Let&rsquo;s start with the first repository (the older code) in <code>./first-repo</code> and the second repository
-(the newer code) in <code>./second-repo</code>.</p>
-
-<p>Let&rsquo;s create a new repository in <code>./merge-repo</code> and do all the work there. We&rsquo;ll clone the first
-repository, add the second one as a remote and fetch its commits.</p>
-
-<pre><code>$ mkdir ./merge-repo
-$ cd ./merge-repo
-$ git clone ../first-repo .
-$ git remote add second-repo ../second-repo
-$ git fetch second-repo
-</code></pre>
-
-<p>Next we&rsquo;ll create some branches to point at some special commits: the first and the last commits
-from the second repository:</p>
-
-<pre><code>$ git branch second-head second-repo/master
-$ git branch second-root $(git log second-head --reverse --pretty=%H | head -n 1)
-</code></pre>
-
-<p>The most recent commit of the first repository (this is where we will link <code>second-root</code>):</p>
-
-<pre><code>$ git branch first-head master
-</code></pre>
-
-<p>We&rsquo;ll rename the <code>master</code> branch (it points to the most recent commit of the first repository) to
-<code>first-head</code>. We will create another <code>master</code> branch after everything is completed.</p>
-
-<pre><code>$ git branch -m master first-master
-$ git branch second-master second-repo/master
-</code></pre>
-
-<p>Finally, we remove all the remotes to keep the working repository isolated.</p>
-
-<pre><code>$ git remote remove origin
-$ git remote remove second-repo
-</code></pre>
-
-<p>This way, if something goes wrong we can just remove the <code>./merge-repo</code> directory and start over.</p>
-
-<h3>Backup the commit dates</h3>
-
-<p>Save the tree hash and the commit time (Unix timestamp) of the commits from the second repository
-to a file. We&rsquo;ll use these to restore the original commit times after the rebase. The tree hash is used
-to identify each commit. We could also save the commit hashes to the file but they are of no use because
-they change after the rebase. However, the tree hashes do not change because the rebase does not modify
-the content of the affected commits, only their parents and commit time.</p>
-
-<pre><code>$ git log --pretty='%T %ct' ..second-head &gt; /tmp/hashlist
-</code></pre>
-
-<h3>Make <code>first-head</code> the parent of <code>second-root</code></h3>
-
-<p>Since we are happy with the files from both repositories and just want to paste <code>second-root</code> on top of
-<code>first-head</code>, any potential conflict must be resolved using the files from the applied commit (<code>second-root</code>):</p>
-
-<pre><code>$ git cherry-pick --strategy-option=theirs second-root
-</code></pre>
-
-<p>This forces <code>git</code> to apply <code>second-root</code> on top of <code>first-head</code> and use the information from <code>second-root</code>
-to solve any conflict that appears.</p>
-
-<h3>Copy the rest of the commits from the second repository</h3>
-
-<p>Try the rebase:</p>
-
-<pre><code>$ git rebase --preserve-merges --onto first-head --root second-head
-</code></pre>
-
-<p>It will stop with an error like this:</p>
-
-<pre><code>$ git rebase --preserve-merges --onto first-head --root second-head
-The previous cherry-pick is now empty, possibly due to conflict resolution.
-If you wish to commit it anyway, use:
-
-    git commit --allow-empty
-
-Otherwise, please use 'git reset'
-rebase in progress; onto cffbb1c
-You are currently rebasing branch 'second-head' on 'cffbb1c'.
-
-nothing to commit, working directory clean
-Could not pick 1f7f7036025ac1d48973818b1602fc9aa91731fb
-</code></pre>
-
-<p>It basically complains that it cannot find any difference between <code>second-root</code> and <code>first-head</code>
-and it is entirely right; using the previous <code>cherry-pick</code> we just applied the commit <code>second-root</code>
-on top of the original <code>first-head</code> and now <code>first-head</code> looks identical with <code>second-root</code>.</p>
-
-<p>Let&rsquo;s just tell Git to ignore this commit and continue:</p>
-
-<pre><code>$ git rebase --skip
-</code></pre>
-
-<p>This would take a while (depending on the size of your second repository) and it should complete successfully.
-If it fails then you are on your own. But it has no reason to fail.</p>
-
-<h3>Fix the committer dates</h3>
-
-<p>The <code>rebase</code> operation keeps most of the meta-data of the commits it changes. It changes the commit hash,
-of course, and it also changes the committer date (using the current date). We want to keep the original
-committer date (this is the entire point of this article after all).</p>
-
-<p>We can &ldquo;fix&rdquo; the original committer dates using a bit of magic:</p>
-
-<pre><code>$ git filter-branch --env-filter 'export GIT_COMMITTER_DATE=$(fgrep -m 1 $(git log -1 --pretty=%T $GIT_COMMIT) /tmp/hashlist | cut -d" " -f2)' first-master..second-head
-</code></pre>
-
-<p>In plain English, <code>git filter-branch</code> lets you rewrite Git revision history by applying custom filter
-on each revision. Our custom filter identifies the commit to be changed by its tree hash, finds the
-corresponding commit date into the backup file we created earlier and uses the <code>$GIT_COMMITTER_DATE</code>
-environment variable to set the desired <code>committer date</code> to the commit being processed.</p>
-
-<h4>If something goes wrong</h4>
-
-<p>The previous position of the <code>second-head</code> branch can be found in the file
-<code>.git/refs/original/refs/heads/master</code></p>
-
-<pre><code>$ cat .git/refs/original/refs/heads/second-head
-</code></pre>
-
-<p>To revert the <code>git filter-branch</code>:</p>
-
-<pre><code>$ git reset --hard $(cat .git/refs/original/refs/heads/second-head)
-</code></pre>
-
-<p>Before trying to <code>git filter-branch</code> again, the backup ref file must be deleted (<code>filter-branch</code> refuses
-to run if it founds it):</p>
-
-<pre><code>$ rm .git/refs/original/refs/heads/second-head
-</code></pre>
-
-<h3>Cleanup</h3>
-
-<p>After the successful linking, the current branch is <code>second-head</code> and we have some branches pointing
-to various commits involved in the process. We can rename <code>second-head</code> to <code>master</code> and remove the other branches.</p>
-
-<pre><code>$ git branch -m second-head master
-$ git branch -D first-head
-$ git branch -D second-root
-$ git branch -D second-master
-$ rm .git/refs/original/refs/heads/second-head
-</code></pre>
-
-<p>The branch <code>first-master</code> is still there, pointing to the <code>master</code> branch of the first repository. You may
-probably want to keep it as reference (or, better, create a tag pointing on that commit.)</p>
-
-<p>Remove the hash file:</p>
-
-<pre><code>$ rm /tmp/hashlist
-</code></pre>
-
-<h2>Remarks</h2>
-
-<ul>
-<li><p>Only the current branch from the new repository will be appended to the old repository; any dangling branch
-needs to be rebased individually after the process completes; the same technique could work, given the
-join points are set up correctly.</p></li>
-<li><p>Extras from <code>git help filter-branch</code>:</p>
-
-<blockquote><p>Note that since this operation is very I/O expensive, it might be a good idea to redirect the temporary
-directory off-disk with the -d option, e.g. on tmpfs.
-Reportedly the speedup is very noticeable.</p></blockquote>
-
-<p>It took a couple of seconds for me, for about 2,500 commits but it is not relevant because my repository
-was stored on a SSD.</p></li>
-<li><p>Because of the rebase, <strong>ALL</strong> the commits from the newer repository changed their hashes. If the
-repository is published this will puzzle the other contributors. <em>Before attempting this stunt, make sure
-that all the important branches are merged, everybody knows what&rsquo;s going on and how to catch up and
-continue afterwards without losing their work</em>.</p>
-
-<p><strong>You have been warned!</strong></p></li>
-</ul>
-
-]]></content>
+the historical data intact.&lt;/p&gt;
+&lt;p&gt;The goal was to get all the code since the project started until the most recent version
+into a single Git repository as we have used Git from the project beginning.&lt;/p&gt;
+&lt;p&gt;I’ll explain below how to accomplish this goal.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="git" scheme="https://axiac.ro/tags/git/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Să se afle ultimele 4 cifre ale numărului]]></title>
+    <title>Să se afle ultimele 4 cifre ale numărului</title>
     <link href="https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"/>
-    <updated>2014-10-14T12:34:56+03:00</updated>
-    <id>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului</id>
-    <content type="html"><![CDATA[<h2>Problemă (de clasa a VI-a)</h2>
-
-<p>Să se afle ultimele 4 cifre ale numărului: <em>S</em> = 9<sup>1</sup> + 9<sup>2</sup> + 9<sup>3</sup> + &hellip; + 9<sup>400</sup></p>
-
-<h2>Soluție</h2>
-
-<p>Problemele de acest gen, în care se cere ultima cifră a unui număr mare, se rezolvă de obicei observând
+    <id>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</id>
+    <published>2014-10-14T09:34:56.000Z</published>
+    <updated>2025-01-22T08:32:12.925Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;Problema-de-clasa-a-VI-a&quot;&gt;&lt;a href=&quot;#Problema-de-clasa-a-VI-a&quot; class=&quot;headerlink&quot; title=&quot;Problemă (de clasa a VI-a)&quot;&gt;&lt;/a&gt;Problemă (de clasa a VI-a)&lt;/h2&gt;&lt;p&gt;Să se afle ultimele 4 cifre ale numărului: &lt;em&gt;S&lt;/em&gt; &amp;#x3D; 9^1 + 9^2 + 9^3 + … + 9^400&lt;/p&gt;
+&lt;h2 id=&quot;Solutie&quot;&gt;&lt;a href=&quot;#Solutie&quot; class=&quot;headerlink&quot; title=&quot;Soluție&quot;&gt;&lt;/a&gt;Soluție&lt;/h2&gt;&lt;p&gt;Problemele de acest gen, în care se cere ultima cifră a unui număr mare, se rezolvă de obicei observând
 cum evoluează ultima cifră a puterilor consecutive ale numerelor implicate în relație.
-Să calculăm primele câteva puteri ale lui 9 și să vedem cum evoluează ultima lor cifră.</p>
-
-<!--more-->
-
-
-
-
-<pre>
-9<sup>1</sup> =      <u>9</u>
-9<sup>2</sup> =     8<u>1</u>
-9<sup>3</sup> =    72<u>9</u>
-9<sup>4</sup> =  6 56<u>1</u>
-9<sup>5</sup> = 59 04<u>9</u>
-...
-</pre>
-
-
-<p>Observăm că pentru valorile pare ale lui <em>k</em>, ultima cifră a lui 9<sup>k</sup> este <em>1</em> iar pentru cele impare ultima cifră este <em>9</em>.
-Să reținem acest aspect, ne va folosi mai târziu.</p>
-
-<p>Suma noastră <em>S</em> conține 200 de termeni de forma 9<sup>k</sup> cu <em>k</em> impar și încă 200 de termeni cu <em>k</em> par, ultima cifră
-a lui <em>S</em> este în mod evident <em>0</em>.
-Din păcate, asta e cam tot ce putem afla pe această cale.</p>
-
-<h2>Altă abordare</h2>
-
-<p>Să încercăm să-l descompunem pe <em>S</em> în factori:<br />
-   S = 9<sup>1</sup> + 9<sup>2</sup> + 9<sup>3</sup> + &hellip; 9<sup>400</sup><br />
-   S = 9 * (1 + 9<sup>1</sup> + 9<sup>2</sup> + &hellip; 9<sup>399</sup>)<br />
-   S = 9 * (9<sup>400</sup> - 1) / (9 - 1)<br /></p>
-
-<p>Folosind (de 4 ori) formula <em>a<sup>2</sup> - b<sup>2</sup> = (a + b) * (a - b)</em> îl descompunem pe <em>S</em> astfel: <br />
-   S = 9 * (9<sup>200</sup> + 1) * (9<sup>100</sup> + 1) * (9<sup>50</sup> + 1) * (9<sup>25</sup> + 1) * (9<sup>25</sup> - 1) / 8</p>
-
-<p>Pe <em>9<sup>25</sup> + 1</em> îl scriem ca (9<sup>5</sup>)<sup>5</sup> + 1 și-l descompunem folosind formula: <br />
-  <em>a<sup>n</sup> + b<sup>n</sup> = (a + b) * (a<sup>n-1</sup> - a<sup>n-2</sup> * b<sup>1</sup> + a<sup>n-3</sup> * b<sup>2</sup> &hellip; - a * b<sup>n-2</sup> + b<sup>n-1</sup>)</em><br />
-(valabilă doar pentru <em>n</em> natural <strong>impar</strong>, <em>n</em> >= 3) în: <br />
-   9<sup>25</sup> + 1 = <em>(9<sup>5</sup> + 1) * (9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1)</em></p>
-
-<p>Similar, folosind formula:<br />
-  <em>a<sup>n</sup> - b<sup>n</sup> = (a - b) * (a<sup>n-1</sup> + a<sup>n-2</sup> * b<sup>1</sup> + &hellip; + a<sup>1</sup> * b<sup>n-2</sup> + b<sup>n-1</sup>)</em><br />
-(valabilă pentru orice <em>n</em> natural, <em>n</em> >= 2), pe <em>9<sup>25</sup> - 1</em> îl scriem ca:<br />
-   <em>9<sup>25</sup> - 1 = (9<sup>5</sup>)<sup>5</sup> - 1 = (9<sup>5</sup> - 1) * (9<sup>20</sup> + 9<sup>15</sup> + 9<sup>10</sup> + 9<sup>5</sup> + 1)</em><br />
-și aplicând formula încă o dată pentru <em>9<sup>5</sup> - 1</em> obținem:<br />
-   <em>9<sup>25</sup> - 1 = (9 - 1) * (9<sup>4</sup> + 9<sup>3</sup> + 9<sup>2</sup> + 9<sup>1</sup> + 1) * (9<sup>20</sup> + 9<sup>15</sup> + 9<sup>10</sup> + 9<sup>5</sup> + 1)</em></p>
-
-<p>Substituim expresiile calculate pentru <em>(9<sup>25</sup> + 1)</em> și <em>(9<sup>25</sup> - 1)</em> în formula lui <em>S</em>, simplificăm
-cu <em>8</em> avem:<br />
-   <strong>S = 9 * (9<sup>200</sup>+1) * (9<sup>100</sup>+1) * (9<sup>50</sup>+1) * (9<sup>5</sup>+1) * (9<sup>20</sup>-9<sup>15</sup>+9<sup>10</sup>-9<sup>5</sup>+1) * (9<sup>4</sup>+9<sup>3</sup>+9<sup>2</sup>+9<sup>1</sup>+1) * (9<sup>20</sup>+9<sup>15</sup>+9<sup>10</sup>+9<sup>5</sup>+1)</strong></p>
-
-<p>Să luăm factorii pe rând și să le calculăm ultima cifră:</p>
-
-<ol>
-<li><strong>9</strong> - ultima lui cifră este, evident, <em>9</em>.</li>
-<li><strong>(9<sup>200</sup> + 1), (9<sup>100</sup> + 1) și (9<sup>50</sup> + 1)</strong> - se termină cu cifra <em>2</em> deoarece 9 la putere pară se termină
-cu <em>1</em> după cum am văzut la începutul discuției.
-Îi putem scrie ca <em>2*A</em>, <em>2*B</em> și <em>2*C</em> unde <em>A</em>, <em>B</em> și <em>C</em> se termină cu <em>1</em> sau <em>6</em>
-(singurele numere de o cifră care înmulțite cu <em>2</em> produc rezultate terminate în <em>2</em>).</li>
-<li><strong>(9<sup>5</sup> + 1)</strong> - <em>9<sup>5</sup> + 1</em> = 59 050 = 50 * 1811.</li>
-<li><strong>(9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1)</strong> - să notăm acest factor cu <em>T</em>. Are ultima cifră <em>5</em> (1-9+1-9+1)
-deci este divizibil cu <em>5</em>. Se poate scrie ca <em>5*D</em> și deocamdată nu știm nimic despre <em>D</em>.</li>
-<li><strong>(9<sup>4</sup> + 9<sup>3</sup> + 9<sup>2</sup> + 9<sup>1</sup> + 1)</strong> și <strong>(9<sup>20</sup> + 9<sup>15</sup> + 9<sup>10</sup> + 9<sup>5</sup> + 1)</strong> - îi vom nota cu <em>E</em> și <em>F</em>.
-Ambii au ultima cifră <em>1</em> (1+9+1+9+1).</li>
-</ol>
-
-
-<p>Îl rescriem pe <em>S</em> folosind notațiile introduse mai sus:<br />
-   S = 9 * 2*A * 2*B * 2*C * 1811*50 * 5*D * E * F<br />
-Grupăm convenabil factorii:<br />
-   S = (2*2*50*5) * (9*2) * (A*B*C) * (1811*E*F) * D<br />
-   S = 1000 * (18*A*B*C) * (1811*E*F) * D<br /></p>
-
-<p>Să analizăm factorii lui <em>S</em> din noua descompunere:</p>
-
-<ol>
-<li><strong>1000</strong> - <em>S</em> este divizibil cu 1000, deci ultimele sale 3 cifre sunt <em>000</em>;</li>
-<li><strong>18*A*B*C</strong> - <em>A</em>, <em>B</em> și <em>C</em> se termină cu <em>1</em> sau <em>6</em>, produsul lor se va termina tot cu <em>1</em> (când toți
-trei se termină cu <em>1</em>) sau cu <em>6</em> (altfel).<br />
-1 * 8 = 8<br />
-6 * 8 = 48<br />
-Ultima cifră a acestui factor este <em>8</em>.</li>
-<li><strong>1811*E*F</strong> - <em>E</em> și <em>F</em> se termină cu <em>1</em>; ultima cifră a acestui factor este <em>1</em>.</li>
-<li><strong>D</strong> - Am notat mai sus <em>T</em> = 9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1 = 5 * <em>D</em>; va trebui să calculăm ultimele 2 cifre ale
-lui T pentru a afla ultima cifră a lui <em>D</em>.</li>
-</ol>
-
-
-<h3>Ultimele două cifre ale lui 9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1</h3>
-
-<p>Încercăm să-l aducem pe <em>T</em> la o formă în care să-i putem calcula ușor ultimele două cifre
-folosind tabelul de puteri ale lui 9 de la începutul textului.</p>
-
-<p>   <em>T</em> = 9<sup>20</sup> - 9<sup>15</sup> + 9<sup>10</sup> - 9<sup>5</sup> + 1<br />
-   <em>T</em> = 9<sup>15</sup> * (9<sup>5</sup> - 1) + 9<sup>5</sup> * (9<sup>5</sup> - 1) + 1<br />
-   <em>T</em> = 9<sup>5</sup> * (9<sup>5</sup> - 1) * (9<sup>10</sup> + 1) + 1<br />
-   <em>T</em> = 9<sup>5</sup> * (9<sup>5</sup> - 1) * (9<sup>5</sup> * 9<sup>5</sup> + 1) + 1<br /></p>
-
-<p>Fie <em>M</em> și <em>N</em> două numere de cel puțin 2 cifre. Dacă notăm cu <em>m</em> și <em>n</em> numele formate de ultimele două cifre
-ale lui <em>M</em> și respectiv <em>N</em> atunci ultimele două cifre ale produsului <em>m</em>*<em>n</em> sunt și ultimele două cifre
-ale lui <em>M</em>*<em>N</em> (demonstația este evidentă).</p>
-
-<p>Știm că 9<sup>5</sup> = 59 049. Folosim ultimele sale două cifre (<em>49</em>) pentru a calcula ultimele două cifre ale lui <em>T</em>.
-Să notăm cu U(x) numărul format de ultimele două cifre ale lui <em>x</em>.</p>
-
-<p>  U(T) = U(U(9<sup>5</sup>) * U(9<sup>5</sup> - 1) * U(U(9<sup>5</sup>) * U(9<sup>5</sup>) + 1) + 1)<br />
-  U(T) = U(49 * (49 - 1) * U(49 * 49 + 1) + 1)<br />
-  U(T) = U(49 * 48 * U(2 402) + 1)<br />
-  U(T) = U(2 352 * 2 + 1)<br />
-  U(T) = U(4 705)<br />
-  U(T) = 05<br /></p>
-
-<p>Așadar, ultimele 2 cifre ale lui <em>T</em> sunt 05, deci <em>T</em> = 100 * U + 5 = 5 * (20 * U + 1) = 5 * <em>D</em>.
-Prin urmare, <em>D</em> = 20 * U + 1 deci <em>D</em> se termină cu <em>1</em>.</p>
-
-<h2>Rezultat</h2>
-
-<p>Introducându-l pe <em>D</em> în formula anterioară avem:<br />
-  * ultimele 3 cifre ale lui <em>S</em> sunt <em>000</em>;<br />
-  * <strong>18*A*B*C</strong> se termină cu <em>8</em>;<br />
-  * <strong>1811*D*E*F</strong> se termină cu <em>1</em>.<br /></p>
-
-<p>Prin urmare, ultimele 4 cifre ale lui <em>S</em> sunt <strong>8000</strong>.</p>
-
-<h2>Verificare</h2>
-
-<p>Pentru cei care cred mai mult în calcule decât în raționamente (și pentru că trăim într-o epocă în care
-preferăm să nu mai gândim ci să dăm repede fuga la Google ca să aflăm lucruri simple),
-Wolfram Alpha poate furniza atât <a href="http://www.wolframalpha.com/input/?i=9^1%2B9^2%2B...%2B9^400+mod+10000">rezultatul</a> calculat aici cât și
-<a href="http://www.wolframalpha.com/input/?i=9^1%2B9^2%2B...%2B9^400">valoarea exactă</a> a lui <em>S</em>.</p>
-]]></content>
+Să calculăm primele câteva puteri ale lui 9 și să vedem cum evoluează ultima lor cifră.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="mate" scheme="https://axiac.ro/tags/mate/"/>
+    
+    <category term="clasa a VI-a" scheme="https://axiac.ro/tags/clasa-a-VI-a/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[Debug Remote PHP CLI Scripts]]></title>
-    <link href="https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug/"/>
-    <updated>2014-03-04T00:00:00+02:00</updated>
-    <id>https://axiac.ro/blog/debugging-remote-php-cli-scripts-with-phpstorm-and-xdebug</id>
-    <content type="html"><![CDATA[<p>I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
-I am using <a href="http://www.jetbrains.com/phpstorm">PhpStorm</a> and <a href="http://xdebug.org">XDebug</a>.</p>
-
-<p>PhpStorm comes with a rich set of configurations to run a PHP script, including a couple of presets for debug.
+    <title>Debug Remote PHP CLI Scripts</title>
+    <link href="https://axiac.ro/blog/debug-remote-php-cli-scripts/"/>
+    <id>https://axiac.ro/blog/debug-remote-php-cli-scripts/</id>
+    <published>2014-03-03T22:00:00.000Z</published>
+    <updated>2025-01-22T08:32:12.984Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
+I am using &lt;a href=&quot;http://www.jetbrains.com/phpstorm&quot;&gt;PhpStorm&lt;/a&gt; and &lt;a href=&quot;http://xdebug.org/&quot;&gt;XDebug&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;PhpStorm comes with a rich set of configurations to run a PHP script, including a couple of presets for debug.
 I used them to debug web pages and command line scripts running on the local computer but nothing worked for
-scripts running on remote servers.</p>
-
-<p>By reading the documentation of XDebug and PhpStorm I learned that some small tasks must be accomplished
-in order to make PhpStorm and XDebug co-operate for debugging.</p>
-
-<!-- more -->
-
-
-<p><a name="xdebug-config"></a></p>
-
-<h2>Installing and configuring XDebug</h2>
-
-<p>Installing XDebug depends on the OS that runs on the remote server and everything is explained in the
-<a href="http://xdebug.org/docs/">XDebug documentation</a>.</p>
-
-<p>A single line of configuration is required. In <code>php.ini</code> add:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">xdebug.remote_enable</span><span class="o">=</span><span class="s">1</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Starting the debugger client</h2>
-
-<p>Due to the way the PHP scripts are invoked by the web server, the communication between the PHP debugger extension
-and the debugger client (the IDE) is initiated by the PHP extension. The IDE must be told to start listening for
-connections first. PhpStorm has a entry in the <em>Run</em> menu named <em>Start Listen for PHP Debug Connections</em> to
-accomplish this task.</p>
-
-<h2>Starting the debugger extension</h2>
-
-<p>Because debugging is not the normal way to run a PHP script, the debugging does not start by only installing
-and configuring the XDebug extension. It requires the presence of a special variable in the request or in the
-environment.</p>
-
-<p>For CLI scripts this is the environment variable <code>XDEBUG_CONFIG</code>. While its mere presence is enough
-to start the debugging, its content is also important: it can be used to override the values declared in <code>php.ini</code>.<br>
-More details in the XDebug <a href="http://xdebug.org/docs/remote#starting">documentation</a>.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">XDEBUG_CONFIG</span><span class="o">=</span><span class="s1">&#39;&#39;</span> php script.php
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>By prepending the command line with the initialization of the environment variable, the variable is set only
-for that specific execution of the PHP interpreter. To make the variable available on the subsequent commands
-it should be set in the shell and <code>export</code>ed for all the applications that will run in the current session:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">XDEBUG_CONFIG</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-</span><span class='line'>php script.php
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is not always the best option but it can help if you are expecting a heavy debug session.</p>
-
-<h2>Configuring path mapping</h2>
-
-<p>Because on the remote host the script is usually located on a different path than on the local machine,
-PhpStorm needs a way to know how to map the remote path to the local path. When the debug session starts,
-PhpStorm asks the debugger about the value of the environment variable <code>PHP_IDE_CONFIG</code> (if it is set.)</p>
-
-<p>Its value should look like <code>serverName=name</code> where <em>&lsquo;name&rsquo;</em> is the name of the server configured in
-<em>Project Settings->PHP->Servers</em>.</p>
-
-<p>The most convenient way to set this variable to the debugged script is to pass it to the interpreter
-as an environment variable.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PHP_IDE_CONFIG</span><span class="o">=</span><span class="s2">&quot;serverName=devel-host&quot;</span>
-</span><span class='line'><span class="nv">XDEBUG_CONFIG</span><span class="o">=</span><span class="s1">&#39;&#39;</span> php script.php
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Check <a href="http://blog.jetbrains.com/webide/2012/03/new-in-4-0-easier-debugging-of-remote-php-command-line-scripts/">this post</a> on PhpStorms&rsquo;s blog for details.</p>
-
-<h2>What else is missing?</h2>
-
-<p>I followed all the steps above by the book, double checked them, but the remote debugger continued to ignore
-all my efforts. I searched on the Internet but the directions I could find did not help very much. So, I went
-back to the documentation.</p>
-
-<p>XDebug provides an exhaustive <a href="http://xdebug.org/docs/remote">description</a> of how to set up remote PHP debugging. It explains
-there how the debug extension communicates with the client program (PhpStorm, in my case) and this was
-the starting point on the path to the solution of the problem.</p>
-
-<p>Back to the <a href="#xdebug-config">XDebug configuration</a>, <code>xdebug.remote_connect=1</code> tells it to attempt to connect
-to the host defined by <code>xdebug.remote_host</code> on port defined by <code>xdebug.remote_port</code>. The default values for
-them are <code>localhost</code> and <code>9000</code>.<br>
-Keep in mind that <code>localhost</code> refers to the host where the XDebug runs and that is the remote host and not
-the machine where the PhpStorm runs. This is why XDebug cannot communicate with PhpStorm.</p>
-
-<p>Setting <code>xdebug.remote_host</code> to the IP address of the local machine should do the trick, except that I cannot
-make it work. The remote server where the PHP scripts run is somewhere in the Internet. The workstation where
-PhpStorm runs is connected to a LAN that is behind a firewall. It uses an intranet IP address (<code>192.168.*.*</code>)
-and this (and the firewall) prevents the XDebug extension to call back to the IDE in order to start debugging.</p>
-
-<h2>Eventually, the solution</h2>
-
-<p>The solution is simple: create a SSH tunnel from port <code>9000</code> on the remote server to port <code>9000</code> of the local
-machine.</p>
-
-<p>In order to start the PHP script on the remote server, I already log into the remote machine using <code>ssh</code>.
-All I had to do was to log out then log in again appending <code>-R 9000:localhost:9000</code> to the <code>ssh</code> command line.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>ssh user@remote-host -R 9000:localhost:9000
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then I set up the environment variables as above, started the PHP script and the magic happened.</p>
-]]></content>
+scripts running on remote servers.&lt;/p&gt;
+&lt;p&gt;By reading the documentation of XDebug and PhpStorm I learned that some small tasks must be accomplished
+in order to make PhpStorm and XDebug co-operate for debugging.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="php" scheme="https://axiac.ro/tags/php/"/>
+    
+    <category term="troubleshooting" scheme="https://axiac.ro/tags/troubleshooting/"/>
+    
   </entry>
-
-
+  
   <entry>
-    <title type="html"><![CDATA[sh: 1: -t: not found]]></title>
+    <title>sh: 1: -t: not found</title>
     <link href="https://axiac.ro/blog/sh-1-t-not-found/"/>
-    <updated>2013-06-07T00:00:00+03:00</updated>
-    <id>https://axiac.ro/blog/sh-1-t-not-found</id>
-    <content type="html"><![CDATA[<h3>The problem</h3>
+    <id>https://axiac.ro/blog/sh-1-t-not-found/</id>
+    <published>2013-06-06T21:00:00.000Z</published>
+    <updated>2016-10-14T21:00:00.000Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;The-problem&quot;&gt;&lt;a href=&quot;#The-problem&quot; class=&quot;headerlink&quot; title=&quot;The problem&quot;&gt;&lt;/a&gt;The problem&lt;/h3&gt;&lt;p&gt;Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple processing: gets some data, creates a CSV file and sends the file using email.&lt;/p&gt;
+&lt;p&gt;When I manually ran it on the development environment everything went well except for the email not being sent and this strange line of text sneaked in the script’s output:&lt;/p&gt;
+&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sh: 1: -t: not found&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-<p>Recently I had to deal with a PHP script that was designed to run as a cron job. It does a simple
-processing: gets some data, creates a CSV file and sends the file using email.</p>
-
-<p>When I manually ran it on the development environment everything went well except for the email not being
-sent and this strange line of text sneaked in the script&rsquo;s output:</p>
-
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">sh: 1: -t: not found</code></pre></div>
-
-
-<p>The email not being sent wasn&rsquo;t a surprise, I knew that for some (technical or business) reason, the PHP code
-is unable to send emails from that particular machine. The strange error message (strange for me) is a different story.
-It was not generated by my code or by any of its dependencies.</p>
-
-<!-- more -->
-
-
-<p>Sure, a quick <a href="http://www.google.com/search?q=%22sh:+1:+-t:+not+found%22" title="Search this message on Google">search on Google</a> could bring some light over the mystery; this is how you reached this page,
-isn&rsquo;t it?</p>
-
-<p>Eventually I discovered the root cause of the problem by getting PHP info from the command line.</p>
-
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">$ </span>php -i <span class="p">|</span> grep sendmail
-<span class="nv">sendmail_from</span> <span class="o">=</span>&gt; no <span class="nv">value</span> <span class="o">=</span>&gt; no value
-<span class="nv">sendmail_path</span> <span class="o">=</span>&gt; -t -i <span class="o">=</span>&gt; -t -i
-Path to <span class="nv">sendmail</span> <span class="o">=</span>&gt; -t -i</code></pre></div>
-
-
-<p>The email is not sent because the property <code>sendmail_from</code> is not set in <code>php.ini</code>.</p>
-
-<h3>The solution</h3>
-
-<p>The fix is really easy: open <code>/etc/php.ini</code>, search for key <code>sendmail_path</code> and make sure it reads:</p>
-
-<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">sendmail_path</span><span class="o">=</span>sendmail -t -i</code></pre></div>
-
-
-<p>Additional or different parameters can be added after the command name (<code>sendmail</code>). If you use
-a different mail program on your system (<code>qmail</code>, <code>postfix</code> or something else) then replace <code>sendmail</code> with the
-name of the mail program you use. This is usually not necessary because most of the alternative mail programs
-create a link called <code>sendmail</code> that points to the actual mail program (for compatibility.)</p>
-
-<h3>The mystery</h3>
-
-<p>However, what is the meaning of each component of the error message?</p>
-
-<p>I peeked into the source code of PHP (version 5.4.16) on GitHub and this is what I found. The code that handles
-a call to the <code>mail()</code> function is located in file <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c" title="Open the PHP code file on GitHub">ext/standard/mail.c</a>.
-On line <a href="https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324" title="Highlight the code on line 324">324</a> it reads:</p>
-
-<figure class='code'><figcaption><span>mail.c</span><a href='https://github.com/php/php-src/blob/PHP-5.4.16/ext/standard/mail.c#L324'>See the complete file on GitHub </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>324</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">sendmail</span> <span class="o">=</span> <span class="n">popen</span><span class="p">(</span><span class="n">sendmail_cmd</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Several lines above, the variable <code>sendmail_cmd</code> is initialized with the value of <code>sendmail_path</code> defined in <code>php.ini</code> followed
-by the value of the 5<sup>th</sup> parameter of function <code>mail()</code>, if provided (its name is <code>$additional_parameters</code>.)<br />
-In my case, the first parameter of <code>popen()</code> was <code>-t -i</code> (no extra parameters were provided on the call to <code>mail()</code>.)</p>
-
-<h4>Who is popen() and what does it do for a living?</h4>
-
-<p><code>popen()</code> is a system function from the standard C library. Details can be found by running <code>man popen</code> in an Unix/Linux shell.
-See some relevant fragmens below:</p>
-
-<div class="highlight"><pre><code class="language-man" data-lang="man">SYNOPSIS
-  FILE *
-  popen(const char *command, const char *mode);
-
-DESCRIPTION
-  The popen() function ``opens&#39;&#39; a process by creating a bidirectional pipe, forking,
-  and invoking the shell.
-  ...
-  The `command` argument is a (...) string containing a shell command line. This command
-  is passed to `/bin/sh`, using the `-c` flag; interpretation, if any, is performed
-  by the shell.</code></pre></div>
-
-
-<p>This means <code>popen()</code> creates an instance of the classic Bourne shell <code>/bin/sh</code> and tells it to run the command <code>-t -i</code>.
-I tried this on the devel machine:</p>
-
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">axiac:~<span class="nv">$ </span>/bin/sh
-<span class="nv">$ </span>-t -i
-sh: 1: -t: not found</code></pre></div>
-
-
-<p>Et voilà! The error message is there!</p>
-
-<h4>Further investigation</h4>
-
-<p>I ran this command on several other Linux/Unix systems (including a Mac OS X Lion) and some of them provided the same
-output while on the others the <code>1:</code> part was missing. Further investigation revealed that on <em>some</em> of the systems that
-produce the error message <em>containing</em> the <code>1:</code> fragment, <code>/bin/sh</code> is, in fact, <a href="http://en.wikipedia.org/wiki/Debian_Almquist_shell" title="More info about Debian ash on Wikipedia"><code>dash</code></a>.</p>
-
-<p>I run several other commands on <code>dash</code>&rsquo;s command line and I found out that <code>1</code> from <code>1:</code> is the number of the command
-it (attempted to) ran since it started.</p>
-
-<p>I never worked with <code>dash</code> before (except when I thought <code>/bin/sh</code> is a symlink to <code>bash</code> and in fact it was <code>dash</code>.)
-I cannot tell why <code>dash</code> numbers the commands it runs and how can it be configured to do (or to not do) it so.</p>
-
-<h3>Conclusion</h3>
-
-<p>Investigating this cryptic error message we found some interesting things about the implementation of PHP. On a Linux/Unix
-system there are at least three ways to launch another program: <a href="http://man7.org/linux/man-pages/man2/fork.2.html"><code>fork()</code></a>+<a href="http://man7.org/linux/man-pages/man3/exec.3.html"><code>exec()</code></a>,
-<a href="http://man7.org/linux/man-pages/man3/system.3.html"><code>system()</code></a>, <a href="http://man7.org/linux/man-pages/man3/popen.3.html"><code>popen()</code></a>. By default, <code>sendmail</code>
-reads the message to send from <a href="http://man7.org/linux/man-pages/man3/stdin.3.html"><code>STDIN</code></a>. From the three methods above, <code>popen()</code> is the easiest (and the most natural) way
-to launch <code>sendmail</code> and pass some text to it.</p>
-
-<p>More than that, because <code>popen()</code> doesn&rsquo;t run the command by itself but passes it to a shell instance, this approach provides
-higher flexibility on defining the command used to send emails from PHP.
-The first token of <code>sendmail_path</code> configuration value can be a shell alias, a shell function, a pipe of commands, a list of commands
-or even a small script.</p>
-]]></content>
+&lt;p&gt;The email not being sent wasn’t a surprise, I knew that for some (technical or business) reason, the PHP code is unable to send emails from that particular machine. The strange error message (strange for me) is a different story. It was not generated by my code or by any of its dependencies.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="php" scheme="https://axiac.ro/tags/php/"/>
+    
+    <category term="troubleshooting" scheme="https://axiac.ro/tags/troubleshooting/"/>
+    
   </entry>
-
+  
 </feed>
