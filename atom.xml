@@ -6,7 +6,7 @@
   <link href="https://axiac.ro/atom.xml" rel="self"/>
   
   <link href="https://axiac.ro/"/>
-  <updated>2025-01-22T08:51:52.608Z</updated>
+  <updated>2025-02-06T10:54:24.943Z</updated>
   <id>https://axiac.ro/</id>
   
   <author>
@@ -21,18 +21,18 @@
     <link href="https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/"/>
     <id>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/</id>
     <published>2017-07-27T21:00:00.000Z</published>
-    <updated>2025-01-22T08:51:52.608Z</updated>
+    <updated>2025-02-06T10:54:24.943Z</updated>
     
     
     <summary type="html">&lt;p&gt;An interesting question from &lt;a href=&quot;https://stackoverflow.com/q/39259910/4265352&quot;&gt;Stack Overflow&lt;/a&gt; asks &lt;em&gt;“Why is MySQL’s maximum time limit 838:59:59?”&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;The official reference at &lt;a href=&quot;http://dev.mysql.com/doc/refman/5.7/en/time.html&quot;&gt;http://dev.mysql.com/doc/refman/5.7/en/time.html&lt;/a&gt; says&lt;/p&gt;
+&lt;p&gt;The official reference at &lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/time.html&quot;&gt;https://dev.mysql.com/doc/refman/5.7/en/time.html&lt;/a&gt; says&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;code&gt;TIME&lt;/code&gt; values may range from &lt;code&gt;-838:59:59&lt;/code&gt; to &lt;code&gt;838:59:59&lt;/code&gt;. The hours part may be so large
 because the &lt;code&gt;TIME&lt;/code&gt; type can be used not only to represent a time of day (which must be
 less than 24 hours), but also elapsed time or a time interval between two events
 (which may be much greater than 24 hours, or even negative).&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;The &lt;code&gt;TIME&lt;/code&gt; values were always stored on 3 bytes in MySQL. But the format changed on &lt;a href=&quot;http://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html&quot;&gt;version 5.6.4&lt;/a&gt;.&lt;/p&gt;</summary>
+&lt;p&gt;The &lt;code&gt;TIME&lt;/code&gt; values were always stored on 3 bytes in MySQL. But the format changed on &lt;a href=&quot;https://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html&quot;&gt;version 5.6.4&lt;/a&gt;.&lt;/p&gt;</summary>
     
     
     
@@ -48,7 +48,7 @@ less than 24 hours), but also elapsed time or a time interval between two events
     <link href="https://axiac.ro/blog/git-ignores-me-not-my-files/"/>
     <id>https://axiac.ro/blog/git-ignores-me-not-my-files/</id>
     <published>2017-02-04T22:00:00.000Z</published>
-    <updated>2025-01-22T08:51:39.905Z</updated>
+    <updated>2025-02-06T10:41:39.874Z</updated>
     
     
     <summary type="html">&lt;p&gt;A question that occurs frequently on the Q&amp;amp;A programming sites looks like this:&lt;/p&gt;
@@ -71,7 +71,7 @@ It seems Git doesn’t ignore the file, it ignores me. I’m desperate, please h
     <link href="https://axiac.ro/blog/how-to-merge-composer-files/"/>
     <id>https://axiac.ro/blog/how-to-merge-composer-files/</id>
     <published>2017-01-23T22:00:00.000Z</published>
-    <updated>2025-01-22T08:51:18.924Z</updated>
+    <updated>2025-02-06T10:42:30.159Z</updated>
     
     
     <summary type="html">&lt;p&gt;Resolving the conflicts in &lt;code&gt;composer.json&lt;/code&gt; can be done in the usual way: use a &lt;code&gt;diff&lt;/code&gt; tool and pull into the
@@ -94,7 +94,7 @@ merged file the correct changes from both sides. Save the merged file, add it to
     <link href="https://axiac.ro/blog/public-properties-are-not-oop/"/>
     <id>https://axiac.ro/blog/public-properties-are-not-oop/</id>
     <published>2016-10-15T14:56:57.000Z</published>
-    <updated>2025-01-22T08:50:52.634Z</updated>
+    <updated>2025-02-06T10:44:33.502Z</updated>
     
     
     <summary type="html">&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Object-oriented_programming#Encapsulation&quot;&gt;Encapsulation&lt;/a&gt; is one fundamental concept of object-oriented programming. It refers to
@@ -115,12 +115,12 @@ and not &lt;code&gt;public&lt;/code&gt;.&lt;/p&gt;</summary>
     <link href="https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/"/>
     <id>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</id>
     <published>2016-04-18T12:56:40.000Z</published>
-    <updated>2025-01-28T11:24:11.862Z</updated>
+    <updated>2025-02-06T10:54:24.942Z</updated>
     
     
     <summary type="html">&lt;img src=&quot;/images/blog/sismo-sourcetree.png&quot; alt=&quot;&quot; style=&quot;float: right; margin-left: 50px;&quot; /&gt;
 
-&lt;p&gt;This article explains how I made &lt;code&gt;Sismo&lt;/code&gt; work with Atlassian &lt;code&gt;SourceTree&lt;/code&gt; on &lt;code&gt;OSX&lt;/code&gt;. First I thought it doesn’t work
+&lt;p&gt;This article explains how I made &lt;code&gt;Sismo&lt;/code&gt; work with Atlassian SourceTree on &lt;code&gt;macOS&lt;/code&gt;. First I thought it doesn’t work
 out-of-the-box because of a &lt;code&gt;$PATH&lt;/code&gt; problem but soon it turned out that the biggest issue comes from the command line
 used for integration. Keep reading to learn how I found it out and how easy is to fix it.&lt;/p&gt;</summary>
     
@@ -138,10 +138,10 @@ used for integration. Keep reading to learn how I found it out and how easy is t
     <link href="https://axiac.ro/blog/distinct-vs-group-by-with-rollup/"/>
     <id>https://axiac.ro/blog/distinct-vs-group-by-with-rollup/</id>
     <published>2015-04-17T21:00:00.000Z</published>
-    <updated>2025-01-22T08:45:28.810Z</updated>
+    <updated>2025-02-06T10:50:39.704Z</updated>
     
     
-    <summary type="html">&lt;h2 id=&quot;or-why-2-2-is-not-always-4&quot;&gt;&lt;a href=&quot;#or-why-2-2-is-not-always-4&quot; class=&quot;headerlink&quot; title=&quot;or why 2+2 is not always 4&quot;&gt;&lt;/a&gt;or why 2+2 is not always 4&lt;/h2&gt;&lt;p&gt;&lt;code&gt;WITH ROLLUP&lt;/code&gt; is a &lt;a href=&quot;http://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html&quot;&gt;&lt;code&gt;GROUP BY&lt;/code&gt; modifier&lt;/a&gt; that causes extra rows to be added to
+    <summary type="html">&lt;h2 id=&quot;or-why-2-2-is-not-always-4&quot;&gt;&lt;a href=&quot;#or-why-2-2-is-not-always-4&quot; class=&quot;headerlink&quot; title=&quot;or why 2+2 is not always 4&quot;&gt;&lt;/a&gt;or why 2+2 is not always 4&lt;/h2&gt;&lt;p&gt;&lt;code&gt;WITH ROLLUP&lt;/code&gt; is a &lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html&quot;&gt;&lt;code&gt;GROUP BY&lt;/code&gt; modifier&lt;/a&gt; that causes extra rows to be added to
 the result set produced by the query. These rows represent higher-level (or super-aggregate)
 summary operations.&lt;/p&gt;
 &lt;p&gt;A shallow examination of the effects of &lt;code&gt;WITH ROLLUP&lt;/code&gt; on a query like:&lt;/p&gt;
@@ -165,10 +165,10 @@ could be computed on the client-side as well. Big mistake!&lt;/p&gt;</summary>
     <link href="https://axiac.ro/blog/do-you-clone-the-datetime-objects/"/>
     <id>https://axiac.ro/blog/do-you-clone-the-datetime-objects/</id>
     <published>2015-02-16T22:00:00.000Z</published>
-    <updated>2025-01-22T08:35:17.144Z</updated>
+    <updated>2025-02-06T10:54:24.979Z</updated>
     
     
-    <summary type="html">&lt;p&gt;The &lt;a href=&quot;http://php.net/manual/en/class.datetime.php&quot;&gt;&lt;code&gt;DateTime&lt;/code&gt;&lt;/a&gt; class and its friends introduced in PHP 5.2 are a very nice replacement
+    <summary type="html">&lt;p&gt;The &lt;a href=&quot;https://php.net/manual/en/class.datetime.php&quot;&gt;&lt;code&gt;DateTime&lt;/code&gt;&lt;/a&gt; class and its friends introduced in PHP 5.2 are a very nice replacement
 for the old date &amp;amp; time processing functions (&lt;code&gt;date()&lt;/code&gt;, &lt;code&gt;getdate()&lt;/code&gt;, &lt;code&gt;strftime()&lt;/code&gt;, &lt;code&gt;strtotime()&lt;/code&gt; and so on).&lt;/p&gt;
 &lt;p&gt;But they come with a minor glitch that is hidden in the plain sight: they are objects and as all the other
 objects in PHP, they are assigned and passed as parameters by reference&lt;a href=&quot;#note-1&quot;&gt;&lt;sup&gt;[1]&lt;/sup&gt;&lt;/a&gt; and not as copies.&lt;/p&gt;
@@ -184,11 +184,11 @@ try to change it.&lt;/p&gt;</summary>
   </entry>
   
   <entry>
-    <title>Join two Git repositories and keep the original commit dates.</title>
+    <title>Join two Git repositories and keep the original commit dates</title>
     <link href="https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/"/>
     <id>https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/</id>
     <published>2014-11-16T22:00:00.000Z</published>
-    <updated>2025-01-22T08:34:55.125Z</updated>
+    <updated>2025-02-06T11:06:02.596Z</updated>
     
     
     <summary type="html">&lt;p&gt;Several years ago I started a project that was stored in a Subversion repository. After
@@ -212,7 +212,7 @@ into a single Git repository as we have used Git from the project beginning.&lt;
     <link href="https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"/>
     <id>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</id>
     <published>2014-10-14T09:34:56.000Z</published>
-    <updated>2025-01-22T08:32:12.925Z</updated>
+    <updated>2025-02-06T11:57:09.666Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;Problema-de-clasa-a-VI-a&quot;&gt;&lt;a href=&quot;#Problema-de-clasa-a-VI-a&quot; class=&quot;headerlink&quot; title=&quot;Problemă (de clasa a VI-a)&quot;&gt;&lt;/a&gt;Problemă (de clasa a VI-a)&lt;/h2&gt;&lt;p&gt;Să se afle ultimele 4 cifre ale numărului: &lt;em&gt;S&lt;/em&gt; &amp;#x3D; 9^1 + 9^2 + 9^3 + … + 9^400&lt;/p&gt;
@@ -234,11 +234,11 @@ Să calculăm primele câteva puteri ale lui 9 și să vedem cum evoluează ulti
     <link href="https://axiac.ro/blog/debug-remote-php-cli-scripts/"/>
     <id>https://axiac.ro/blog/debug-remote-php-cli-scripts/</id>
     <published>2014-03-03T22:00:00.000Z</published>
-    <updated>2025-01-22T08:32:12.984Z</updated>
+    <updated>2025-02-06T10:54:25.163Z</updated>
     
     
     <summary type="html">&lt;p&gt;I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
-I am using &lt;a href=&quot;http://www.jetbrains.com/phpstorm&quot;&gt;PhpStorm&lt;/a&gt; and &lt;a href=&quot;http://xdebug.org/&quot;&gt;XDebug&lt;/a&gt;.&lt;/p&gt;
+I am using &lt;a href=&quot;https://www.jetbrains.com/phpstorm&quot;&gt;PhpStorm&lt;/a&gt; and &lt;a href=&quot;https://xdebug.org/&quot;&gt;XDebug&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;PhpStorm comes with a rich set of configurations to run a PHP script, including a couple of presets for debug.
 I used them to debug web pages and command line scripts running on the local computer but nothing worked for
 scripts running on remote servers.&lt;/p&gt;

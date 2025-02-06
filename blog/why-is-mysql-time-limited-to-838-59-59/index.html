@@ -21,6 +21,17 @@
     
 
     
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
+
+    
 
     
 <script src="/js/modernizr-2.0.js"></script>
@@ -116,20 +127,21 @@
         </header>
         <div class="entry-content">
             <p>An interesting question from <a target="_blank" rel="noopener" href="https://stackoverflow.com/q/39259910/4265352">Stack Overflow</a> asks <em>“Why is MySQL’s maximum time limit 838:59:59?”</em></p>
-<p>The official reference at <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/refman/5.7/en/time.html">http://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
+<p>The official reference at <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/time.html">https://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
 <blockquote>
 <p><code>TIME</code> values may range from <code>-838:59:59</code> to <code>838:59:59</code>. The hours part may be so large
 because the <code>TIME</code> type can be used not only to represent a time of day (which must be
 less than 24 hours), but also elapsed time or a time interval between two events
 (which may be much greater than 24 hours, or even negative).</p>
 </blockquote>
-<p>The <code>TIME</code> values were always stored on 3 bytes in MySQL. But the format changed on <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html">version 5.6.4</a>.</p>
+<p>The <code>TIME</code> values were always stored on 3 bytes in MySQL. But the format changed on <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html">version 5.6.4</a>.</p>
 <span id="more"></span>
+
 <p>I suspect this was not the first time when it changed. But the other change, if there was one, happened
 long time ago and there is no public evidence of it. The MySQL source code history on GitHub starts with
 version 5.5 (the oldest commit is from May 2008) but the change I am looking for happened somewhere
 around 2001-2002. The first stable release of MySQL 4 (version 4.0.4) was launched in September 2002.</p>
-<h3 id="How-the-TIME-values-are-stored-since-version-5-6-4"><a href="#How-the-TIME-values-are-stored-since-version-5-6-4" class="headerlink" title="How the TIME values are stored since version 5.6.4"></a>How the <code>TIME</code> values are stored since version 5.6.4</h3><p>The current format, as described in the <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/refman/5.7/en/time.html">documentation</a>, uses the 24 bits as follows:</p>
+<h3 id="How-the-TIME-values-are-stored-since-version-5-6-4"><a href="#How-the-TIME-values-are-stored-since-version-5-6-4" class="headerlink" title="How the TIME values are stored since version 5.6.4"></a>How the <code>TIME</code> values are stored since version 5.6.4</h3><p>The current format, as described in the <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/time.html">documentation</a>, uses the 24 bits as follows:</p>
 <ul>
 <li>6 bits for seconds (possible values: <code>0</code> to <code>63</code>);</li>
 <li>6 bits for minutes (again, possible values: <code>0</code> to <code>63</code>);</li>
@@ -154,9 +166,9 @@ range using nested <code>SELECT</code> statements. It was not a feature but a bu
 <code>TIME</code> values outside it was backward compatibility.</p>
 <p>I suspect MySQL 3 used a different format that, due to the way the data was packed,
 limited the valid values to the range <code>-838..+838</code> hours.</p>
-<p>By looking into the current <a target="_blank" rel="noopener" href="https://github.com/mysql/mysql-server/blob/5.7/include/my_time.h#L94">MySQL’s source code</a> I found this interesting formula:</p>
-<pre><code>#define TIME_MAX_VALUE (TIME_MAX_HOUR*10000 + TIME_MAX_MINUTE*100 + TIME_MAX_SECOND)
-</code></pre>
+<p>By looking into the current <a target="_blank" rel="noopener" href="https://github.com/mysql/mysql-server/blob/5.7/include/my_time.h#L101">MySQL’s source code</a> I found this interesting formula:</p>
+<figure class="highlight c"><figcaption><span>include/my_time.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_VALUE (TIME_MAX_HOUR*10000 + TIME_MAX_MINUTE*100 + TIME_MAX_SECOND)</span></span><br></pre></td></tr></table></figure>
+
 <p>Let’s ignore for the moment the <em><code>MAX</code></em> part of the names used above and let’s remember only that
 <code>TIME_MAX_MINUTE</code> and <code>TIME_MAX_SECOND</code> are numbers between <code>00</code> and <code>59</code>.
 The formula just concatenates the hours, minutes and seconds in a single integer number.<br>
@@ -168,7 +180,7 @@ Since the last four digits (<code>8607</code>) should be read as minutes (<code>
 valid value is <code>59</code>, the greatest value that can be stored on 3 bytes with sign using the formula above is <code>8385959</code>.
 Which, as <code>TIME</code> is <code>+838:59:59</code>. Ta-da!</p>
 <p>Guess what? The fragment of <code>C</code> code listed above was extracted from:</p>
-<figure class="highlight c"><figcaption><span>my_time.h start:90 <https://github.com/mysql/mysql-server/blob/5.7/include/my_time.h#L90> See the file on Github</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*Limits for the TIME data type*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_HOUR 838</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_MINUTE 59</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_SECOND 59</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_VALUE (TIME_MAX_HOUR*10000 + TIME_MAX_MINUTE*100 + TIME_MAX_SECOND)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><figcaption><span>my_time.h <https://github.com/mysql/mysql-server/blob/5.7/include/my_time.h#L97> See the file on Github</span></figcaption><table><tr><td class="gutter"><pre><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Limits for the TIME data type */</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_HOUR 838</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_MINUTE 59</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_SECOND 59</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> TIME_MAX_VALUE (TIME_MAX_HOUR*10000 + TIME_MAX_MINUTE*100 + TIME_MAX_SECOND)</span></span><br></pre></td></tr></table></figure>
 
 <p>Now I am sure this is how MySQL 3 used to keep the <code>TIME</code> values internally. This format imposed the limitation
 of the range, and the backward compatibility requirement on the subsequent versions propagated
@@ -203,7 +215,7 @@ the limitation to our days.</p>
                 
 
                 
-                <a class="basic-alignment right" href="/" title="Previous Post: Git Ignores Me, Not My Files">Git Ignores Me, Not My Files »</a>
+                <a class="basic-alignment right" href="/blog/git-ignores-me-not-my-files/" title="Previous Post: Git Ignores Me, Not My Files"> Git Ignores Me, Not My Files » </a>
                 
             </p>
         </footer>
@@ -216,7 +228,7 @@ the limitation to our days.</p>
 <aside class="sidebar">
     <section class="odd">
     <h1>Recent Posts</h1>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
 </section><section class="even">
     <h1>GitHub Repos</h1>
     <ul id="gh_repos">

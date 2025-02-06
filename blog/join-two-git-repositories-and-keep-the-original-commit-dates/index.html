@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Join two Git repositories and keep the original commit dates.</title>
+    <title>Join two Git repositories and keep the original commit dates</title>
 
     <meta name="author" content="axiac">
 
@@ -19,6 +19,17 @@
     
         <link rel="alternate" href="/atom.xml" type="application/atom+xml">
     
+
+    
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
 
     
 
@@ -109,7 +120,7 @@
         <div>
     <article class="hentry" role="article">
         <header>
-            <h1 class="entry-title">Join two Git repositories and keep the original commit dates.</h1>
+            <h1 class="entry-title">Join two Git repositories and keep the original commit dates</h1>
             <p class="meta">
                 <time datetime="2014-11-16T22:00:00.000Z" data-updated="true">Mon Nov 17 2014</time>
             </p>
@@ -125,7 +136,7 @@ into a single Git repository as we have used Git from the project beginning.</p>
 <p>I’ll explain below how to accomplish this goal.</p>
 <span id="more"></span>
 
-<p>I started by using <a target="_blank" rel="noopener" href="http://subgit.com/">SubGit</a> to import the Subversion commits into a new Git repository.
+<p>I started by using <a target="_blank" rel="noopener" href="https://subgit.com/">SubGit</a> to import the Subversion commits into a new Git repository.
 I could do the import with <code>git svn</code> but SubGit does a better job.</p>
 <h2 id="The-request"><a href="#The-request" class="headerlink" title="The request"></a>The request</h2><p>In a graphical fashion, the starting setup looks like this:</p>
 <pre><code> o &lt;- second-head, second-master    \
@@ -176,7 +187,7 @@ commit dates are again set to the current date&amp;time.</p>
 <h3 id="What’s-wrong"><a href="#What’s-wrong" class="headerlink" title="What’s wrong?"></a>What’s wrong?</h3><p>Nothing is wrong. The help explains: <code>--preserve-merges</code> internally uses the
 <code>--interactive</code> machinery and <code>--committer-date-is-author-date</code> is incompatible with <code>--interactive</code>.</p>
 <p>Apparently this is a dead end.</p>
-<h3 id="Really"><a href="#Really" class="headerlink" title="Really?"></a>Really?</h3><p>I did some research on the Internet and I found a partial solution in an <a target="_blank" rel="noopener" href="http://stackoverflow.com/a/19522951/4265352">answer</a>
+<h3 id="Really"><a href="#Really" class="headerlink" title="Really?"></a>Really?</h3><p>I did some research on the Internet and I found a partial solution in an <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/19522951/4265352">answer</a>
 on StackOverflow. It is not completely baked, it even fails with a syntax error, but it helped me
 to find the right path and the complete solution.</p>
 <h2 id="My-solution"><a href="#My-solution" class="headerlink" title="My solution"></a>My solution</h2><p>The solution involves several steps:</p>
@@ -302,7 +313,7 @@ join points are set up correctly.</p>
 directory off-disk with the -d option, e.g. on tmpfs.
 Reportedly the speedup is very noticeable.</p>
 </blockquote>
-<p>  It took a couple of seconds for me, for about 2,500 commits but it is not relevant because my repository
+<p>  It took a couple of seconds for me, for about 2,500 commits, but it is not relevant because my repository
   was stored on a SSD.</p>
 <ul>
 <li><p>Because of the rebase, <strong>ALL</strong> the commits from the newer repository changed their hashes. If the
@@ -330,7 +341,7 @@ continue afterwards without losing their work</em>.</p>
             <div class="sharing">
     
         <a class="twitter-share-button"
-           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=Join%20two%20Git%20repositories%20and%20keep%20the%20original%20commit%20dates.">
+           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=Join%20two%20Git%20repositories%20and%20keep%20the%20original%20commit%20dates">
             Tweet
         </a>
     
@@ -338,11 +349,11 @@ continue afterwards without losing their work</em>.</p>
 
             <p class="meta">
                 
-                <a class="basic-alignment left" href="/" title="Previous Post: Do You Clone the DateTime Objects?">« Do You Clone the DateTime Objects?</a>
+                <a class="basic-alignment left" href="/blog/do-you-clone-the-datetime-objects/" title="Previous Post: Do You Clone the DateTime Objects?">« Do You Clone the DateTime Objects?</a>
                 
 
                 
-                <a class="basic-alignment right" href="/" title="Previous Post: Să se afle ultimele 4 cifre ale numărului">Să se afle ultimele 4 cifre ale numărului »</a>
+                <a class="basic-alignment right" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/" title="Previous Post: Să se afle ultimele 4 cifre ale numărului"> Să se afle ultimele 4 cifre ale numărului » </a>
                 
             </p>
         </footer>
@@ -355,7 +366,7 @@ continue afterwards without losing their work</em>.</p>
 <aside class="sidebar">
     <section class="odd">
     <h1>Recent Posts</h1>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
 </section><section class="even">
     <h1>GitHub Repos</h1>
     <ul id="gh_repos">

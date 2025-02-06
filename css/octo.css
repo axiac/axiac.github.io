@@ -1733,7 +1733,7 @@ figure.code pre {
     margin-bottom: 0
 }
 
-figure.code figcaption {
+figure.code figcaption, figure.highlight figcaption {
     position: relative
 }
 
@@ -1741,7 +1741,7 @@ figure.code .highlight {
     margin-bottom: 0
 }
 
-.code-title, html .gist .gist-file .gist-meta a[href*='#file'], h3.filename, figure.code figcaption {
+.code-title, html .gist .gist-file .gist-meta a[href*='#file'], h3.filename, figure.code figcaption, figure.highlight figcaption {
     text-align: center;
     font-size: 13px;
     line-height: 2em;
@@ -1750,7 +1750,7 @@ figure.code .highlight {
     border-radius: 0 0 2px 2px;
 }
 
-.download-source, html .gist .gist-file .gist-meta a[href*=raw], figure.code figcaption a {
+.download-source, html .gist .gist-file .gist-meta a[href*=raw], figure.code figcaption a, figure.highlight figcaption a {
     position: absolute;
     right: .8em;
     text-decoration: none;
@@ -1760,7 +1760,7 @@ figure.code .highlight {
     padding-left: 3em
 }
 
-.download-source:hover, html .gist .gist-file .gist-meta a[href*=raw]:hover, figure.code figcaption a:hover {
+.download-source:hover, html .gist .gist-file .gist-meta a[href*=raw]:hover, figure.code figcaption a:hover, figure.highlight figcaption a:hover {
     text-decoration: underline
 }
 

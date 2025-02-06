@@ -2,63 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</loc>
+    <loc>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</loc>
     
-    <lastmod>2025-01-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/</loc>
-    
-    <lastmod>2025-01-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/blog/git-ignores-me-not-my-files/</loc>
-    
-    <lastmod>2025-01-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/blog/how-to-merge-composer-files/</loc>
-    
-    <lastmod>2025-01-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/blog/public-properties-are-not-oop/</loc>
-    
-    <lastmod>2025-01-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/blog/distinct-vs-group-by-with-rollup/</loc>
-    
-    <lastmod>2025-01-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/blog/do-you-clone-the-datetime-objects/</loc>
-    
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-02-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -67,7 +13,7 @@
   <url>
     <loc>https://axiac.ro/blog/join-two-git-repositories-and-keep-the-original-commit-dates/</loc>
     
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-02-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -76,16 +22,70 @@
   <url>
     <loc>https://axiac.ro/blog/debug-remote-php-cli-scripts/</loc>
     
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-02-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</loc>
+    <loc>https://axiac.ro/blog/do-you-clone-the-datetime-objects/</loc>
     
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2025-02-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/why-is-mysql-time-limited-to-838-59-59/</loc>
+    
+    <lastmod>2025-02-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</loc>
+    
+    <lastmod>2025-02-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/distinct-vs-group-by-with-rollup/</loc>
+    
+    <lastmod>2025-02-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/public-properties-are-not-oop/</loc>
+    
+    <lastmod>2025-02-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/how-to-merge-composer-files/</loc>
+    
+    <lastmod>2025-02-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/blog/git-ignores-me-not-my-files/</loc>
+    
+    <lastmod>2025-02-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -152,14 +152,14 @@
   </url>
   
   <url>
-    <loc>https://axiac.ro/tags/OOP/</loc>
+    <loc>https://axiac.ro/tags/macOS/</loc>
     <lastmod>2025-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://axiac.ro/tags/macOS/</loc>
+    <loc>https://axiac.ro/tags/OOP/</loc>
     <lastmod>2025-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

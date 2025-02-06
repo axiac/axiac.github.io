@@ -21,6 +21,17 @@
     
 
     
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
+
+    
 
     
 <script src="/js/modernizr-2.0.js"></script>
@@ -119,14 +130,14 @@
                 </p>
             </header>
             <div class="entry-content"><p>An interesting question from <a target="_blank" rel="noopener" href="https://stackoverflow.com/q/39259910/4265352">Stack Overflow</a> asks <em>“Why is MySQL’s maximum time limit 838:59:59?”</em></p>
-<p>The official reference at <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/refman/5.7/en/time.html">http://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
+<p>The official reference at <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/time.html">https://dev.mysql.com/doc/refman/5.7/en/time.html</a> says</p>
 <blockquote>
 <p><code>TIME</code> values may range from <code>-838:59:59</code> to <code>838:59:59</code>. The hours part may be so large
 because the <code>TIME</code> type can be used not only to represent a time of day (which must be
 less than 24 hours), but also elapsed time or a time interval between two events
 (which may be much greater than 24 hours, or even negative).</p>
 </blockquote>
-<p>The <code>TIME</code> values were always stored on 3 bytes in MySQL. But the format changed on <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html">version 5.6.4</a>.</p></div>
+<p>The <code>TIME</code> values were always stored on 3 bytes in MySQL. But the format changed on <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/internals/en/date-and-time-data-type-representation.html">version 5.6.4</a>.</p></div>
             <footer>
                 <a rel="full-article" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Read on →</a>
             </footer>
@@ -200,7 +211,7 @@ and not <code>public</code>.</p></div>
             </header>
             <div class="entry-content"><img src="/images/blog/sismo-sourcetree.png" alt="" style="float: right; margin-left: 50px;" />
 
-<p>This article explains how I made <code>Sismo</code> work with Atlassian <code>SourceTree</code> on <code>OSX</code>. First I thought it doesn’t work
+<p>This article explains how I made <code>Sismo</code> work with Atlassian SourceTree on <code>macOS</code>. First I thought it doesn’t work
 out-of-the-box because of a <code>$PATH</code> problem but soon it turned out that the biggest issue comes from the command line
 used for integration. Keep reading to learn how I found it out and how easy is to fix it.</p></div>
             <footer>
@@ -217,7 +228,7 @@ used for integration. Keep reading to learn how I found it out and how easy is t
                     <time datetime="2015-04-17T21:00:00.000Z" data-updated="true">Sat Apr 18 2015</time>
                 </p>
             </header>
-            <div class="entry-content"><h2 id="or-why-2-2-is-not-always-4"><a href="#or-why-2-2-is-not-always-4" class="headerlink" title="or why 2+2 is not always 4"></a>or why 2+2 is not always 4</h2><p><code>WITH ROLLUP</code> is a <a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html"><code>GROUP BY</code> modifier</a> that causes extra rows to be added to
+            <div class="entry-content"><h2 id="or-why-2-2-is-not-always-4"><a href="#or-why-2-2-is-not-always-4" class="headerlink" title="or why 2+2 is not always 4"></a>or why 2+2 is not always 4</h2><p><code>WITH ROLLUP</code> is a <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/group-by-modifiers.html"><code>GROUP BY</code> modifier</a> that causes extra rows to be added to
 the result set produced by the query. These rows represent higher-level (or super-aggregate)
 summary operations.</p>
 <p>A shallow examination of the effects of <code>WITH ROLLUP</code> on a query like:</p>
@@ -240,7 +251,7 @@ could be computed on the client-side as well. Big mistake!</p></div>
                     <time datetime="2015-02-16T22:00:00.000Z" data-updated="true">Tue Feb 17 2015</time>
                 </p>
             </header>
-            <div class="entry-content"><p>The <a target="_blank" rel="noopener" href="http://php.net/manual/en/class.datetime.php"><code>DateTime</code></a> class and its friends introduced in PHP 5.2 are a very nice replacement
+            <div class="entry-content"><p>The <a target="_blank" rel="noopener" href="https://php.net/manual/en/class.datetime.php"><code>DateTime</code></a> class and its friends introduced in PHP 5.2 are a very nice replacement
 for the old date &amp; time processing functions (<code>date()</code>, <code>getdate()</code>, <code>strftime()</code>, <code>strtotime()</code> and so on).</p>
 <p>But they come with a minor glitch that is hidden in the plain sight: they are objects and as all the other
 objects in PHP, they are assigned and passed as parameters by reference<a href="#note-1"><sup>[1]</sup></a> and not as copies.</p>
@@ -255,7 +266,7 @@ try to change it.</p></div>
         <article>
             <header>
                 <h1 class="entry-title">
-                    <a href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a>
+                    <a href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates</a>
                 </h1>
                 <p class="meta">
                     <time datetime="2014-11-16T22:00:00.000Z" data-updated="true">Mon Nov 17 2014</time>
@@ -302,7 +313,7 @@ Să calculăm primele câteva puteri ale lui 9 și să vedem cum evoluează ulti
                 </p>
             </header>
             <div class="entry-content"><p>I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
-I am using <a target="_blank" rel="noopener" href="http://www.jetbrains.com/phpstorm">PhpStorm</a> and <a target="_blank" rel="noopener" href="http://xdebug.org/">XDebug</a>.</p>
+I am using <a target="_blank" rel="noopener" href="https://www.jetbrains.com/phpstorm">PhpStorm</a> and <a target="_blank" rel="noopener" href="https://xdebug.org/">XDebug</a>.</p>
 <p>PhpStorm comes with a rich set of configurations to run a PHP script, including a couple of presets for debug.
 I used them to debug web pages and command line scripts running on the local computer but nothing worked for
 scripts running on remote servers.</p>
@@ -324,7 +335,7 @@ in order to make PhpStorm and XDebug co-operate for debugging.</p></div>
 <aside class="sidebar">
     <section class="odd">
     <h1>Recent Posts</h1>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
 </section><section class="even">
     <h1>GitHub Repos</h1>
     <ul id="gh_repos">

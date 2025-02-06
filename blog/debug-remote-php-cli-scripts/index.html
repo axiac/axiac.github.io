@@ -21,6 +21,17 @@
     
 
     
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
+
+    
 
     
 <script src="/js/modernizr-2.0.js"></script>
@@ -116,7 +127,7 @@
         </header>
         <div class="entry-content">
             <p>I had to debug a command line PHP script that runs on a remote server and I could not figure out how to do it.
-I am using <a target="_blank" rel="noopener" href="http://www.jetbrains.com/phpstorm">PhpStorm</a> and <a target="_blank" rel="noopener" href="http://xdebug.org/">XDebug</a>.</p>
+I am using <a target="_blank" rel="noopener" href="https://www.jetbrains.com/phpstorm">PhpStorm</a> and <a target="_blank" rel="noopener" href="https://xdebug.org/">XDebug</a>.</p>
 <p>PhpStorm comes with a rich set of configurations to run a PHP script, including a couple of presets for debug.
 I used them to debug web pages and command line scripts running on the local computer but nothing worked for
 scripts running on remote servers.</p>
@@ -126,7 +137,7 @@ in order to make PhpStorm and XDebug co-operate for debugging.</p>
 
 
 <h2 id="Installing-and-configuring-XDebug"><a href="#Installing-and-configuring-XDebug" class="headerlink" title="Installing and configuring XDebug"></a>Installing and configuring XDebug</h2><p>Installing XDebug depends on the OS that runs on the remote server and everything is explained in the
-<a target="_blank" rel="noopener" href="http://xdebug.org/docs/">XDebug documentation</a>.</p>
+<a target="_blank" rel="noopener" href="https://xdebug.org/docs/">XDebug documentation</a>.</p>
 <p>A single line of configuration is required. In <code>php.ini</code> add:</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">xdebug.remote_enable</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
 
@@ -140,7 +151,7 @@ and configuring the XDebug extension. It requires the presence of a special vari
 environment.</p>
 <p>For CLI scripts this is the environment variable <code>XDEBUG_CONFIG</code>. While its mere presence is enough
 to start the debugging, its content is also important: it can be used to override the values declared in <code>php.ini</code>.<br>
-More details in the XDebug <a target="_blank" rel="noopener" href="http://xdebug.org/docs/remote#starting">documentation</a>.</p>
+More details in the XDebug <a target="_blank" rel="noopener" href="https://xdebug.org/docs/remote#starting">documentation</a>.</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XDEBUG_CONFIG=<span class="string">&#x27;&#x27;</span> php script.php</span><br></pre></td></tr></table></figure>
 
 <p>By prepending the command line with the initialization of the environment variable, the variable is set only
@@ -158,11 +169,11 @@ PhpStorm asks the debugger about the value of the environment variable <code>PHP
 as an environment variable.</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PHP_IDE_CONFIG=<span class="string">&quot;serverName=devel-host&quot;</span></span><br><span class="line">XDEBUG_CONFIG=<span class="string">&#x27;&#x27;</span> php script.php</span><br></pre></td></tr></table></figure>
 
-<p>Check <a target="_blank" rel="noopener" href="http://blog.jetbrains.com/webide/2012/03/new-in-4-0-easier-debugging-of-remote-php-command-line-scripts/">this post</a> on PhpStorms’s blog for details.</p>
+<p>Check <a target="_blank" rel="noopener" href="https://blog.jetbrains.com/webide/2012/03/new-in-4-0-easier-debugging-of-remote-php-command-line-scripts/">this post</a> on PhpStorms’s blog for details.</p>
 <h2 id="What-else-is-missing"><a href="#What-else-is-missing" class="headerlink" title="What else is missing?"></a>What else is missing?</h2><p>I followed all the steps above by the book, double checked them, but the remote debugger continued to ignore
 all my efforts. I searched on the Internet but the directions I could find did not help very much. So, I went
 back to the documentation.</p>
-<p>XDebug provides an exhaustive <a target="_blank" rel="noopener" href="http://xdebug.org/docs/remote">description</a> of how to set up remote PHP debugging. It explains
+<p>XDebug provides an exhaustive <a target="_blank" rel="noopener" href="https://xdebug.org/docs/remote">description</a> of how to set up remote PHP debugging. It explains
 there how the debug extension communicates with the client program (PhpStorm, in my case) and this was
 the starting point on the path to the solution of the problem.</p>
 <p>Back to the <a href="#installing-and-configuring-xdebug">XDebug configuration</a>, <code>xdebug.remote_connect=1</code> tells it to attempt to connect
@@ -209,11 +220,11 @@ All I had to do was to log out then log in again appending <code>-R 9000:localho
 
             <p class="meta">
                 
-                <a class="basic-alignment left" href="/" title="Previous Post: Să se afle ultimele 4 cifre ale numărului">« Să se afle ultimele 4 cifre ale numărului</a>
+                <a class="basic-alignment left" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/" title="Previous Post: Să se afle ultimele 4 cifre ale numărului">« Să se afle ultimele 4 cifre ale numărului</a>
                 
 
                 
-                <a class="basic-alignment right" href="/" title="Previous Post: sh: 1: -t: not found">sh: 1: -t: not found »</a>
+                <a class="basic-alignment right" href="/blog/sh-1-t-not-found/" title="Previous Post: sh: 1: -t: not found"> sh: 1: -t: not found » </a>
                 
             </p>
         </footer>
@@ -226,7 +237,7 @@ All I had to do was to log out then log in again appending <code>-R 9000:localho
 <aside class="sidebar">
     <section class="odd">
     <h1>Recent Posts</h1>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
 </section><section class="even">
     <h1>GitHub Repos</h1>
     <ul id="gh_repos">

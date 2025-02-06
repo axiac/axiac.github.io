@@ -21,6 +21,17 @@
     
 
     
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
+
+    
 
     
 <script src="/js/modernizr-2.0.js"></script>
@@ -117,12 +128,12 @@
         <div class="entry-content">
             <img src="/images/blog/sismo-sourcetree.png" alt="" style="float: right; margin-left: 50px;" />
 
-<p>This article explains how I made <code>Sismo</code> work with Atlassian <code>SourceTree</code> on <code>OSX</code>. First I thought it doesn’t work
+<p>This article explains how I made <code>Sismo</code> work with Atlassian SourceTree on <code>macOS</code>. First I thought it doesn’t work
 out-of-the-box because of a <code>$PATH</code> problem but soon it turned out that the biggest issue comes from the command line
 used for integration. Keep reading to learn how I found it out and how easy is to fix it.</p>
 <span id="more"></span>
 
-<h2 id="The-actors"><a href="#The-actors" class="headerlink" title="The actors"></a>The actors</h2><p><strong><a target="_blank" rel="noopener" href="http://sourcetreeapp.com/">Atlassian SourceTree</a></strong> is a GUI for Git and Mercurial that runs on Windows and OSX. It covers most of the basic VCS
+<h2 id="The-actors"><a href="#The-actors" class="headerlink" title="The actors"></a>The actors</h2><p><strong><a target="_blank" rel="noopener" href="https://sourcetreeapp.com/">Atlassian SourceTree</a></strong> is a GUI for Git and Mercurial that runs on Windows and OSX. It covers most of the basic VCS
 workflow; it provides a handy button that opens a command line console in the work tree directory, allowing the user
 to type the advanced commands it doesn’t provide. All in all, it is a good tool for the daily needs of any developer
 regarding the source code versioning.</p>
@@ -130,14 +141,14 @@ regarding the source code versioning.</p>
 to verify the shape of the code before committing the changes (can run the tests, verify the formatting etc).
 The post-commit hook can be used to send notification emails, to trigger project builds on the continuous
 integration server and so on.</p>
-<p><strong><a target="_blank" rel="noopener" href="http://sismo.sensiolabs.org/">Sismo</a></strong> is a <em>continuous testing server</em> published by Fabien Potencier (the creator of <a target="_blank" rel="noopener" href="http://symfony.com/">Symfony</a>).
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/FriendsOfPHP/Sismo">Sismo</a></strong> is a <em>continuous testing server</em> published by Fabien Potencier (the creator of <a target="_blank" rel="noopener" href="https://symfony.com/">Symfony</a>).
 It is small (everything is packed in a single PHP file that can run both as CLI and as web page), it is fast
 and dumb-easy to configure.</p>
 <h2 id="The-play"><a href="#The-play" class="headerlink" title="The play"></a>The play</h2><p>I’m working with Git and SourceTree for years. Sismo joined the group last week and making it work standalone
-was <a target="_blank" rel="noopener" href="http://www.quotationspage.com/quote/237.html">as easy as taking candy from a baby</a>. I created a project and put <code>composer; phpunit</code> in the list of
+was <a target="_blank" rel="noopener" href="https://www.quotationspage.com/quote/237.html">as easy as taking candy from a baby</a>. I created a project and put <code>composer; phpunit</code> in the list of
 commands to be run by <code>Sismo</code> when I ask it to build the project.</p>
 <p>The next step was to install it as a <code>post-commit</code> hook, in order to run it every time I create a new commit.
-The <a target="_blank" rel="noopener" href="http://sismo.sensiolabs.org/">Sismo project page</a> explains how to integrate it into the Git workflow by launching it<a href="#note1"><sup>1</sup></a>
+The <a target="_blank" rel="noopener" href="https://github.com/FriendsOfPHP/Sismo">Sismo project page</a> explains how to integrate it into the Git workflow by launching it<a href="#note1"><sup>1</sup></a>
 from the <code>post-commit</code> git hook:</p>
 <figure class="highlight sh"><figcaption><span>.git/hooks/post-commit</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/bin/sh</span></span><br><span class="line"></span><br><span class="line">php /path/to/sismo.php --quiet build symfony-local `git <span class="built_in">log</span> -1 HEAD --pretty=<span class="string">&quot;%H&quot;</span>` &amp;</span><br></pre></td></tr></table></figure>
 
@@ -164,21 +175,21 @@ states:</p>
 it looks for the variable <code>BASH_ENV</code> in the environment, expands its value if it appears there, and
 uses the expanded value as the name of a file to read and execute.</p>
 </blockquote>
-<p>I modified <code>bin/sismo-git-post-commit</code> to launch <code>Sismo</code> using <code>bash</code> and provide it the correct path to <code>.bashrc</code>
+<p>I modified <code>~/bin/sismo-git-post-commit</code> to launch <code>Sismo</code> using <code>bash</code> and provide it the correct path to <code>.bashrc</code>
 in <code>BASH_ENV</code>:</p>
-<figure class="highlight sh"><figcaption><span>~/bin/sismo-git-post-commit start:9</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BASH_ENV=~/.bashrc bash ~/bin/sismo --quiet build <span class="variable">$PROJECT</span> $(git <span class="built_in">log</span> -1 HEAD --pretty=<span class="string">&quot;%H&quot;</span>) &amp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><figcaption><span>~/bin/sismo-git-post-commit</span></figcaption><table><tr><td class="gutter"><pre><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BASH_ENV=~/.bashrc bash ~/bin/sismo --quiet build <span class="variable">$PROJECT</span> $(git <span class="built_in">log</span> -1 HEAD --pretty=<span class="string">&quot;%H&quot;</span>) &amp;</span><br></pre></td></tr></table></figure>
 
 <p><em>(If you have noticed that <code>$PROJECT</code> is undefined then please also notice that this is line #9 of the script.
 I have chosen to show only the relevant part here. Keep reading for the complete script.)</em></p>
 <p>It was still working fine using the command line <code>git</code> and it started working when I committed the code
-using <code>SourceTree</code>. It seemed I solved the problem and it was the time to move on.</p>
-<p>But something wasn’t working as it used to work before. Committing using <code>SourceTree</code> used to complete in
+using SourceTree. It seemed I solved the problem and it was the time to move on.</p>
+<p>But something wasn’t working as it used to work before. Committing using SourceTree used to complete in
 a snap. Now it seemed sluggish. And it felt like this because <strong>it was</strong> sluggish.</p>
 <h2 id="Further-investigation"><a href="#Further-investigation" class="headerlink" title="Further investigation"></a>Further investigation</h2><p>I suspected that, even if Sismo runs in the background, for some reason SourceTree waits until it completes.
 It’s not Git the one that produces the delay; it worked fine when I used <code>git commit</code> from the command line.</p>
 <p>The execution of <code>sismo build</code> takes some time, depending on the size of the project and the commands used
 to build it. Mine were pretty light, that’s why I added <code>sleep 5</code> as the first build command for the project.
-The next two commits, one from the command line, the other using <code>SourceTree</code> revealed the truth: SourceTree
+The next two commits, one from the command line, the other using SourceTree revealed the truth: SourceTree
 indeed waits for the <code>sismo</code> command to complete before it closes the “Committing” console. The command line
 <code>git commit</code> still completes in a snap, without any additional delay.</p>
 <p>I scratched my head and suddenly it dawned to me: when it launches Git in the background to process the commit,
@@ -232,11 +243,11 @@ under the hood when the things doesn’t work as expected (in the first part).</
 
             <p class="meta">
                 
-                <a class="basic-alignment left" href="/" title="Previous Post: Public Properties Are Not OOP">« Public Properties Are Not OOP</a>
+                <a class="basic-alignment left" href="/blog/public-properties-are-not-oop/" title="Previous Post: Public Properties Are Not OOP">« Public Properties Are Not OOP</a>
                 
 
                 
-                <a class="basic-alignment right" href="/" title="Previous Post: DISTINCT vs. GROUP BY WITH ROLLUP">DISTINCT vs. GROUP BY WITH ROLLUP »</a>
+                <a class="basic-alignment right" href="/blog/distinct-vs-group-by-with-rollup/" title="Previous Post: DISTINCT vs. GROUP BY WITH ROLLUP"> DISTINCT vs. GROUP BY WITH ROLLUP » </a>
                 
             </p>
         </footer>
@@ -249,7 +260,7 @@ under the hood when the things doesn’t work as expected (in the first part).</
 <aside class="sidebar">
     <section class="odd">
     <h1>Recent Posts</h1>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates.</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/why-is-mysql-time-limited-to-838-59-59/">Why Is MySQL Time Limited to 838:59:59?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/git-ignores-me-not-my-files/">Git Ignores Me, Not My Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/how-to-merge-composer-files/">How to Merge Composer Files</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/public-properties-are-not-oop/">Public Properties Are Not OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/atlassian-sourcetree-and-git-hooks/">Atlassian SourceTree and Git hooks</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/distinct-vs-group-by-with-rollup/">DISTINCT vs. GROUP BY WITH ROLLUP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/do-you-clone-the-datetime-objects/">Do You Clone the DateTime Objects?</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/join-two-git-repositories-and-keep-the-original-commit-dates/">Join two Git repositories and keep the original commit dates</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/">Să se afle ultimele 4 cifre ale numărului</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/debug-remote-php-cli-scripts/">Debug Remote PHP CLI Scripts</a></li></ul>
 </section><section class="even">
     <h1>GitHub Repos</h1>
     <ul id="gh_repos">
