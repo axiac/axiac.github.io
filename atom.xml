@@ -115,14 +115,15 @@ and not &lt;code&gt;public&lt;/code&gt;.&lt;/p&gt;</summary>
     <link href="https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/"/>
     <id>https://axiac.ro/blog/atlassian-sourcetree-and-git-hooks/</id>
     <published>2016-04-18T12:56:40.000Z</published>
-    <updated>2025-02-06T10:54:24.942Z</updated>
+    <updated>2025-02-06T18:08:54.348Z</updated>
     
     
     <summary type="html">&lt;img src=&quot;/images/blog/sismo-sourcetree.png&quot; alt=&quot;&quot; style=&quot;float: right; margin-left: 50px;&quot; /&gt;
 
 &lt;p&gt;This article explains how I made &lt;code&gt;Sismo&lt;/code&gt; work with Atlassian SourceTree on &lt;code&gt;macOS&lt;/code&gt;. First I thought it doesn’t work
 out-of-the-box because of a &lt;code&gt;$PATH&lt;/code&gt; problem but soon it turned out that the biggest issue comes from the command line
-used for integration. Keep reading to learn how I found it out and how easy is to fix it.&lt;/p&gt;</summary>
+used for integration. Keep reading to learn how I found it out and how easy is to fix it.
+&lt;br clear=&quot;all&quot; /&gt;&lt;/p&gt;</summary>
     
     
     
@@ -212,7 +213,7 @@ into a single Git repository as we have used Git from the project beginning.&lt;
     <link href="https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"/>
     <id>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</id>
     <published>2014-10-14T09:34:56.000Z</published>
-    <updated>2025-02-06T11:57:09.666Z</updated>
+    <updated>2025-02-08T11:09:25.999Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;Problema-de-clasa-a-VI-a&quot;&gt;&lt;a href=&quot;#Problema-de-clasa-a-VI-a&quot; class=&quot;headerlink&quot; title=&quot;Problemă (de clasa a VI-a)&quot;&gt;&lt;/a&gt;Problemă (de clasa a VI-a)&lt;/h2&gt;&lt;p&gt;Să se afle ultimele 4 cifre ale numărului: &lt;em&gt;S&lt;/em&gt; &amp;#x3D; 9^1 + 9^2 + 9^3 + … + 9^400&lt;/p&gt;
