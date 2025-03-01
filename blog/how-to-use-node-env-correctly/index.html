@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How to Use `NODE_ENV` Correctly</title>
+
+    <meta name="author" content="axiac">
+
+    <link rel="shortcut icon" href="/images/favicon.png">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+    <link rel="canonical" href="https://axiac.ro/blog/how-to-use-node-env-correctly/">
+
+    
+        <link rel="alternate" href="/atom.xml" type="application/atom+xml">
+    
+
+    
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
+
+    
+
+    
+<script src="/js/modernizr-2.0.js"></script>
+
+
+    
+<script src="/js/jquery-1.9.1.js"></script>
+
+
+    
+    <script>window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            };
+
+            return t;
+        }(document, "script", "twitter-wjs"));</script>
+
+    
+    <link rel="me" href="https://twitter.com/axiac">
+    
+
+
+
+    
+<script src="/js/octo.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+
+    
+<link rel="stylesheet" href="/css/octo.css">
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+
+<header role="banner">
+    <hgroup>
+        <h1><a href="/">axiac@web</a></h1>
+        
+    </hgroup>
+</header>
+
+<nav role="navigation">
+    
+        <ul class="subscription" data-subscription="rss">
+            <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+        </ul>
+    
+
+    <form action="https://google.com/search" method="get">
+        <fieldset role="search">
+            <input type="hidden" name="q" value="site:https://axiac.ro/">
+            <input class="search" type="text" name="q" results="0" placeholder="Search">
+        </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+        
+            <li><a href="/">Blog</a></li>
+        
+            <li><a href="/archives">Archives</a></li>
+        
+    </ul>
+</nav>
+
+
+<div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">How to Use `NODE_ENV` Correctly</h1>
+            <p class="meta">
+                <time datetime="2025-02-28T22:00:00.000Z" data-updated="true">Sat Mar 01 2025</time>
+            </p>
+        </header>
+        <div class="entry-content">
+            <h2 id="What-is-NODE-ENV"><a href="#What-is-NODE-ENV" class="headerlink" title="What is NODE_ENV?"></a>What is <code>NODE_ENV</code>?</h2><p>The <code>NODE_ENV</code> <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Environment_variable">environment variable</a> became popular early in Node.js development as a convention to distinguish between runtime environments like development, testing, and production. It is now widely used and supported across many tools and frameworks in the Node.js ecosystem, allowing developers to implement environment-specific configurations and optimizations.</p>
+<p>Unfortunatley, many developers don’t grasp its purpose and use it incorrectly.</p>
+<span id="more"></span>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/search?q=%2FNODE_ENV%3D%5Cw%2B%2F+AND+NOT+%2Fproduction%7Cdevelopment%7Ctest%2F&type=code">Countless projects</a> incorrectly use the environment variable <code>NODE_ENV</code> to specify the name of their environment (like <code>dev</code>, <code>stg</code>, <code>prd</code>, etc.) but the purpose of <code>NODE_ENV</code> is to specify the <strong>type</strong> of the environment, not its name.<br>
+The expected values of <code>NODE_ENV</code> are <code>development</code>, <code>test</code> and <code>production</code>.</p>
+<p>Various tools and libraries change their behaviour based on the value of <code>NODE_ENV</code>:</p>
+<ul>
+<li>when <code>NODE_ENV</code> is set to <code>development</code>, some tools may load additional code to show useful warnings, enable hot reloading and skip optimizations that are not necessary when you are developing the app;</li>
+<li>when <code>NODE_ENV</code> is set to <code>test</code>, you may want to instrument your code for code coverage;</li>
+<li>when <code>NODE_ENV</code> is set to <code>production</code>, certain tools may optimize code execution paths, eliminate unused code, and apply optimizations as needed to enhance performance.</li>
+</ul>
+<h2 id="How-some-popular-Node-applications-and-framworks-handle-NODE-ENV"><a href="#How-some-popular-Node-applications-and-framworks-handle-NODE-ENV" class="headerlink" title="How some popular Node applications and framworks handle NODE_ENV"></a>How some popular Node applications and framworks handle <code>NODE_ENV</code></h2><ul>
+<li><p><strong>Node.js</strong> recommends to always set <code>NODE_ENV</code> to <code>production</code>; setting it to a different value and using the value of <code>NODE_ENV</code> to drive the application behaviour is considered an anti-pattern:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production">https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production</a></li>
+</ul>
+</li>
+<li><p>Various commands of <strong>Npm</strong> (<code>install</code>, <code>update</code>, <code>prune</code>, <code>ci</code>, etc. ) use the value of <code>NODE_ENV</code> to include or exclude the dev dependencies from processing:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.npmjs.com/cli/v8/commands/npm-install">https://docs.npmjs.com/cli/v8/commands/npm-install</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.npmjs.com/cli/v9/commands/npm-update">https://docs.npmjs.com/cli/v9/commands/npm-update</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.npmjs.com/cli/v9/commands/npm-prune">https://docs.npmjs.com/cli/v9/commands/npm-prune</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.npmjs.com/cli/v9/commands/npm-ci">https://docs.npmjs.com/cli/v9/commands/npm-ci</a></li>
+</ul>
+</li>
+<li><p><strong>Yarn v1</strong> uses it on <code>yarn install</code> to include or exclude the dev dependencies:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://classic.yarnpkg.com/lang/en/docs/cli/install/">https://classic.yarnpkg.com/lang/en/docs/cli/install/</a></li>
+</ul>
+</li>
+<li><p>It seems that <strong>Yarn v2+</strong> does not use the <code>NODE_ENV</code> environment variable and drives its behaviour based only on the command line arguments.</p>
+</li>
+<li><p><strong>Next.js</strong> recommends to use only one of <code>development</code>, <code>test</code> or <code>production</code> as the value of <code>NODE_ENV</code>. A different value might cause dependencies to work unexpectedly.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://nextjs.org/docs/messages/non-standard-node-env">https://nextjs.org/docs/messages/non-standard-node-env</a></li>
+</ul>
+</li>
+<li><p><strong>Jest</strong> <em>sets</em> <code>NODE_ENV</code> to <code>test</code> if it is not already set. Apparently, it does this so that the tested code can enable&#x2F;disable logging, optimisations etc. when it runs in test mode. Jest itself does not change its behaviour based on the value of <code>NODE_ENV</code>.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://jestjs.io/docs/environment-variables">https://jestjs.io/docs/environment-variables</a></li>
+</ul>
+</li>
+<li><p>Setting <code>NODE_ENV</code> to <code>production</code> makes <strong>Express</strong>:</p>
+<ul>
+<li>cache view templates;</li>
+<li>cache CSS files generated from CSS extensions;</li>
+<li>generate less verbose error messages.</li>
+</ul>
+<p>Source: <a target="_blank" rel="noopener" href="https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production">https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production</a></p>
+</li>
+<li><p><strong>React</strong> uses the terms <em>development build</em> and <em>production build</em> everywhere in its documentation. These are the differences between them:</p>
+<ol>
+<li><p>development build:</p>
+<ul>
+<li>includes helpful warnings, error messages, and debugging tools such as source maps;</li>
+<li>slower performance due to additional checks and verbose logging;</li>
+<li>used during the development phase to aid debugging and testing.</li>
+</ul>
+</li>
+<li><p>production build:</p>
+<ul>
+<li>minified and optimized for performance by removing warnings and unnecessary code;</li>
+<li>smaller file sizes, leading to faster load times and reduced bandwidth usage;</li>
+<li>intended for deployment to end users.</li>
+</ul>
+</li>
+</ol>
+<p>Although not officially documented, the two build modes are identified by <a target="_blank" rel="noopener" href="https://github.com/search?q=repo%3Afacebook%2Freact+NODE_ENV&type=code">checking the value of <code>NODE_ENV</code> against <code>production</code> or <code>development</code></a>.</p>
+</li>
+</ul>
+<h2 id="How-to-use-NODE-ENV-in-applications"><a href="#How-to-use-NODE-ENV-in-applications" class="headerlink" title="How to use NODE_ENV in applications?"></a>How to use <code>NODE_ENV</code> in applications?</h2><p>The applications should not know in what environment they run. The environment variables <a target="_blank" rel="noopener" href="https://12factor.net/config">should be used to set the configuration values that vary across environments</a>. When behaviour needs to differ across environments, the best way is to use the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Strategy_pattern">Strategy design patter</a>; implement the behaviour that varies in several components that implement the same interface and decide at runtime which of them to use based on the value of a configuration entry (provided as an environment variable). Use different values for the variable based on the environment (or environment type) where the application runs.</p>
+<p>As an exception to the rule above, use the value of <code>NODE_ENV</code> in applications to implement optimisations (or skip some costly verifications) when the code run in production and provide better support for developers (in the development mode.)</p>
+<!-- That's all, folks! -->
+
+        </div>
+        <footer>
+            <p class="meta">
+                <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+                <time datetime="2025-02-28T22:00:00.000Z" data-updated="true">Sat Mar 01 2025</time>
+                
+    <span class="categories">
+    
+        <a class="category" href="/tags/troubleshooting/">troubleshooting</a>,
+    
+        <a class="category" href="/tags/node-js/">node.js</a>
+    
+    </span>
+
+            </p>
+            <div class="sharing">
+    
+        <a class="twitter-share-button"
+           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=How%20to%20Use%20%60NODE_ENV%60%20Correctly">
+            Tweet
+        </a>
+    
+</div>
+
+            <p class="meta">
+                
+
+                
+                <a class="basic-alignment right" href="/blog/why-is-mysql-time-limited-to-838-59-59/" title="Previous Post: Why Is MySQL Time Limited to 838:59:59?"> Why Is MySQL Time Limited to 838:59:59? » </a>
+                
+            </p>
+        </footer>
+    </article>
+
+    
+        <section>
+    <h1>Comments</h1>
+
+    <div id="disqus_thread"></div>
+
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT
+         *  THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR
+         *  PLATFORM OR CMS.
+         *
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:
+         *  https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        var canonicalUrl = 'https://axiac.ro/blog/how-to-use-node-env-correctly/';
+
+        var disqus_config = function () {
+           // Replace PAGE_URL with your page's canonical URL variable
+           this.page.url = canonicalUrl;
+
+           // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+           this.page.identifier = canonicalUrl;
+        };
+
+        (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+            var d = document, s = d.createElement('script');
+
+            // IMPORTANT: Replace EXAMPLE with your forum shortname!
+            s.src = 'https://axiac.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+
+</section>
+
+    
+
+</div>
+
+<aside class="sidebar">
+    <section class="odd">
+    <h1>Stack Overflow</h1>
+    <a target="_blank" rel="noopener" href="https://stackoverflow.com/users/4265352/axiac"><img
+        src="https://stackoverflow.com/users/flair/4265352.png?theme=clean"
+        alt="profile for axiac at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
+        title="profile for axiac at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
+        width="208" height="58" style="margin-top: 1em" /></a>
+</section>
+<section class="even">
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+        <li id="gh_loader">Status updating&#8230;</li>
+    </ul>
+
+    <a target="_blank" rel="noopener" href="https://github.com/axiac">@axiac</a> on GitHub
+
+    <script defer>
+        const htmlEscaper = document.createElement('textarea');
+        const target = document.getElementById('gh_repos');
+
+        function request () {
+            const ghUser = 'axiac';
+            const url = `https://api.github.com/users/${ghUser}/repos?sort=pushed&type=sources`;
+
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        function renderError () {
+            target.classList.add('error');
+            target.innerText = 'Error loading feed';
+        }
+
+        function renderRepo (repo) {
+            return `<li>
+                <a href="${repo.html_url}">${repo.name}</a>
+                <p>${escapeHTML(repo.description || '')}</p>    
+            </li>`;
+        }
+
+        function escapeHTML (text) {
+            htmlEscaper.innerHTML = text;
+            return htmlEscaper.value;
+        }
+
+        request()
+            .then(response => response.json())
+            .then(results => {
+                if (!results) return;
+
+                const repos = results
+                  .filter(result => !result.fork)
+                  .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                  .reduce((acc, item) => acc.length >= 15 ? acc : [...acc, item], []);
+
+                repos.forEach(repo => {
+                    const repoHTML = renderRepo(repo);
+                    target.insertAdjacentHTML('beforeend', repoHTML);
+                });
+                document.getElementById('gh_loader').remove();
+            })
+            .catch(renderError);
+    </script>
+</section>
+</aside>
+
+
+    </div>
+</div>
+
+<footer role="contentinfo">
+    <p>
+        Copyright © 2013-2025 - axiac -
+        <span class="credit">Generated using <a target="_blank" rel="noopener" href="https://github.com/jbreckmckye/hexo-theme-octo">Octo theme</a> for <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></span>
+    </p>
+</footer>
+
+
+
+</body>
+</html>

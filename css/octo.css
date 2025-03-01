@@ -216,6 +216,18 @@ ul, ul ul, ul ol, ol, ol ul, ol ol {
 ul ul, ul ol, ol ul, ol ol {
     margin-bottom: 0em
 }
+li p {
+    margin-bottom: 0.7em;
+}
+
+p+p {
+    margin-top: 1.3em;
+}
+
+p+ul {
+    margin-top: -0.5em;
+    margin-bottom: 0.9em;
+}
 
 strong {
     font-weight: bold
