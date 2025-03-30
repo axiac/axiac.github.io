@@ -130,7 +130,7 @@
 <p>Unfortunatley, many developers don’t grasp its purpose and use it incorrectly.</p>
 <span id="more"></span>
 
-<p><a target="_blank" rel="noopener" href="https://github.com/search?q=%2FNODE_ENV%3D%5Cw%2B%2F+AND+NOT+%2Fproduction%7Cdevelopment%7Ctest%2F&type=code">Countless projects</a> incorrectly use the environment variable <code>NODE_ENV</code> to specify the name of their environment (like <code>dev</code>, <code>stg</code>, <code>prd</code>, etc.) but the purpose of <code>NODE_ENV</code> is to specify the <strong>type</strong> of the environment, not its name.<br>
+<p><a target="_blank" rel="noopener" href="https://github.com/search?q=/NODE_ENV=%5Cw+/+AND+NOT+/production%7Cdevelopment%7Ctest/&type=code">Countless projects</a> incorrectly use the environment variable <code>NODE_ENV</code> to specify the name of their environment (like <code>dev</code>, <code>stg</code>, <code>prd</code>, etc.) but the purpose of <code>NODE_ENV</code> is to specify the <strong>type</strong> of the environment, not its name.<br>
 The expected values of <code>NODE_ENV</code> are <code>development</code>, <code>test</code> and <code>production</code>.</p>
 <p>Various tools and libraries change their behaviour based on the value of <code>NODE_ENV</code>:</p>
 <ul>
@@ -194,10 +194,10 @@ The expected values of <code>NODE_ENV</code> are <code>development</code>, <code
 </ul>
 </li>
 </ol>
-<p>Although not officially documented, the two build modes are identified by <a target="_blank" rel="noopener" href="https://github.com/search?q=repo%3Afacebook%2Freact+NODE_ENV&type=code">checking the value of <code>NODE_ENV</code> against <code>production</code> or <code>development</code></a>.</p>
+<p>Although not officially documented, the two build modes are identified by <a target="_blank" rel="noopener" href="https://github.com/search?q=repo:facebook/react%20NODE_ENV&type=code">checking the value of <code>NODE_ENV</code> against <code>production</code> or <code>development</code></a>.</p>
 </li>
 </ul>
-<h2 id="How-to-use-NODE-ENV-in-applications"><a href="#How-to-use-NODE-ENV-in-applications" class="headerlink" title="How to use NODE_ENV in applications?"></a>How to use <code>NODE_ENV</code> in applications?</h2><p>The applications should not know in what environment they run. The environment variables <a target="_blank" rel="noopener" href="https://12factor.net/config">should be used to set the configuration values that vary across environments</a>. When behaviour needs to differ across environments, the best way is to use the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Strategy_pattern">Strategy design patter</a>; implement the behaviour that varies in several components that implement the same interface and decide at runtime which of them to use based on the value of a configuration entry (provided as an environment variable). Use different values for the variable based on the environment (or environment type) where the application runs.</p>
+<h2 id="How-to-use-NODE-ENV-in-applications"><a href="#How-to-use-NODE-ENV-in-applications" class="headerlink" title="How to use NODE_ENV in applications?"></a>How to use <code>NODE_ENV</code> in applications?</h2><p>The applications should not know in what environment they run. The environment variables <a target="_blank" rel="noopener" href="https://12factor.net/config">should be used to set the configuration values that vary across environments</a>. When behaviour needs to differ across environments, the best way is to use the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Strategy_pattern">Strategy design pattern</a>; implement the behaviour that varies in several components that implement the same interface and decide at runtime which of them to use based on the value of a configuration entry (provided as an environment variable). Use different values for the variable based on the environment (or environment type) where the application runs.</p>
 <p>As an exception to the rule above, use the value of <code>NODE_ENV</code> in applications to implement optimisations (or skip some costly verifications) when the code run in production and provide better support for developers (in the development mode.)</p>
 <!-- That's all, folks! -->
 

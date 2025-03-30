@@ -6,7 +6,7 @@
   <link href="https://axiac.ro/atom.xml" rel="self"/>
   
   <link href="https://axiac.ro/"/>
-  <updated>2025-03-01T16:30:36.233Z</updated>
+  <updated>2025-03-30T16:46:28.032Z</updated>
   <id>https://axiac.ro/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://axiac.ro/blog/how-to-use-node-env-correctly/"/>
     <id>https://axiac.ro/blog/how-to-use-node-env-correctly/</id>
     <published>2025-02-28T22:00:00.000Z</published>
-    <updated>2025-03-01T16:30:36.233Z</updated>
+    <updated>2025-03-30T16:46:28.032Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;What-is-NODE-ENV&quot;&gt;&lt;a href=&quot;#What-is-NODE-ENV&quot; class=&quot;headerlink&quot; title=&quot;What is NODE_ENV?&quot;&gt;&lt;/a&gt;What is &lt;code&gt;NODE_ENV&lt;/code&gt;?&lt;/h2&gt;&lt;p&gt;The &lt;code&gt;NODE_ENV&lt;/code&gt; &lt;a href=&quot;https://en.wikipedia.org/wiki/Environment_variable&quot;&gt;environment variable&lt;/a&gt; became popular early in Node.js development as a convention to distinguish between runtime environments like development, testing, and production. It is now widely used and supported across many tools and frameworks in the Node.js ecosystem, allowing developers to implement environment-specific configurations and optimizations.&lt;/p&gt;
@@ -233,7 +233,7 @@ into a single Git repository as we have used Git from the project beginning.&lt;
     <link href="https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/"/>
     <id>https://axiac.ro/blog/sa-se-afle-ultimele-4-cifre-ale-numarului/</id>
     <published>2014-10-14T09:34:56.000Z</published>
-    <updated>2025-02-17T20:00:58.618Z</updated>
+    <updated>2025-03-30T16:43:43.803Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;Problema-de-clasa-a-VI-a&quot;&gt;&lt;a href=&quot;#Problema-de-clasa-a-VI-a&quot; class=&quot;headerlink&quot; title=&quot;Problemă (de clasa a VI-a)&quot;&gt;&lt;/a&gt;Problemă (de clasa a VI-a)&lt;/h2&gt;&lt;p&gt;Să se afle ultimele 4 cifre ale numărului: &lt;em&gt;S&lt;/em&gt; &amp;#x3D; 9^1 + 9^2 + 9^3 + … + 9^400&lt;/p&gt;
