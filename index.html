@@ -481,7 +481,7 @@ Să calculăm primele câteva puteri ale lui <mjx-container class="MathJax" jax=
         function renderRepo (repo) {
             return `<li>
                 <a href="${repo.html_url}">${repo.name}</a>
-                <p>${escapeHTML(repo.description || '')}</p>    
+                <p>${escapeHTML(repo.description || '')}</p>
             </li>`;
         }
 
@@ -494,9 +494,11 @@ Să calculăm primele câteva puteri ale lui <mjx-container class="MathJax" jax=
             .then(response => response.json())
             .then(results => {
                 if (!results) return;
+                const re = new RegExp('code-golf|adventofcode|maroco|semne-bune' ?? '.*');
 
                 const repos = results
                   .filter(result => !result.fork)
+                    .filter(result => re.test(result.name))
                   .sort((a, b) => b.stargazers_count - a.stargazers_count)
                   .reduce((acc, item) => acc.length >= 15 ? acc : [...acc, item], []);
 
@@ -509,6 +511,7 @@ Să calculăm primele câteva puteri ale lui <mjx-container class="MathJax" jax=
             .catch(renderError);
     </script>
 </section>
+
 </aside>
 
 
