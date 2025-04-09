@@ -164,6 +164,11 @@ The expected values of <code>NODE_ENV</code> are <code>development</code>, <code
 <li><a target="_blank" rel="noopener" href="https://nextjs.org/docs/messages/non-standard-node-env">https://nextjs.org/docs/messages/non-standard-node-env</a></li>
 </ul>
 </li>
+<li><p><strong>NestJS</strong> does not make any difference between development and production environments but recommends to use <code>production</code> when running the application in a production environment. It does not make any recommendation for other environments.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.nestjs.com/deployment#node_envproduction">https://docs.nestjs.com/deployment#node_envproduction</a></li>
+</ul>
+</li>
 <li><p><strong>Jest</strong> <em>sets</em> <code>NODE_ENV</code> to <code>test</code> if it is not already set. Apparently, it does this so that the tested code can enable&#x2F;disable logging, optimisations etc. when it runs in test mode. Jest itself does not change its behaviour based on the value of <code>NODE_ENV</code>.</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://jestjs.io/docs/environment-variables">https://jestjs.io/docs/environment-variables</a></li>
