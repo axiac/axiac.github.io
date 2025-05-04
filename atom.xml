@@ -6,7 +6,7 @@
   <link href="https://axiac.ro/atom.xml" rel="self"/>
   
   <link href="https://axiac.ro/"/>
-  <updated>2025-04-09T18:33:08.590Z</updated>
+  <updated>2025-05-04T19:30:44.272Z</updated>
   <id>https://axiac.ro/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>What to Mock?</title>
+    <link href="https://axiac.ro/blog/what-to-mock/"/>
+    <id>https://axiac.ro/blog/what-to-mock/</id>
+    <published>2025-05-03T21:00:00.000Z</published>
+    <updated>2025-05-04T19:30:44.272Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Using &lt;a href=&quot;https://en.wikipedia.org/wiki/Test_double&quot;&gt;test doubles&lt;/a&gt; to replace dependencies in tests has become a standard practice.&lt;/p&gt;
+&lt;p&gt;Generally, there are three main types of components that should be substituted with test doubles during testing:&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="testing" scheme="https://axiac.ro/tags/testing/"/>
+    
+  </entry>
   
   <entry>
     <title>How to Use `NODE_ENV` Correctly</title>

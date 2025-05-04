@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>What to Mock?</title>
+
+    <meta name="author" content="axiac">
+
+    <link rel="shortcut icon" href="/images/favicon.png">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+    <link rel="canonical" href="https://axiac.ro/blog/what-to-mock/">
+
+    
+        <link rel="alternate" href="/atom.xml" type="application/atom+xml">
+    
+
+    
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1JWYSSMS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-0E1JWYSSMS');
+</script>
+
+    
+
+    
+<script src="/js/modernizr-2.0.js"></script>
+
+
+    
+<script src="/js/jquery-1.9.1.js"></script>
+
+
+    
+    <script>window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            };
+
+            return t;
+        }(document, "script", "twitter-wjs"));</script>
+
+    
+    <link rel="me" href="https://twitter.com/axiac">
+    
+
+
+
+    
+<script src="/js/octo.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"
+          type="text/css">
+
+    
+<link rel="stylesheet" href="/css/octo.css">
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+
+<header role="banner">
+    <hgroup>
+        <h1><a href="/">axiac@web</a></h1>
+        
+    </hgroup>
+</header>
+
+<nav role="navigation">
+    
+        <ul class="subscription" data-subscription="rss">
+            <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+        </ul>
+    
+
+    <form action="https://google.com/search" method="get">
+        <fieldset role="search">
+            <input type="hidden" name="q" value="site:https://axiac.ro/">
+            <input class="search" type="text" name="q" results="0" placeholder="Search">
+        </fieldset>
+    </form>
+
+    <ul class="main-navigation">
+        
+            <li><a href="/">Blog</a></li>
+        
+            <li><a href="/archives">Archives</a></li>
+        
+    </ul>
+</nav>
+
+
+<div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">What to Mock?</h1>
+            <p class="meta">
+                <time datetime="2025-05-03T21:00:00.000Z" data-updated="true">Sun May 04 2025</time>
+            </p>
+        </header>
+        <div class="entry-content">
+            <p>Using <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Test_double">test doubles</a> to replace dependencies in tests has become a standard practice.</p>
+<p>Generally, there are three main types of components that should be substituted with test doubles during testing:</p>
+<span id="more"></span>
+
+<ul>
+<li>Components that interact with resources outside the memory of the current process, such as databases, caches, files, HTTP requests, or queues.</li>
+<li>Components that rely on randomness or the current date and time.</li>
+<li>Components that, while not falling into the above categories, require a significant amount of time to execute. For unit tests, anything that takes longer than 0.1 seconds is typically considered too slow.</li>
+</ul>
+<p>The main reasons for substituting these components with test doubles are:</p>
+<ul>
+<li><strong>Speed</strong>: Components in the first category often take a long time to complete their tasks, and the third category is specifically concerned with this issue.</li>
+<li><strong>Consistency</strong>: Tests need to yield the same results every time they run. This is challenging when input data varies between runs, which is common with the second category and, at times, the first.</li>
+<li><strong>Isolation</strong>: Tests should be able to run at any time (second category) and in any environment (first category). They must not rely on external setups that are beyond the developer’s control or may be unavailable (first category).</li>
+</ul>
+<p>Substituting a component that does not fall into any of the categories mentioned above with a test double is considered a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Code_smell">code smell</a>. This often indicates that a component has excessive dependencies, including hidden ones, making it hard to instantiate. The root cause is typically poor component design, or a lack of design altogether.</p>
+<!-- That's all, folks! -->
+
+        </div>
+        <footer>
+            <p class="meta">
+                <span class="byline author vcard">Posted by <span class="fn">axiac</span></span>
+                <time datetime="2025-05-03T21:00:00.000Z" data-updated="true">Sun May 04 2025</time>
+                
+    <span class="categories">
+    
+        <a class="category" href="/tags/testing/">testing</a>
+    
+    </span>
+
+            </p>
+            <div class="sharing">
+    
+        <a class="twitter-share-button"
+           target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=What%20to%20Mock%3F">
+            Tweet
+        </a>
+    
+</div>
+
+            <p class="meta">
+                
+
+                
+                <a class="basic-alignment right" href="/blog/how-to-use-node-env-correctly/" title="Previous Post: How to Use `NODE_ENV` Correctly"> How to Use `NODE_ENV` Correctly » </a>
+                
+            </p>
+        </footer>
+    </article>
+
+    
+        <section>
+    <h1>Comments</h1>
+
+    <div id="disqus_thread"></div>
+
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT
+         *  THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR
+         *  PLATFORM OR CMS.
+         *
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:
+         *  https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        var canonicalUrl = 'https://axiac.ro/blog/what-to-mock/';
+
+        var disqus_config = function () {
+           // Replace PAGE_URL with your page's canonical URL variable
+           this.page.url = canonicalUrl;
+
+           // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+           this.page.identifier = canonicalUrl;
+        };
+
+        (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+            var d = document, s = d.createElement('script');
+
+            // IMPORTANT: Replace EXAMPLE with your forum shortname!
+            s.src = 'https://axiac.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+
+</section>
+
+    
+
+</div>
+
+<aside class="sidebar">
+    <section class="odd">
+    <h1>Stack Overflow</h1>
+    <a target="_blank" rel="noopener" href="https://stackoverflow.com/users/4265352/axiac"><img
+        src="https://stackoverflow.com/users/flair/4265352.png?theme=clean"
+        alt="profile for axiac at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
+        title="profile for axiac at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
+        width="208" height="58" style="margin-top: 1em" /></a>
+</section>
+<section class="even">
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+        <li id="gh_loader">Status updating&#8230;</li>
+    </ul>
+
+    <a target="_blank" rel="noopener" href="https://github.com/axiac">@axiac</a> on GitHub
+
+    <script defer>
+        const htmlEscaper = document.createElement('textarea');
+        const target = document.getElementById('gh_repos');
+
+        function request () {
+            const ghUser = 'axiac';
+            const url = `https://api.github.com/users/${ghUser}/repos?sort=pushed&type=sources`;
+
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        function renderError () {
+            target.classList.add('error');
+            target.innerText = 'Error loading feed';
+        }
+
+        function renderRepo (repo) {
+            return `<li>
+                <a href="${repo.html_url}">${repo.name}</a>
+                <p>${escapeHTML(repo.description || '')}</p>
+            </li>`;
+        }
+
+        function escapeHTML (text) {
+            htmlEscaper.innerHTML = text;
+            return htmlEscaper.value;
+        }
+
+        request()
+            .then(response => response.json())
+            .then(results => {
+                if (!results) return;
+                const re = new RegExp('code-golf|adventofcode|maroco|semne-bune' ?? '.*');
+
+                const repos = results
+                  .filter(result => !result.fork)
+                    .filter(result => re.test(result.name))
+                  .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                  .reduce((acc, item) => acc.length >= 15 ? acc : [...acc, item], []);
+
+                repos.forEach(repo => {
+                    const repoHTML = renderRepo(repo);
+                    target.insertAdjacentHTML('beforeend', repoHTML);
+                });
+                document.getElementById('gh_loader').remove();
+            })
+            .catch(renderError);
+    </script>
+</section>
+
+</aside>
+
+
+    </div>
+</div>
+
+<footer role="contentinfo">
+    <p>
+        Copyright © 2013-2025 - axiac -
+        <span class="credit">Generated using <a target="_blank" rel="noopener" href="https://github.com/jbreckmckye/hexo-theme-octo">Octo theme</a> for <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></span>
+    </p>
+</footer>
+
+
+
+</body>
+</html>
