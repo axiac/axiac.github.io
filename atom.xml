@@ -6,7 +6,7 @@
   <link href="https://axiac.ro/atom.xml" rel="self"/>
   
   <link href="https://axiac.ro/"/>
-  <updated>2025-05-04T21:03:02.598Z</updated>
+  <updated>2025-05-25T07:51:01.570Z</updated>
   <id>https://axiac.ro/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://axiac.ro/blog/what-to-mock/"/>
     <id>https://axiac.ro/blog/what-to-mock/</id>
     <published>2025-05-03T21:00:00.000Z</published>
-    <updated>2025-05-04T21:03:02.598Z</updated>
+    <updated>2025-05-25T07:51:01.570Z</updated>
     
     
     <summary type="html">&lt;p&gt;Using &lt;a href=&quot;https://en.wikipedia.org/wiki/Test_double&quot;&gt;test doubles&lt;/a&gt; to replace dependencies in tests has become a standard practice.&lt;/p&gt;
@@ -39,7 +39,7 @@
     <link href="https://axiac.ro/blog/how-to-use-node-env-correctly/"/>
     <id>https://axiac.ro/blog/how-to-use-node-env-correctly/</id>
     <published>2025-02-28T22:00:00.000Z</published>
-    <updated>2025-04-09T18:33:08.590Z</updated>
+    <updated>2025-04-09T18:36:47.327Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;What-is-NODE-ENV&quot;&gt;&lt;a href=&quot;#What-is-NODE-ENV&quot; class=&quot;headerlink&quot; title=&quot;What is NODE_ENV?&quot;&gt;&lt;/a&gt;What is &lt;code&gt;NODE_ENV&lt;/code&gt;?&lt;/h2&gt;&lt;p&gt;The &lt;code&gt;NODE_ENV&lt;/code&gt; &lt;a href=&quot;https://en.wikipedia.org/wiki/Environment_variable&quot;&gt;environment variable&lt;/a&gt; became popular early in Node.js development as a convention to distinguish between runtime environments like development, testing, and production. It is now widely used and supported across many tools and frameworks in the Node.js ecosystem, allowing developers to implement environment-specific configurations and optimizations.&lt;/p&gt;

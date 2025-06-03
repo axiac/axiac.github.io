@@ -18,8 +18,8 @@ https://axiac.ro/tags/mate/
 https://axiac.ro/tags/clasa-a-VI-a/
 https://axiac.ro/tags/git/
 https://axiac.ro/tags/mysql/
-https://axiac.ro/tags/composer/
-https://axiac.ro/tags/OOP/
 https://axiac.ro/tags/macOS/
+https://axiac.ro/tags/OOP/
+https://axiac.ro/tags/composer/
 https://axiac.ro/tags/node-js/
 https://axiac.ro/tags/testing/

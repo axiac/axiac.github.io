@@ -4,7 +4,7 @@
   <url>
     <loc>https://axiac.ro/blog/what-to-mock/</loc>
     
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-05-25</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -121,7 +121,7 @@
 
   <url>
     <loc>https://axiac.ro/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -129,77 +129,77 @@
   
   <url>
     <loc>https://axiac.ro/tags/php/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/troubleshooting/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/mate/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/clasa-a-VI-a/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/git/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/mysql/</loc>
-    <lastmod>2025-05-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/tags/composer/</loc>
-    <lastmod>2025-05-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://axiac.ro/tags/OOP/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/macOS/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/OOP/</loc>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://axiac.ro/tags/composer/</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/node-js/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://axiac.ro/tags/testing/</loc>
-    <lastmod>2025-05-04</lastmod>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
